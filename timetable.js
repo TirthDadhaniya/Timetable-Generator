@@ -19,7 +19,8 @@ let lastSavedTimetableId = null; // for scrolling after save
 
 // API Base URL - automatically detects environment
 const API_BASE =
-  window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+  window.location.hostname === "localhost" ||
+  window.location.hostname === "127.0.0.1"
     ? `http://${window.location.hostname}:3000`
     : window.location.origin;
 
@@ -52,7 +53,10 @@ async function loadDatabase() {
     return database;
   } catch (error) {
     console.error("❌ Error loading database:", error);
-    showToast("Failed to load database. Please ensure the server is running on localhost:3000", "error");
+    showToast(
+      "Failed to load database. Please ensure the server is running on localhost:3000",
+      "error"
+    );
     return null;
   }
 }
@@ -81,7 +85,10 @@ async function initializeTimetableSystem() {
 
     showToast("System initialized successfully!", "success");
   } else {
-    showToast("Failed to initialize system. Please refresh the page or check server connection.", "error");
+    showToast(
+      "Failed to initialize system. Please refresh the page or check server connection.",
+      "error"
+    );
   }
 
   // Hide loading indicator
@@ -123,7 +130,10 @@ function populateSubjectFormDropdowns() {
   populateSelect(semesterSelect, semesters);
 
   // Populate faculty
-  const facultyOptions = faculty.map((f) => ({ value: f.name, text: `${f.name} (${f.specialization})` }));
+  const facultyOptions = faculty.map((f) => ({
+    value: f.name,
+    text: `${f.name} (${f.specialization})`,
+  }));
   populateSelect(facultySelect, facultyOptions);
 }
 
@@ -194,7 +204,8 @@ function renderSubjects() {
   if (!subjectList) return;
 
   if (subjects.length === 0) {
-    subjectList.innerHTML = '<p class="empty-state">No subjects added yet. Add your first subject above.</p>';
+    subjectList.innerHTML =
+      '<p class="empty-state">No subjects added yet. Add your first subject above.</p>';
     return;
   }
 
@@ -235,7 +246,8 @@ function renderFaculty() {
   if (!facultyList) return;
 
   if (faculty.length === 0) {
-    facultyList.innerHTML = '<p class="empty-state">No faculty added yet. Add your first faculty member above.</p>';
+    facultyList.innerHTML =
+      '<p class="empty-state">No faculty added yet. Add your first faculty member above.</p>';
     return;
   }
 
@@ -269,7 +281,8 @@ function renderRooms() {
   if (!roomList) return;
 
   if (rooms.length === 0) {
-    roomList.innerHTML = '<p class="empty-state">No rooms added yet. Add your first room above.</p>';
+    roomList.innerHTML =
+      '<p class="empty-state">No rooms added yet. Add your first room above.</p>';
     return;
   }
 
@@ -279,11 +292,15 @@ function renderRooms() {
     <div class="room-card" data-id="${room.id}">
       <div class="room-card-content">
           <div class="room-card-info">
-            <div class="room-card-title">${room.number} <span class="room-card-type">(${room.type})</span></div>
-            <div class="room-card-details">Building: <b>${room.building}</b> | Floor: <b>${room.floor}</b></div>
-            <div class="room-card-details">Capacity: <b>${room.capacity} students</b> | Equipment: <b>${
-        room.equipment || "None"
-      }</b></div>
+            <div class="room-card-title">${
+              room.number
+            } <span class="room-card-type">(${room.type})</span></div>
+            <div class="room-card-details">Building: <b>${
+              room.building
+            }</b> | Floor: <b>${room.floor}</b></div>
+            <div class="room-card-details">Capacity: <b>${
+              room.capacity
+            } students</b> | Equipment: <b>${room.equipment || "None"}</b></div>
           </div>
           <div class="room-card-actions">
             <button onclick="editRoom('${
@@ -308,7 +325,8 @@ function renderDepartments() {
   if (!departmentList) return;
 
   if (departments.length === 0) {
-    departmentList.innerHTML = '<p class="empty-state">No departments added yet. Add your first department above.</p>';
+    departmentList.innerHTML =
+      '<p class="empty-state">No departments added yet. Add your first department above.</p>';
     return;
   }
 
@@ -416,7 +434,9 @@ async function handleSubjectFormSubmission(event) {
   const finalEditId = event.target.dataset.editId || editId;
 
   try {
-    const url = isEdit ? `${API_BASE}/api/subjects/${finalEditId}` : `${API_BASE}/api/subjects`;
+    const url = isEdit
+      ? `${API_BASE}/api/subjects/${finalEditId}`
+      : `${API_BASE}/api/subjects`;
     const method = isEdit ? "PUT" : "POST";
 
     const response = await fetch(url, {
@@ -461,7 +481,10 @@ async function handleSubjectFormSubmission(event) {
     }
   } catch (error) {
     console.error(`Error ${isEdit ? "updating" : "adding"} subject:`, error);
-    showToast(`Failed to ${isEdit ? "update" : "add"} subject. Please try again.`, "error");
+    showToast(
+      `Failed to ${isEdit ? "update" : "add"} subject. Please try again.`,
+      "error"
+    );
   }
 }
 
@@ -503,7 +526,9 @@ async function handleFacultyFormSubmission(event) {
   const finalEditId = event.target.dataset.editId || editId;
 
   try {
-    const url = isEdit ? `${API_BASE}/api/faculty/${finalEditId}` : `${API_BASE}/api/faculty`;
+    const url = isEdit
+      ? `${API_BASE}/api/faculty/${finalEditId}`
+      : `${API_BASE}/api/faculty`;
     const method = isEdit ? "PUT" : "POST";
 
     const response = await fetch(url, {
@@ -549,7 +574,10 @@ async function handleFacultyFormSubmission(event) {
     }
   } catch (error) {
     console.error(`Error ${isEdit ? "updating" : "adding"} faculty:`, error);
-    showToast(`Failed to ${isEdit ? "update" : "add"} faculty. Please try again.`, "error");
+    showToast(
+      `Failed to ${isEdit ? "update" : "add"} faculty. Please try again.`,
+      "error"
+    );
   }
 }
 
@@ -593,7 +621,9 @@ async function handleRoomFormSubmission(event) {
   const finalEditId = event.target.dataset.editId || editId;
 
   try {
-    const url = isEdit ? `${API_BASE}/api/rooms/${finalEditId}` : `${API_BASE}/api/rooms`;
+    const url = isEdit
+      ? `${API_BASE}/api/rooms/${finalEditId}`
+      : `${API_BASE}/api/rooms`;
     const method = isEdit ? "PUT" : "POST";
 
     const response = await fetch(url, {
@@ -638,7 +668,10 @@ async function handleRoomFormSubmission(event) {
     }
   } catch (error) {
     console.error(`Error ${isEdit ? "updating" : "adding"} room:`, error);
-    showToast(`Failed to ${isEdit ? "update" : "add"} room. Please try again.`, "error");
+    showToast(
+      `Failed to ${isEdit ? "update" : "add"} room. Please try again.`,
+      "error"
+    );
   }
 }
 
@@ -664,7 +697,7 @@ async function handleDepartmentFormSubmission(event) {
 
   try {
     let url, method;
-    
+
     if (isEdit) {
       url = `${API_BASE}/api/departments/${editIndex}`;
       method = "PUT";
@@ -710,11 +743,17 @@ async function handleDepartmentFormSubmission(event) {
       }
     } else {
       const errorData = await response.json();
-      throw new Error(errorData.error || `Failed to ${isEdit ? "update" : "add"} department`);
+      throw new Error(
+        errorData.error || `Failed to ${isEdit ? "update" : "add"} department`
+      );
     }
   } catch (error) {
     console.error(`Error ${isEdit ? "updating" : "adding"} department:`, error);
-    showToast(error.message || `Failed to ${isEdit ? "update" : "add"} department. Please try again.`, "error");
+    showToast(
+      error.message ||
+        `Failed to ${isEdit ? "update" : "add"} department. Please try again.`,
+      "error"
+    );
   }
 }
 
@@ -732,12 +771,23 @@ async function handleTimetableGeneration(event) {
 
   const formData = new FormData(event.target);
   const generationParams = {
-    course: formData.get("course") || document.getElementById("genCourse").value,
-    department: formData.get("department") || document.getElementById("genDepartment").value,
-    semester: formData.get("semester") || document.getElementById("genSemester").value,
-    students: parseInt(formData.get("students")) || parseInt(document.getElementById("genStudents").value) || 0,
-    startTime: formData.get("startTime") || document.getElementById("collegeStartTime").value,
-    endTime: formData.get("endTime") || document.getElementById("collegeEndTime").value,
+    course:
+      formData.get("course") || document.getElementById("genCourse").value,
+    department:
+      formData.get("department") ||
+      document.getElementById("genDepartment").value,
+    semester:
+      formData.get("semester") || document.getElementById("genSemester").value,
+    students:
+      parseInt(formData.get("students")) ||
+      parseInt(document.getElementById("genStudents").value) ||
+      0,
+    startTime:
+      formData.get("startTime") ||
+      document.getElementById("collegeStartTime").value,
+    endTime:
+      formData.get("endTime") ||
+      document.getElementById("collegeEndTime").value,
   };
 
   // Validation
@@ -748,7 +798,8 @@ async function handleTimetableGeneration(event) {
   // Show loading status
   const statusDiv = document.getElementById("timetableGenStatus");
   if (statusDiv) {
-    statusDiv.innerHTML = '<span style="color: #667eea;">🔄 Generating timetable...</span>';
+    statusDiv.innerHTML =
+      '<span style="color: #667eea;">🔄 Generating timetable...</span>';
   }
 
   try {
@@ -760,7 +811,8 @@ async function handleTimetableGeneration(event) {
       // Ensure Timetable tab is visible and smooth scroll to the generated section
       focusTimetableTabAndScroll();
       if (statusDiv) {
-        statusDiv.innerHTML = '<span style="color: #10b981;">✅ Timetable generated successfully!</span>';
+        statusDiv.innerHTML =
+          '<span style="color: #10b981;">✅ Timetable generated successfully!</span>';
       }
     } else {
       showToast(result.error, "error");
@@ -772,7 +824,8 @@ async function handleTimetableGeneration(event) {
     console.error("Error generating timetable:", error);
     showToast("Failed to generate timetable. Please try again.", "error");
     if (statusDiv) {
-      statusDiv.innerHTML = '<span style="color: #ef4444;">❌ Failed to generate timetable</span>';
+      statusDiv.innerHTML =
+        '<span style="color: #ef4444;">❌ Failed to generate timetable</span>';
     }
   }
 }
@@ -792,12 +845,18 @@ async function generateTimetable(params) {
   try {
     // Filter subjects for the selected course, department, and semester
     const filteredSubjects = subjects.filter(
-      (s) => s.course === course && s.department === department && s.semester === semester
+      (s) =>
+        s.course === course &&
+        s.department === department &&
+        s.semester === semester
     );
 
     console.log("🔍 Filtered subjects:", {
       count: filteredSubjects.length,
-      subjects: filteredSubjects.map((s) => ({ name: s.name, faculty: s.assignedFaculty })),
+      subjects: filteredSubjects.map((s) => ({
+        name: s.name,
+        faculty: s.assignedFaculty,
+      })),
     });
 
     if (filteredSubjects.length === 0) {
@@ -828,7 +887,11 @@ async function generateTimetable(params) {
     }
 
     // Generate the actual timetable
-    const timetableResult = generateOptimizedSchedule(filteredSubjects, availableRooms, timeSlots);
+    const timetableResult = generateOptimizedSchedule(
+      filteredSubjects,
+      availableRooms,
+      timeSlots
+    );
 
     if (timetableResult.success) {
       // Save the generated timetable to database
@@ -916,7 +979,10 @@ function generateOptimizedSchedule(subjects, availableRooms, timeSlots) {
       lecturesScheduled: 0,
       labsScheduled: 0,
       totalLectures: subject.lectureHours,
-      totalLabs: subject.labHours > 0 && labDuration > 0 ? Math.ceil(subject.labHours / labDuration) : 0, // Only calculate if both labHours and labDuration > 0
+      totalLabs:
+        subject.labHours > 0 && labDuration > 0
+          ? Math.ceil(subject.labHours / labDuration)
+          : 0, // Only calculate if both labHours and labDuration > 0
       labDuration: labDuration, // Store lab duration for later use
     };
   });
@@ -944,10 +1010,14 @@ function generateOptimizedSchedule(subjects, availableRooms, timeSlots) {
   }
 
   // Sort subjects by priority (more hours = higher priority) but add randomization
-  const sortedSubjects = [...subjects].sort((a, b) => b.totalHours - a.totalHours);
+  const sortedSubjects = [...subjects].sort(
+    (a, b) => b.totalHours - a.totalHours
+  );
 
   // First pass: Schedule labs (they have more constraints) with randomization
-  const labSubjects = shuffleArray(sortedSubjects.filter((s) => s.labHours > 0 && s.labDuration > 0));
+  const labSubjects = shuffleArray(
+    sortedSubjects.filter((s) => s.labHours > 0 && s.labDuration > 0)
+  );
 
   for (const subject of labSubjects) {
     const labDuration = subject.labDuration || 2; // Default to 2 hours
@@ -966,7 +1036,11 @@ function generateOptimizedSchedule(subjects, availableRooms, timeSlots) {
         }
 
         // Don't schedule lab as first slot of the day
-        for (let slotIndex = 1; slotIndex <= timeSlots.length - labDuration; slotIndex++) {
+        for (
+          let slotIndex = 1;
+          slotIndex <= timeSlots.length - labDuration;
+          slotIndex++
+        ) {
           // Get consecutive slots needed for lab duration
           const requiredSlots = [];
           let allSlotsFree = true;
@@ -995,7 +1069,9 @@ function generateOptimizedSchedule(subjects, availableRooms, timeSlots) {
             // Find suitable room (preferably lab)
             const suitableRoom =
               availableRooms.find(
-                (room) => room.type.toLowerCase().includes("lab") || room.type.toLowerCase().includes("computer")
+                (room) =>
+                  room.type.toLowerCase().includes("lab") ||
+                  room.type.toLowerCase().includes("computer")
               ) || availableRooms[0];
 
             if (suitableRoom) {
@@ -1013,7 +1089,12 @@ function generateOptimizedSchedule(subjects, availableRooms, timeSlots) {
 
               // Place in all required slots
               requiredSlots.forEach((slot, index) => {
-                const slotPosition = index === 0 ? "first" : index === requiredSlots.length - 1 ? "last" : "middle";
+                const slotPosition =
+                  index === 0
+                    ? "first"
+                    : index === requiredSlots.length - 1
+                    ? "last"
+                    : "middle";
                 timetable[day][slot.id] = { ...labSession, slotPosition };
 
                 // Mark resources as used
@@ -1065,9 +1146,14 @@ function generateOptimizedSchedule(subjects, availableRooms, timeSlots) {
     // For each subject that needs more lectures
     for (const subject of pendingSubjects) {
       const scheduled = subjectScheduled[subject.id];
-      const lecturesToSchedule = scheduled.totalLectures - scheduled.lecturesScheduled;
+      const lecturesToSchedule =
+        scheduled.totalLectures - scheduled.lecturesScheduled;
 
-      for (let lectureIndex = 0; lectureIndex < lecturesToSchedule; lectureIndex++) {
+      for (
+        let lectureIndex = 0;
+        lectureIndex < lecturesToSchedule;
+        lectureIndex++
+      ) {
         let lectureScheduled = false;
 
         // Randomize day order for better distribution
@@ -1083,7 +1169,9 @@ function generateOptimizedSchedule(subjects, availableRooms, timeSlots) {
           }
 
           // Randomize slot order within the day
-          const randomizedSlots = shuffleArray([...Array(timeSlots.length).keys()]);
+          const randomizedSlots = shuffleArray([
+            ...Array(timeSlots.length).keys(),
+          ]);
 
           for (const slotIndex of randomizedSlots) {
             const slot = timeSlots[slotIndex];
@@ -1108,16 +1196,26 @@ function generateOptimizedSchedule(subjects, availableRooms, timeSlots) {
               // Find suitable room
               const suitableRoom =
                 availableRooms.find(
-                  (room) => room.type.toLowerCase().includes("lecture") || room.type.toLowerCase().includes("hall")
+                  (room) =>
+                    room.type.toLowerCase().includes("lecture") ||
+                    room.type.toLowerCase().includes("hall")
                 ) || availableRooms[0];
 
               if (suitableRoom) {
                 // Check for back-to-back lectures of same subject
-                const prevSlot = slotIndex > 0 ? timeSlots[slotIndex - 1] : null;
-                const nextSlot = slotIndex < timeSlots.length - 1 ? timeSlots[slotIndex + 1] : null;
+                const prevSlot =
+                  slotIndex > 0 ? timeSlots[slotIndex - 1] : null;
+                const nextSlot =
+                  slotIndex < timeSlots.length - 1
+                    ? timeSlots[slotIndex + 1]
+                    : null;
 
-                const prevSession = prevSlot ? timetable[day][prevSlot.id] : null;
-                const nextSession = nextSlot ? timetable[day][nextSlot.id] : null;
+                const prevSession = prevSlot
+                  ? timetable[day][prevSlot.id]
+                  : null;
+                const nextSession = nextSlot
+                  ? timetable[day][nextSlot.id]
+                  : null;
 
                 const isBackToBack =
                   (prevSession && prevSession.subject === subject.name) ||
@@ -1159,7 +1257,9 @@ function generateOptimizedSchedule(subjects, availableRooms, timeSlots) {
         // If we couldn't schedule this lecture, try in next pass
         if (!lectureScheduled && pass === maxPasses) {
           console.log(
-            `⚠️ Could not schedule lecture ${lectureIndex + 1} for "${subject.name}" even after ${maxPasses} passes`
+            `⚠️ Could not schedule lecture ${lectureIndex + 1} for "${
+              subject.name
+            }" even after ${maxPasses} passes`
           );
           return {
             success: false,
@@ -1180,7 +1280,10 @@ function generateOptimizedSchedule(subjects, availableRooms, timeSlots) {
   // Validation: Check if all subjects are properly scheduled
   for (const subject of subjects) {
     const scheduled = subjectScheduled[subject.id];
-    if (scheduled.lecturesScheduled < scheduled.totalLectures || scheduled.labsScheduled < scheduled.totalLabs) {
+    if (
+      scheduled.lecturesScheduled < scheduled.totalLectures ||
+      scheduled.labsScheduled < scheduled.totalLabs
+    ) {
       return {
         success: false,
         error: `Incomplete scheduling for "${subject.name}". Required: ${scheduled.totalLectures} lectures, ${scheduled.totalLabs} labs. Scheduled: ${scheduled.lecturesScheduled} lectures, ${scheduled.labsScheduled} labs.`,
@@ -1231,7 +1334,9 @@ function displayGeneratedTimetable(timetableData, params) {
         <thead>
           <tr>
             <th class="time-header">Time</th>
-            ${workingDays.map((day) => `<th class="day-header">${day}</th>`).join("")}
+            ${workingDays
+              .map((day) => `<th class="day-header">${day}</th>`)
+              .join("")}
           </tr>
         </thead>
         <tbody>
@@ -1257,8 +1362,12 @@ function displayGeneratedTimetable(timetableData, params) {
               return "";
             }
 
-            const rowspan = session.duration > 1 ? `rowspan="${session.duration}"` : "";
-            const sessionClass = session.type.toLowerCase() === "lecture" ? "lecture-session" : "lab-session";
+            const rowspan =
+              session.duration > 1 ? `rowspan="${session.duration}"` : "";
+            const sessionClass =
+              session.type.toLowerCase() === "lecture"
+                ? "lecture-session"
+                : "lab-session";
 
             return `
           <td class="session-cell ${sessionClass}" ${rowspan}>
@@ -1268,7 +1377,11 @@ function displayGeneratedTimetable(timetableData, params) {
             <div class="session-faculty">👨‍🏫 ${session.faculty}</div>
             <div class="session-room">🏢 ${session.room}</div>
                         <div class="session-type">${session.type}</div>
-                        ${session.duration > 1 ? `<div class="session-duration">${session.duration}h</div>` : ""}
+                        ${
+                          session.duration > 1
+                            ? `<div class="session-duration">${session.duration}h</div>`
+                            : ""
+                        }
                       </div>
                     </div>
                   </td>
@@ -1309,7 +1422,8 @@ function displayGeneratedTimetable(timetableData, params) {
   // Show subject summary section
   const subjectSummary = document.getElementById("subject-summary");
   if (subjectSummary && subjectSummaryHTML) {
-    document.getElementById("subject-stats-grid").innerHTML = subjectSummaryHTML;
+    document.getElementById("subject-stats-grid").innerHTML =
+      subjectSummaryHTML;
     subjectSummary.style.display = "block";
   }
 
@@ -1381,7 +1495,11 @@ async function deleteTimetable() {
     return;
   }
 
-  if (!confirm("Are you sure you want to delete this timetable? This will clear the display.")) {
+  if (
+    !confirm(
+      "Are you sure you want to delete this timetable? This will clear the display."
+    )
+  ) {
     return;
   }
 
@@ -1461,8 +1579,12 @@ async function renderSavedTimetables() {
               ${t.course} • ${t.department} • ${t.semester}
             </div>
             <div class="saved-timetable-meta">
-              <span>${new Date(t.savedAt || t.generatedAt || Date.now()).toLocaleString()}</span>
-              <button class="small-btn danger" onclick="deleteSavedTimetable('${t.id}')">Delete</button>
+              <span>${new Date(
+                t.savedAt || t.generatedAt || Date.now()
+              ).toLocaleString()}</span>
+              <button class="small-btn danger" onclick="deleteSavedTimetable('${
+                t.id
+              }')">Delete</button>
             </div>
           </div>
           <div class="saved-timetable-body">
@@ -1494,7 +1616,9 @@ function renderMiniTableGrid(timetable) {
 async function deleteSavedTimetable(id) {
   if (!confirm("Delete this saved timetable?")) return;
   try {
-    const res = await fetch(`${API_BASE}/api/timetables/${id}`, { method: "DELETE" });
+    const res = await fetch(`${API_BASE}/api/timetables/${id}`, {
+      method: "DELETE",
+    });
     if (!res.ok) throw new Error("Failed to delete saved timetable");
     await renderSavedTimetables();
     showToast("Saved timetable deleted", "success");
@@ -1559,7 +1683,10 @@ function updateTimetableActionButtons(isSaved, timetableId = null) {
  */
 function generateSubjectSummary(params) {
   const filteredSubjects = subjects.filter(
-    (s) => s.course === params.course && s.department === params.department && s.semester === params.semester
+    (s) =>
+      s.course === params.course &&
+      s.department === params.department &&
+      s.semester === params.semester
   );
 
   return filteredSubjects
@@ -1612,7 +1739,14 @@ async function saveTimetableToDatabase(timetableData) {
  * Validate subject data
  */
 function validateSubjectData(data) {
-  if (!data.name || !data.code || !data.course || !data.department || !data.semester || !data.assignedFaculty) {
+  if (
+    !data.name ||
+    !data.code ||
+    !data.course ||
+    !data.department ||
+    !data.semester ||
+    !data.assignedFaculty
+  ) {
     showToast("Please fill in all required fields", "error");
     return false;
   }
@@ -1629,7 +1763,10 @@ function validateSubjectData(data) {
   }
 
   if (data.labHours > 0 && data.labDuration === 0) {
-    showToast("Lab duration must be specified when there are lab hours", "error");
+    showToast(
+      "Lab duration must be specified when there are lab hours",
+      "error"
+    );
     return false;
   }
 
@@ -1719,7 +1856,7 @@ function validateTimetableParams(params) {
  * Validate department data
  */
 function validateDepartmentData(data) {
-  if (!data.name || typeof data.name !== 'string' || data.name.trim() === '') {
+  if (!data.name || typeof data.name !== "string" || data.name.trim() === "") {
     showToast("Please enter a department name", "error");
     return false;
   }
@@ -1825,7 +1962,11 @@ async function deleteRoom(roomId) {
  * Delete department
  */
 async function deleteDepartment(index) {
-  if (!confirm("Are you sure you want to delete this department? This action cannot be undone if the department is being used by existing faculty or subjects.")) {
+  if (
+    !confirm(
+      "Are you sure you want to delete this department? This action cannot be undone if the department is being used by existing faculty or subjects."
+    )
+  ) {
     return;
   }
 
@@ -1848,7 +1989,10 @@ async function deleteDepartment(index) {
     }
   } catch (error) {
     console.error("Error deleting department:", error);
-    showToast(error.message || "Failed to delete department. Please try again.", "error");
+    showToast(
+      error.message || "Failed to delete department. Please try again.",
+      "error"
+    );
   }
 }
 
@@ -1874,13 +2018,17 @@ function editSubject(subjectId) {
     form.querySelector('[name="subjectName"]').value = subject.name || "";
     form.querySelector('[name="subjectCode"]').value = subject.code || "";
     form.querySelector('[name="subjectCourse"]').value = subject.course || "";
-    form.querySelector('[name="subjectDepartment"]').value = subject.department || "";
-    form.querySelector('[name="lectureHours"]').value = subject.lectureHours || 0;
+    form.querySelector('[name="subjectDepartment"]').value =
+      subject.department || "";
+    form.querySelector('[name="lectureHours"]').value =
+      subject.lectureHours || 0;
     form.querySelector('[name="labHours"]').value = subject.labHours || 0;
     form.querySelector('[name="labDuration"]').value = subject.labDuration || 0;
     form.querySelector('[name="totalHours"]').value = subject.totalHours || 0;
-    form.querySelector('[name="assignedFaculty"]').value = subject.assignedFaculty || "";
-    form.querySelector('[name="subjectSemester"]').value = subject.semester || "";
+    form.querySelector('[name="assignedFaculty"]').value =
+      subject.assignedFaculty || "";
+    form.querySelector('[name="subjectSemester"]').value =
+      subject.semester || "";
 
     // Change form to edit mode
     form.dataset.editId = subjectId;
@@ -1909,9 +2057,12 @@ function editFaculty(facultyId) {
   const form = document.getElementById("facultyForm");
   if (form) {
     form.querySelector('[name="facultyName"]').value = facultyMember.name || "";
-    form.querySelector('[name="facultySpecialization"]').value = facultyMember.specialization || "";
-    form.querySelector('[name="facultyDepartment"]').value = facultyMember.department || "";
-    form.querySelector('[name="facultyEmail"]').value = facultyMember.email || "";
+    form.querySelector('[name="facultySpecialization"]').value =
+      facultyMember.specialization || "";
+    form.querySelector('[name="facultyDepartment"]').value =
+      facultyMember.department || "";
+    form.querySelector('[name="facultyEmail"]').value =
+      facultyMember.email || "";
 
     // Change form to edit mode
     form.dataset.editId = facultyId;
