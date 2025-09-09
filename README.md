@@ -47,12 +47,18 @@ A comprehensive, intelligent timetable generation system with advanced schedulin
 
 ### Installation
 
-1. **Clone or Download** the project to your local machine
+1. **Clone the Repository**
+
+   ```bash
+   git clone https://github.com/TirthDadhaniya/Timetable-Generator.git
+   cd Timetable-Generator
+   ```
+
+   Or download the project to your local machine
 
 2. **Install Dependencies**
 
    ```bash
-   cd "Time Table Generator Final - Copy"
    npm install
    ```
 
@@ -286,7 +292,7 @@ The timetable generation uses a sophisticated constraint-satisfaction approach:
 ## 📁 Project Structure
 
 ```
-📦 Time Table Generator/
+📦 Timetable-Generator/
 ├── 📄 server.js              # Express.js backend server
 ├── 📄 package.json           # Node.js dependencies & scripts
 ├── 📄 database.json          # Persistent data storage
@@ -295,13 +301,14 @@ The timetable generation uses a sophisticated constraint-satisfaction approach:
 ├── 📄 script.js              # UI interactions & statistics
 ├── 📄 style.css              # Responsive styling & animations
 ├── 📄 README.md              # This documentation
-├── 📄 PROJECT_DOCUMENTATION.md # Technical documentation
-├── 📁 node_modules/          # Installed dependencies
+├── 📄 .gitignore             # Git ignore rules
+├── 📁 node_modules/          # Installed dependencies (after npm install)
 └── 📁 res/                   # SVG icons & assets
     ├── 🗑️ delete.svg         # Delete button icon
     ├── ✏️ edit.svg           # Edit button icon
     ├── 👨‍🏫 faculty.svg        # Faculty statistics icon
-    ├── 📚 subject.svg         # Subject statistics icon
+    ├── � save.svg           # Save button icon
+    ├── �📚 subject.svg         # Subject statistics icon
     └── 📅 timetable.svg       # Timetable statistics icon
 ```
 
@@ -515,7 +522,8 @@ npm start
 
 ## 📄 License & Credits
 
-**Author**: Tirth  
+**Author**: Tirth Dadhaniya  
+**GitHub**: [TirthDadhaniya/Timetable-Generator](https://github.com/TirthDadhaniya/Timetable-Generator)  
 **Version**: 2.0 (Advanced Edition)  
 **License**: MIT License  
 **Node.js**: Backend server framework  
