@@ -888,6 +888,11 @@ body {
     line-height: 1.5;
 }
 
+.placeholder-content .btn-container {
+  display: flex;
+  justify-content: center;
+}
+
 .placeholder-content .btn {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
@@ -910,6 +915,10 @@ body {
 /* Timetable Section Styling */
 #dynamic-timetable {
     margin-top: 30px;
+}
+#timetableGenStatus {
+  text-align: center;
+  margin-top: 20px !important;
 }
 
 .section-title {
