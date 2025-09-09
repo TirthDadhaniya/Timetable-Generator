@@ -70,6 +70,7 @@ async function initializeTimetableSystem() {
     renderSubjects();
     renderFaculty();
     renderRooms();
+    renderDepartments();
     await renderSavedTimetables();
     setupFormHandlers();
 
@@ -300,6 +301,37 @@ function renderRooms() {
 }
 
 /**
+ * Render departments list
+ */
+function renderDepartments() {
+  const departmentList = document.getElementById("departmentList");
+  if (!departmentList) return;
+
+  if (departments.length === 0) {
+    departmentList.innerHTML = '<p class="empty-state">No departments added yet. Add your first department above.</p>';
+    return;
+  }
+
+  departmentList.innerHTML = departments
+    .map(
+      (department, index) => `
+    <div class="department-card" data-index="${index}">
+      <div class="department-card-content">
+          <div class="department-card-info">
+            <div class="department-card-name">${department}</div>
+          </div>
+          <div class="department-card-actions">
+            <button onclick="editDepartment(${index})" title="Edit" class="card-action-btn"><img src="res/edit.svg" alt="Edit"></button>
+            <button onclick="deleteDepartment(${index})" title="Delete" class="card-action-btn delete-btn"><img src="res/delete.svg" alt="Delete"></button>
+          </div>
+        </div>
+    </div>
+  `
+    )
+    .join("");
+}
+
+/**
  * ========================================
  * FORM HANDLING FUNCTIONS
  * ========================================
@@ -325,6 +357,12 @@ function setupFormHandlers() {
   const roomForm = document.getElementById("roomForm");
   if (roomForm) {
     roomForm.addEventListener("submit", handleRoomFormSubmission);
+  }
+
+  // Department form
+  const departmentForm = document.getElementById("departmentForm");
+  if (departmentForm) {
+    departmentForm.addEventListener("submit", handleDepartmentFormSubmission);
   }
 
   // Timetable generation form
@@ -601,6 +639,82 @@ async function handleRoomFormSubmission(event) {
   } catch (error) {
     console.error(`Error ${isEdit ? "updating" : "adding"} room:`, error);
     showToast(`Failed to ${isEdit ? "update" : "add"} room. Please try again.`, "error");
+  }
+}
+
+/**
+ * Handle department form submission
+ */
+async function handleDepartmentFormSubmission(event) {
+  event.preventDefault();
+
+  const formData = new FormData(event.target);
+  const departmentData = {
+    name: formData.get("departmentName"),
+  };
+
+  // Validation
+  if (!validateDepartmentData(departmentData)) {
+    return;
+  }
+
+  // Check if this is an edit operation
+  const editIndex = event.target.dataset.editIndex;
+  let isEdit = editIndex !== undefined;
+
+  try {
+    let url, method;
+    
+    if (isEdit) {
+      url = `${API_BASE}/api/departments/${editIndex}`;
+      method = "PUT";
+    } else {
+      url = `${API_BASE}/api/departments`;
+      method = "POST";
+    }
+
+    const response = await fetch(url, {
+      method: method,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(departmentData),
+    });
+
+    if (response.ok) {
+      const result = await response.json();
+
+      if (isEdit) {
+        // Update existing department
+        departments[parseInt(editIndex)] = result.newName;
+        showToast("Department updated successfully!", "success");
+
+        // Reset form to add mode
+        delete event.target.dataset.editIndex;
+        const submitBtn = event.target.querySelector('button[type="submit"]');
+        if (submitBtn) {
+          submitBtn.textContent = "Add Department";
+        }
+      } else {
+        // Add new department
+        departments.push(result.name);
+        showToast("Department added successfully!", "success");
+      }
+
+      renderDepartments();
+      populateAllDropdowns(); // Refresh department dropdowns everywhere
+      event.target.reset();
+
+      if (typeof updateStatistics === "function") {
+        updateStatistics();
+      }
+    } else {
+      const errorData = await response.json();
+      throw new Error(errorData.error || `Failed to ${isEdit ? "update" : "add"} department`);
+    }
+  } catch (error) {
+    console.error(`Error ${isEdit ? "updating" : "adding"} department:`, error);
+    showToast(error.message || `Failed to ${isEdit ? "update" : "add"} department. Please try again.`, "error");
   }
 }
 
@@ -1602,6 +1716,18 @@ function validateTimetableParams(params) {
 }
 
 /**
+ * Validate department data
+ */
+function validateDepartmentData(data) {
+  if (!data.name || typeof data.name !== 'string' || data.name.trim() === '') {
+    showToast("Please enter a department name", "error");
+    return false;
+  }
+
+  return true;
+}
+
+/**
  * ========================================
  * CRUD OPERATIONS
  * ========================================
@@ -1692,6 +1818,37 @@ async function deleteRoom(roomId) {
   } catch (error) {
     console.error("Error deleting room:", error);
     showToast("Failed to delete room. Please try again.", "error");
+  }
+}
+
+/**
+ * Delete department
+ */
+async function deleteDepartment(index) {
+  if (!confirm("Are you sure you want to delete this department? This action cannot be undone if the department is being used by existing faculty or subjects.")) {
+    return;
+  }
+
+  try {
+    const response = await fetch(`${API_BASE}/api/departments/${index}`, {
+      method: "DELETE",
+    });
+
+    if (response.ok) {
+      departments.splice(index, 1);
+      renderDepartments();
+      populateAllDropdowns(); // Refresh department dropdowns everywhere
+      showToast("Department deleted successfully!", "success");
+      if (typeof updateStatistics === "function") {
+        updateStatistics();
+      }
+    } else {
+      const errorData = await response.json();
+      throw new Error(errorData.error || "Failed to delete department");
+    }
+  } catch (error) {
+    console.error("Error deleting department:", error);
+    showToast(error.message || "Failed to delete department. Please try again.", "error");
   }
 }
 
@@ -1800,6 +1957,34 @@ function editRoom(roomId) {
     showToast("Edit mode activated. Update the fields and submit.", "info");
   }
 }
+
+/**
+ * Edit department
+ */
+function editDepartment(index) {
+  const department = departments[index];
+  if (!department) {
+    showToast("Department not found!", "error");
+    return;
+  }
+
+  // Populate the form with existing data
+  const form = document.getElementById("departmentForm");
+  if (form) {
+    form.querySelector('[name="departmentName"]').value = department;
+
+    // Change form to edit mode
+    form.dataset.editIndex = index;
+    const submitBtn = form.querySelector('button[type="submit"]');
+    if (submitBtn) {
+      submitBtn.textContent = "Update Department";
+    }
+
+    // Scroll to form
+    form.scrollIntoView({ behavior: "smooth" });
+    showToast("Edit mode activated. Update the fields and submit.", "info");
+  }
+}
 /**
  * ========================================
  * UTILITY FUNCTIONS
@@ -1888,9 +2073,11 @@ document.addEventListener("DOMContentLoaded", () => {
 window.deleteSubject = deleteSubject;
 window.deleteFaculty = deleteFaculty;
 window.deleteRoom = deleteRoom;
+window.deleteDepartment = deleteDepartment;
 window.editSubject = editSubject;
 window.editFaculty = editFaculty;
 window.editRoom = editRoom;
+window.editDepartment = editDepartment;
 window.scrollToGenerator = scrollToGenerator;
 window.getSubjects = getSubjects;
 window.getFaculty = getFaculty;
