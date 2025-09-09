@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Interactive Timetable Generator</title>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Header -->
+      <div class="header">
+        <h1>Interactive Timetable Generator</h1>
+        <p>Advanced Multi-Semester Scheduling System</p>
+      </div>
+
+      <!-- Statistics Cards -->
+      <div class="stats-overview">
+        <div class="stat-overview-card">
+          <div class="stat-header">
+            <span class="stat-label">Total Subjects</span>
+            <div class="stat-icon"><img src="res/subject.svg" alt="Subjects Icon" /></div>
+          </div>
+          <div class="stat-number" id="total-subjects-count">0</div>
+          <div class="stat-description">Active subjects in database</div>
+        </div>
+
+        <div class="stat-overview-card">
+          <div class="stat-header">
+            <span class="stat-label">Faculty Members</span>
+            <div class="stat-icon"><img src="res/faculty.svg" alt="Faculty Icon" /></div>
+          </div>
+          <div class="stat-number" id="total-faculty-count">0</div>
+          <div class="stat-description">Registered faculty</div>
+        </div>
+
+        <div class="stat-overview-card">
+          <div class="stat-header">
+            <span class="stat-label">Timetable Generated</span>
+            <div class="stat-icon"><img src="res/timetable.svg" alt="Timetable Icon" /></div>
+          </div>
+          <div class="stat-number" id="total-timetables-count">0</div>
+          <div class="stat-description">Generated timetables</div>
+        </div>
+      </div>
+
+      <!-- AI Timetable Generator Section -->
+      <div class="generator-panel">
+        <h2>Timetable Generator</h2>
+        <p>Automatically generate subjects, faculty, and optimized timetable.</p>
+        <form id="timetableGenForm" class="generator-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Course Name</label>
+              <select id="genCourse" required>
+                <option value="">Select course</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Department</label>
+              <select id="genDepartment" required>
+                <option value="">Select department</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Semester</label>
+              <select id="genSemester" required>
+                <option value="">Select semester</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Number of Students</label>
+              <input type="number" id="genStudents" placeholder="60" min="1" required />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>College Start Time</label>
+              <input type="time" id="collegeStartTime" value="09:00" required />
+            </div>
+            <div class="form-group">
+              <label>College End Time</label>
+              <input type="time" id="collegeEndTime" value="17:00" required />
+            </div>
+          </div>
+
+          <button type="submit" class="btn generate-btn">Generate Complete Timetable</button>
+          <div id="timetableGenStatus" style="margin-top: 8px; font-size: 0.95em; color: #555"></div>
+        </form>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <div class="tabs">
+        <button class="tab active" id="timetable-tab">Timetable</button>
+        <button class="tab" id="faculty-tab">Faculty</button>
+        <button class="tab" id="subjects-tab">Subjects</button>
+        <button class="tab" id="room-tab">Rooms</button>
+      </div>
+
+      <!-- Timetable Section -->
+      <div class="tab-content" id="timetable-content">
+        <h2 class="section-title" id="timetable-title">Generated Timetable</h2>
+
+        <!-- Dynamic Timetable Container -->
+        <div id="dynamic-timetable">
+          <div class="timetable-placeholder">
+            <div class="placeholder-content">
+              <h3>No Timetable Generated Yet</h3>
+              <p>Use the Timetable Generator above to create your schedule</p>
+              <button onclick="scrollToGenerator()" class="btn">Generate Timetable</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Subject Summary Section -->
+        <div id="subject-summary" style="display: none">
+          <h2 class="section-subtitle">Subject Summary</h2>
+          <div class="stats-grid" id="subject-stats-grid">
+            <!-- Dynamic subject stats will be populated here -->
+          </div>
+        </div>
+
+        <!-- Saved Timetables Section -->
+        <div id="saved-timetables-section" class="list-section" style="display: none; margin-top: 24px">
+          <h3>Saved Timetables</h3>
+          <div id="savedTimetablesList" class="saved-timetables-list"></div>
+        </div>
+      </div>
+
+      <!-- Faculty Section -->
+      <div class="tab-content hidden" id="faculty-content">
+        <form id="facultyForm" class="form-section">
+          <h2>Add New Faculty</h2>
+          <p>Add faculty members with their details and specialization.</p>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Faculty Name</label>
+              <input type="text" id="facultyName" name="facultyName" placeholder="John Smith" required />
+            </div>
+            <div class="form-group">
+              <label>Specialization</label>
+              <input
+                type="text"
+                id="facultySpecialization"
+                name="facultySpecialization"
+                placeholder="e.g., Data Structures, AI"
+                required
+              />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Department</label>
+              <select id="facultyDepartment" name="facultyDepartment" required>
+                <option value="">Select department</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Email</label>
+              <input
+                type="email"
+                id="facultyEmail"
+                name="facultyEmail"
+                placeholder="john.smith@university.edu"
+                required
+              />
+            </div>
+          </div>
+          <button type="submit" class="btn">Add Faculty</button>
+        </form>
+        <div class="list-section">
+          <h3>All Faculty</h3>
+          <div id="facultyList" class="faculty-list"></div>
+        </div>
+      </div>
+
+      <!-- Subjects Section -->
+      <div class="tab-content hidden" id="subjects-content">
+        <form id="subjectForm" class="form-section">
+          <h2>Add New Subject</h2>
+          <p>Configure subjects with their lecture and lab hour requirements</p>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Subject Name</label>
+              <input type="text" id="subjectName" name="subjectName" placeholder="e.g. Data Structures" required />
+            </div>
+            <div class="form-group">
+              <label>Subject Code</label>
+              <input type="text" id="subjectCode" name="subjectCode" placeholder="e.g. CS201" required />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Course/Program Name</label>
+              <select id="subjectCourse" name="subjectCourse" required>
+                <option value="">Select course</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Department</label>
+              <select id="subjectDepartment" name="subjectDepartment" required>
+                <option value="">Select department</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Lecture Hours</label>
+              <input type="number" id="lectureHours" name="lectureHours" placeholder="3" min="0" required />
+            </div>
+            <div class="form-group">
+              <label>Lab Hours</label>
+              <input type="number" id="labHours" name="labHours" placeholder="2" min="0" required />
+            </div>
+            <div class="form-group">
+              <label>Total Hours/Week</label>
+              <input type="number" id="totalHours" name="totalHours" placeholder="5" min="1" readonly />
+            </div>
+            <div class="form-group">
+              <label>Lab Duration (per session)</label>
+              <select id="labDuration" name="labDuration">
+                <option value="0">No Lab</option>
+                <option value="1">1 Hour</option>
+                <option value="2" selected>2 Hours</option>
+                <option value="3">3 Hours</option>
+                <option value="4">4 Hours</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Assigned Faculty</label>
+              <select id="assignedFaculty" name="assignedFaculty" required>
+                <option value="">Select faculty</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Semester</label>
+              <select id="subjectSemester" name="subjectSemester" required>
+                <option value="">Select semester</option>
+              </select>
+            </div>
+          </div>
+          <button type="submit" class="btn">Add Subject</button>
+        </form>
+        <div class="list-section">
+          <h3>All Subjects</h3>
+          <div id="subjectList" class="subject-list"></div>
+        </div>
+      </div>
+
+      <!-- Room Section -->
+      <div class="tab-content hidden" id="room-content">
+        <form id="roomForm" class="form-section">
+          <h2>Add New Room</h2>
+          <p>Add classroom and labs with their specifications</p>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Room Number</label>
+              <input type="text" id="roomNumber" name="roomNumber" placeholder="e.g., A101, Lab-201" required />
+            </div>
+            <div class="form-group">
+              <label>Room Type</label>
+              <select id="roomType" name="roomType" required>
+                <option value="">Select room type</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Building</label>
+              <input
+                type="text"
+                id="roomBuilding"
+                name="roomBuilding"
+                placeholder="e.g., Main Building, IT Block"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label>Floor</label>
+              <select id="roomFloor" name="roomFloor" required>
+                <option value="">Select floor</option>
+                <option value="Ground Floor">Ground Floor</option>
+                <option value="1st Floor">1st Floor</option>
+                <option value="2nd Floor">2nd Floor</option>
+                <option value="3rd Floor">3rd Floor</option>
+                <option value="4th Floor">4th Floor</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Capacity</label>
+              <input type="number" id="roomCapacity" name="roomCapacity" placeholder="e.g., 60" min="1" required />
+            </div>
+            <div class="form-group">
+              <label>Equipment (Optional)</label>
+              <input
+                type="text"
+                id="roomEquipment"
+                name="roomEquipment"
+                placeholder="e.g., Projector, AC, Lab Equipment"
+              />
+            </div>
+          </div>
+          <button type="submit" class="btn">Add Room</button>
+        </form>
+        <div class="list-section">
+          <h3>All Rooms</h3>
+          <div id="roomList" class="room-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="toast-container" aria-live="polite" aria-label="Notifications"></div>
+
+    <!-- JavaScript for Tab Functionality and Data Management -->
+    <script src="timetable.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
