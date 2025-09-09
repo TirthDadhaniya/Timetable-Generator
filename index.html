@@ -19,7 +19,9 @@
         <div class="stat-overview-card">
           <div class="stat-header">
             <span class="stat-label">Total Subjects</span>
-            <div class="stat-icon"><img src="res/subject.svg" alt="Subjects Icon" /></div>
+            <div class="stat-icon">
+              <img src="res/subject.svg" alt="Subjects Icon" />
+            </div>
           </div>
           <div class="stat-number" id="total-subjects-count">0</div>
           <div class="stat-description">Active subjects in database</div>
@@ -28,7 +30,9 @@
         <div class="stat-overview-card">
           <div class="stat-header">
             <span class="stat-label">Faculty Members</span>
-            <div class="stat-icon"><img src="res/faculty.svg" alt="Faculty Icon" /></div>
+            <div class="stat-icon">
+              <img src="res/faculty.svg" alt="Faculty Icon" />
+            </div>
           </div>
           <div class="stat-number" id="total-faculty-count">0</div>
           <div class="stat-description">Registered faculty</div>
@@ -37,7 +41,9 @@
         <div class="stat-overview-card">
           <div class="stat-header">
             <span class="stat-label">Timetable Generated</span>
-            <div class="stat-icon"><img src="res/timetable.svg" alt="Timetable Icon" /></div>
+            <div class="stat-icon">
+              <img src="res/timetable.svg" alt="Timetable Icon" />
+            </div>
           </div>
           <div class="stat-number" id="total-timetables-count">0</div>
           <div class="stat-description">Generated timetables</div>
@@ -47,7 +53,9 @@
       <!-- AI Timetable Generator Section -->
       <div class="generator-panel">
         <h2>Timetable Generator</h2>
-        <p>Automatically generate subjects, faculty, and optimized timetable.</p>
+        <p>
+          Automatically generate subjects, faculty, and optimized timetable.
+        </p>
         <form id="timetableGenForm" class="generator-form">
           <div class="form-row">
             <div class="form-group">
@@ -72,7 +80,12 @@
             </div>
             <div class="form-group">
               <label>Number of Students</label>
-              <input type="number" id="genStudents" placeholder="60" min="1" required />
+              <input
+                type="number"
+                id="genStudents"
+                placeholder="60"
+                min="1"
+                required />
             </div>
           </div>
           <div class="form-row">
@@ -86,8 +99,12 @@
             </div>
           </div>
 
-          <button type="submit" class="btn generate-btn">Generate Complete Timetable</button>
-          <div id="timetableGenStatus" style="margin-top: 8px; font-size: 0.95em; color: #555"></div>
+          <button type="submit" class="btn generate-btn">
+            Generate Complete Timetable
+          </button>
+          <div
+            id="timetableGenStatus"
+            style="margin-top: 8px; font-size: 0.95em; color: #555"></div>
         </form>
       </div>
 
@@ -109,7 +126,11 @@
             <div class="placeholder-content">
               <h3>No Timetable Generated Yet</h3>
               <p>Use the Timetable Generator above to create your schedule</p>
-              <button onclick="scrollToGenerator()" class="btn">Generate Timetable</button>
+              <div class="btn-container">
+                <button onclick="scrollToGenerator()" class="btn">
+                  Generate Timetable
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -123,7 +144,10 @@
         </div>
 
         <!-- Saved Timetables Section -->
-        <div id="saved-timetables-section" class="list-section" style="display: none; margin-top: 24px">
+        <div
+          id="saved-timetables-section"
+          class="list-section"
+          style="display: none; margin-top: 24px">
           <h3>Saved Timetables</h3>
           <div id="savedTimetablesList" class="saved-timetables-list"></div>
         </div>
@@ -137,7 +161,12 @@
           <div class="form-row">
             <div class="form-group">
               <label>Faculty Name</label>
-              <input type="text" id="facultyName" name="facultyName" placeholder="John Smith" required />
+              <input
+                type="text"
+                id="facultyName"
+                name="facultyName"
+                placeholder="John Smith"
+                required />
             </div>
             <div class="form-group">
               <label>Specialization</label>
@@ -146,8 +175,7 @@
                 id="facultySpecialization"
                 name="facultySpecialization"
                 placeholder="e.g., Data Structures, AI"
-                required
-              />
+                required />
             </div>
           </div>
           <div class="form-row">
@@ -164,8 +192,7 @@
                 id="facultyEmail"
                 name="facultyEmail"
                 placeholder="john.smith@university.edu"
-                required
-              />
+                required />
             </div>
           </div>
           <button type="submit" class="btn">Add Faculty</button>
@@ -184,11 +211,21 @@
           <div class="form-row">
             <div class="form-group">
               <label>Subject Name</label>
-              <input type="text" id="subjectName" name="subjectName" placeholder="e.g. Data Structures" required />
+              <input
+                type="text"
+                id="subjectName"
+                name="subjectName"
+                placeholder="e.g. Data Structures"
+                required />
             </div>
             <div class="form-group">
               <label>Subject Code</label>
-              <input type="text" id="subjectCode" name="subjectCode" placeholder="e.g. CS201" required />
+              <input
+                type="text"
+                id="subjectCode"
+                name="subjectCode"
+                placeholder="e.g. CS201"
+                required />
             </div>
           </div>
           <div class="form-row">
@@ -208,15 +245,33 @@
           <div class="form-row">
             <div class="form-group">
               <label>Lecture Hours</label>
-              <input type="number" id="lectureHours" name="lectureHours" placeholder="3" min="0" required />
+              <input
+                type="number"
+                id="lectureHours"
+                name="lectureHours"
+                placeholder="3"
+                min="0"
+                required />
             </div>
             <div class="form-group">
               <label>Lab Hours</label>
-              <input type="number" id="labHours" name="labHours" placeholder="2" min="0" required />
+              <input
+                type="number"
+                id="labHours"
+                name="labHours"
+                placeholder="2"
+                min="0"
+                required />
             </div>
             <div class="form-group">
               <label>Total Hours/Week</label>
-              <input type="number" id="totalHours" name="totalHours" placeholder="5" min="1" readonly />
+              <input
+                type="number"
+                id="totalHours"
+                name="totalHours"
+                placeholder="5"
+                min="1"
+                readonly />
             </div>
             <div class="form-group">
               <label>Lab Duration (per session)</label>
@@ -259,7 +314,12 @@
           <div class="form-row">
             <div class="form-group">
               <label>Room Number</label>
-              <input type="text" id="roomNumber" name="roomNumber" placeholder="e.g., A101, Lab-201" required />
+              <input
+                type="text"
+                id="roomNumber"
+                name="roomNumber"
+                placeholder="e.g., A101, Lab-201"
+                required />
             </div>
             <div class="form-group">
               <label>Room Type</label>
@@ -276,8 +336,7 @@
                 id="roomBuilding"
                 name="roomBuilding"
                 placeholder="e.g., Main Building, IT Block"
-                required
-              />
+                required />
             </div>
             <div class="form-group">
               <label>Floor</label>
@@ -294,7 +353,13 @@
           <div class="form-row">
             <div class="form-group">
               <label>Capacity</label>
-              <input type="number" id="roomCapacity" name="roomCapacity" placeholder="e.g., 60" min="1" required />
+              <input
+                type="number"
+                id="roomCapacity"
+                name="roomCapacity"
+                placeholder="e.g., 60"
+                min="1"
+                required />
             </div>
             <div class="form-group">
               <label>Equipment (Optional)</label>
@@ -302,8 +367,7 @@
                 type="text"
                 id="roomEquipment"
                 name="roomEquipment"
-                placeholder="e.g., Projector, AC, Lab Equipment"
-              />
+                placeholder="e.g., Projector, AC, Lab Equipment" />
             </div>
           </div>
           <button type="submit" class="btn">Add Room</button>
@@ -316,7 +380,11 @@
     </div>
 
     <!-- Toast Notification Container -->
-    <div id="toast-container" class="toast-container" aria-live="polite" aria-label="Notifications"></div>
+    <div
+      id="toast-container"
+      class="toast-container"
+      aria-live="polite"
+      aria-label="Notifications"></div>
 
     <!-- JavaScript for Tab Functionality and Data Management -->
     <script src="timetable.js"></script>
