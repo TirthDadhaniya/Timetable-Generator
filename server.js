@@ -300,6 +300,119 @@ app.put("/api/rooms/:id", (req, res) => {
 });
 
 // ===========================================
+// DEPARTMENTS API ROUTES
+// ===========================================
+
+// GET - Get all departments
+app.get("/api/departments", (req, res) => {
+  const database = readDatabase();
+  if (!database) {
+    return res.status(500).json({ error: "Failed to read database" });
+  }
+  res.json(database.departments || []);
+});
+
+// POST - Add new department
+app.post("/api/departments", (req, res) => {
+  const database = readDatabase();
+  if (!database) {
+    return res.status(500).json({ error: "Failed to read database" });
+  }
+
+  const { name } = req.body;
+  
+  if (!name || typeof name !== 'string' || name.trim() === '') {
+    return res.status(400).json({ error: "Department name is required" });
+  }
+
+  const trimmedName = name.trim();
+  
+  // Check if department already exists
+  if (database.departments.includes(trimmedName)) {
+    return res.status(400).json({ error: "Department already exists" });
+  }
+
+  database.departments.push(trimmedName);
+
+  if (writeDatabase(database)) {
+    res.json({ name: trimmedName });
+    console.log("✅ Department added:", trimmedName);
+  } else {
+    res.status(500).json({ error: "Failed to save department" });
+  }
+});
+
+// PUT - Update department
+app.put("/api/departments/:index", (req, res) => {
+  const database = readDatabase();
+  if (!database) {
+    return res.status(500).json({ error: "Failed to read database" });
+  }
+
+  const index = parseInt(req.params.index);
+  const { name } = req.body;
+
+  if (isNaN(index) || index < 0 || index >= database.departments.length) {
+    return res.status(404).json({ error: "Department not found" });
+  }
+
+  if (!name || typeof name !== 'string' || name.trim() === '') {
+    return res.status(400).json({ error: "Department name is required" });
+  }
+
+  const trimmedName = name.trim();
+  const oldName = database.departments[index];
+
+  // Check if new name already exists (except for current one)
+  if (database.departments.includes(trimmedName) && database.departments[index] !== trimmedName) {
+    return res.status(400).json({ error: "Department already exists" });
+  }
+
+  database.departments[index] = trimmedName;
+
+  if (writeDatabase(database)) {
+    res.json({ oldName, newName: trimmedName });
+    console.log("✏️ Department updated:", `${oldName} → ${trimmedName}`);
+  } else {
+    res.status(500).json({ error: "Failed to update department" });
+  }
+});
+
+// DELETE - Delete department
+app.delete("/api/departments/:index", (req, res) => {
+  const database = readDatabase();
+  if (!database) {
+    return res.status(500).json({ error: "Failed to read database" });
+  }
+
+  const index = parseInt(req.params.index);
+
+  if (isNaN(index) || index < 0 || index >= database.departments.length) {
+    return res.status(404).json({ error: "Department not found" });
+  }
+
+  // Check if department is being used by any faculty or subjects
+  const departmentName = database.departments[index];
+  const usedInFaculty = database.faculty.some(f => f.department === departmentName);
+  const usedInSubjects = database.subjects.some(s => s.department === departmentName);
+
+  if (usedInFaculty || usedInSubjects) {
+    return res.status(400).json({ 
+      error: "Cannot delete department. It is being used by existing faculty or subjects." 
+    });
+  }
+
+  const deleted = database.departments.splice(index, 1)[0];
+
+  if (writeDatabase(database)) {
+    res.json({ name: deleted });
+    console.log("🗑️ Department deleted:", deleted);
+  } else {
+    res.status(500).json({ error: "Failed to delete department" });
+  }
+});
+
+// ===========================================
 // TIMETABLE API ROUTES
 // ===========================================
 

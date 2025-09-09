@@ -103,6 +103,7 @@
         <button class="tab" id="faculty-tab">Faculty</button>
         <button class="tab" id="subjects-tab">Subjects</button>
         <button class="tab" id="room-tab">Rooms</button>
+        <button class="tab" id="departments-tab">Departments</button>
       </div>
 
       <!-- Timetable Section -->
@@ -319,6 +320,30 @@
         <div class="list-section">
           <h3>All Rooms</h3>
           <div id="roomList" class="room-list"></div>
+        </div>
+      </div>
+
+      <!-- Departments Section -->
+      <div class="tab-content hidden" id="departments-content">
+        <form id="departmentForm" class="form-section">
+          <h2>Add New Department</h2>
+          <p>Manage academic departments and branches</p>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Department Name</label>
+              <input
+                type="text"
+                id="departmentName"
+                name="departmentName"
+                placeholder="e.g., Computer Engineering, Information Technology"
+                required />
+            </div>
+          </div>
+          <button type="submit" class="btn">Add Department</button>
+        </form>
+        <div class="list-section">
+          <h3>All Departments</h3>
+          <div id="departmentList" class="department-list"></div>
         </div>
       </div>
     </div>
