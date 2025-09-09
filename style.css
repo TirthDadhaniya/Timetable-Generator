@@ -258,14 +258,15 @@ body {
 }
 
 .btn.generate-btn {
-    margin-top: 50px;
+    margin-top: 30px;
+    margin-bottom: 10px;
     width: 100%;
     max-width: 420px;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     display: block;
     margin-left: auto;
     margin-right: auto;
-    padding: 16px 30px;
+    padding: 16px 28px;
     font-size: 1.2rem;
     font-weight: 700;
     border-radius: 16px;
@@ -289,6 +290,12 @@ body {
     /* background: linear-gradient(135deg, #764ba2 0%, #667eea 100%); */
 }
 
+#timetableGenStatus {
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
 /* Tabs Section */
 .tabs {
     background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
@@ -299,7 +306,7 @@ body {
     flex-wrap: wrap;
     gap: 10px;
     padding: 1px;
-    border-radius: 14px;
+    border-radius: 18px;
 }
 
 .tab {
@@ -309,7 +316,7 @@ body {
     width: 100%;
     flex: 1 1 120px;
     border: none;
-    border-radius: 14px;
+    border-radius: 18px;
     cursor: pointer;
     font-weight: 500;
     transition: all 0.3s ease;
@@ -319,9 +326,8 @@ body {
 
 .tab.active {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    /* background-color: #fff; */
     color: white;
-    /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04); */
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
 }
 
 /* Timetable section */
