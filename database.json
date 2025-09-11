@@ -211,7 +211,323 @@
     "Auditorium"
   ],
   "generatedTimetables": [],
-  "savedTimetables": [],
+  "savedTimetables": [
+    {
+      "id": "1757612341650",
+      "course": "BTech",
+      "department": "Information Technology",
+      "semester": "Semester 7",
+      "students": 50,
+      "startTime": "09:00",
+      "endTime": "15:00",
+      "timetable": {
+        "Monday": {
+          "1": {
+            "subject": "Internet Of Things",
+            "code": "3171108",
+            "faculty": "Kavita Rathod",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "09:00",
+            "endTime": "10:00"
+          },
+          "2": {
+            "subject": "Wireless Communication",
+            "code": "3171608",
+            "faculty": "Heena Patel",
+            "room": "218",
+            "type": "Lab",
+            "duration": 2,
+            "startTime": "10:00",
+            "endTime": "12:00",
+            "slotPosition": "first"
+          },
+          "3": {
+            "subject": "Wireless Communication",
+            "code": "3171608",
+            "faculty": "Heena Patel",
+            "room": "218",
+            "type": "Lab",
+            "duration": 2,
+            "startTime": "10:00",
+            "endTime": "12:00",
+            "slotPosition": "last"
+          },
+          "4": null,
+          "5": {
+            "subject": "Applied Machine Learning",
+            "code": "3171617",
+            "faculty": "Smit Patel",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "13:00",
+            "endTime": "14:00"
+          },
+          "6": {
+            "subject": "Software Project Management",
+            "code": "3171609",
+            "faculty": "Ankita Mevada",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "14:00",
+            "endTime": "15:00"
+          }
+        },
+        "Tuesday": {
+          "1": {
+            "subject": "Wireless Communication",
+            "code": "3171608",
+            "faculty": "Heena Patel",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "09:00",
+            "endTime": "10:00"
+          },
+          "2": {
+            "subject": "Software Project Management",
+            "code": "3171609",
+            "faculty": "Ankita Mevada",
+            "room": "218",
+            "type": "Lab",
+            "duration": 2,
+            "startTime": "10:00",
+            "endTime": "12:00",
+            "slotPosition": "first"
+          },
+          "3": {
+            "subject": "Software Project Management",
+            "code": "3171609",
+            "faculty": "Ankita Mevada",
+            "room": "218",
+            "type": "Lab",
+            "duration": 2,
+            "startTime": "10:00",
+            "endTime": "12:00",
+            "slotPosition": "last"
+          },
+          "4": {
+            "subject": "Computer Vision",
+            "code": "3171614",
+            "faculty": "Nitesh Prajapati",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "12:00",
+            "endTime": "13:00"
+          },
+          "5": {
+            "subject": "Agile Development and UI/UX design",
+            "code": "3171610",
+            "faculty": "Kajal Chauhan",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "13:00",
+            "endTime": "14:00"
+          },
+          "6": {
+            "subject": "Internet Of Things",
+            "code": "3171108",
+            "faculty": "Kavita Rathod",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "14:00",
+            "endTime": "15:00"
+          }
+        },
+        "Wednesday": {
+          "1": {
+            "subject": "Computer Vision",
+            "code": "3171614",
+            "faculty": "Nitesh Prajapati",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "09:00",
+            "endTime": "10:00"
+          },
+          "2": {
+            "subject": "Internet Of Things",
+            "code": "3171108",
+            "faculty": "Kavita Rathod",
+            "room": "218",
+            "type": "Lab",
+            "duration": 2,
+            "startTime": "10:00",
+            "endTime": "12:00",
+            "slotPosition": "first"
+          },
+          "3": {
+            "subject": "Internet Of Things",
+            "code": "3171108",
+            "faculty": "Kavita Rathod",
+            "room": "218",
+            "type": "Lab",
+            "duration": 2,
+            "startTime": "10:00",
+            "endTime": "12:00",
+            "slotPosition": "last"
+          },
+          "4": {
+            "subject": "Agile Development and UI/UX design",
+            "code": "3171610",
+            "faculty": "Kajal Chauhan",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "12:00",
+            "endTime": "13:00"
+          },
+          "5": {
+            "subject": "Applied Machine Learning",
+            "code": "3171617",
+            "faculty": "Smit Patel",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "13:00",
+            "endTime": "14:00"
+          },
+          "6": {
+            "subject": "Wireless Communication",
+            "code": "3171608",
+            "faculty": "Heena Patel",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "14:00",
+            "endTime": "15:00"
+          }
+        },
+        "Thursday": {
+          "1": {
+            "subject": "Applied Machine Learning",
+            "code": "3171617",
+            "faculty": "Smit Patel",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "09:00",
+            "endTime": "10:00"
+          },
+          "2": {
+            "subject": "Computer Vision",
+            "code": "3171614",
+            "faculty": "Nitesh Prajapati",
+            "room": "218",
+            "type": "Lab",
+            "duration": 2,
+            "startTime": "10:00",
+            "endTime": "12:00",
+            "slotPosition": "first"
+          },
+          "3": {
+            "subject": "Computer Vision",
+            "code": "3171614",
+            "faculty": "Nitesh Prajapati",
+            "room": "218",
+            "type": "Lab",
+            "duration": 2,
+            "startTime": "10:00",
+            "endTime": "12:00",
+            "slotPosition": "last"
+          },
+          "4": {
+            "subject": "Agile Development and UI/UX design",
+            "code": "3171610",
+            "faculty": "Kajal Chauhan",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "12:00",
+            "endTime": "13:00"
+          },
+          "5": {
+            "subject": "Software Project Management",
+            "code": "3171609",
+            "faculty": "Ankita Mevada",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "13:00",
+            "endTime": "14:00"
+          },
+          "6": null
+        },
+        "Friday": {
+          "1": {
+            "subject": "Internet Of Things",
+            "code": "3171108",
+            "faculty": "Kavita Rathod",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "09:00",
+            "endTime": "10:00"
+          },
+          "2": {
+            "subject": "Applied Machine Learning",
+            "code": "3171617",
+            "faculty": "Smit Patel",
+            "room": "218",
+            "type": "Lab",
+            "duration": 2,
+            "startTime": "10:00",
+            "endTime": "12:00",
+            "slotPosition": "first"
+          },
+          "3": {
+            "subject": "Applied Machine Learning",
+            "code": "3171617",
+            "faculty": "Smit Patel",
+            "room": "218",
+            "type": "Lab",
+            "duration": 2,
+            "startTime": "10:00",
+            "endTime": "12:00",
+            "slotPosition": "last"
+          },
+          "4": {
+            "subject": "Software Project Management",
+            "code": "3171609",
+            "faculty": "Ankita Mevada",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "12:00",
+            "endTime": "13:00"
+          },
+          "5": {
+            "subject": "Computer Vision",
+            "code": "3171614",
+            "faculty": "Nitesh Prajapati",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "13:00",
+            "endTime": "14:00"
+          },
+          "6": {
+            "subject": "Wireless Communication",
+            "code": "3171608",
+            "faculty": "Heena Patel",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "14:00",
+            "endTime": "15:00"
+          }
+        }
+      },
+      "generatedAt": "2025-09-11T17:39:01.644Z",
+      "savedAt": "2025-09-11T17:39:01.650Z"
+    }
+  ],
   "settings": {
     "defaultCollegeStartTime": "09:00",
     "defaultCollegeEndTime": "17:00",
