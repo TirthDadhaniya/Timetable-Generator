@@ -1225,7 +1225,9 @@ function displayGeneratedTimetable(timetableData, params) {
         <p><strong>Department:</strong> ${params.department}</p>
         <p><strong>Semester:</strong> ${params.semester}</p>
         <p><strong>Students:</strong> ${params.students}</p>
-        <p><strong>Timing:</strong> ${params.startTime} - ${params.endTime}</p>
+        <p><strong>Timing:</strong> ${convertTo12HourFormat(params.startTime)} - ${convertTo12HourFormat(
+    params.endTime
+  )}</p>
         <p><strong>Generated:</strong> ${new Date().toLocaleDateString()}</p>
       </div>
     </div>
@@ -1245,8 +1247,8 @@ function displayGeneratedTimetable(timetableData, params) {
             <tr class="time-row">
               <td class="time-cell">
                 <div class="time-slot">
-                  <span class="start-time">${slot.startTime} -</span>
-                  <span class="end-time">${slot.endTime}</span>
+                  <span class="start-time">${convertTo12HourFormat(slot.startTime)} -</span>
+                  <span class="end-time">${convertTo12HourFormat(slot.endTime)}</span>
                 </div>
               </td>
         ${workingDays
@@ -1304,17 +1306,7 @@ function displayGeneratedTimetable(timetableData, params) {
     params,
   };
 
-  // Show subject summary
-  const subjectSummaryHTML = generateSubjectSummary(params);
-
   dynamicTimetable.innerHTML = timetableHTML;
-
-  // Show subject summary section
-  const subjectSummary = document.getElementById("subject-summary");
-  if (subjectSummary && subjectSummaryHTML) {
-    document.getElementById("subject-stats-grid").innerHTML = subjectSummaryHTML;
-    subjectSummary.style.display = "block";
-  }
 
   // Smooth scroll the generated timetable into view
   setTimeout(() => {
@@ -1366,6 +1358,17 @@ async function saveTimetable() {
       lastSavedTimetableId = savedTimetable.id;
       await renderSavedTimetables();
       scrollToSavedTimetable(savedTimetable.id);
+
+      // Update local database with the new timetable
+      if (!database.savedTimetables) {
+        database.savedTimetables = [];
+      }
+      database.savedTimetables.push(savedTimetable);
+
+      // Update statistics count
+      if (typeof updateStatistics === "function") {
+        updateStatistics();
+      }
     } else {
       throw new Error("Failed to save timetable");
     }
@@ -1389,26 +1392,33 @@ async function deleteTimetable() {
   }
 
   try {
-    // Clear the timetable display
+    // Clear the timetable display and restore placeholder
     const dynamicTimetable = document.getElementById("dynamic-timetable");
     const timetableTitle = document.getElementById("timetable-title");
-    const subjectSummary = document.getElementById("subject-summary");
 
     if (dynamicTimetable) {
-      dynamicTimetable.innerHTML =
-        '<p class="empty-state">No timetable generated yet. Use the generator above to create a new timetable.</p>';
+      dynamicTimetable.innerHTML = `
+        <div class="timetable-placeholder">
+          <div class="placeholder-content">
+            <h3>No Timetable Generated Yet</h3>
+            <p>Use the Timetable Generator above to create your schedule</p>
+            <div class="btn-container">
+              <button onclick="scrollToGenerator()" class="btn">Generate Timetable</button>
+            </div>
+          </div>
+        </div>
+      `;
     }
 
     if (timetableTitle) {
       timetableTitle.textContent = "Generated Timetable";
     }
 
-    if (subjectSummary) {
-      subjectSummary.style.display = "none";
-    }
-
     // Clear the current timetable data
     currentGeneratedTimetable = null;
+
+    // Re-evaluate saved timetables display after deleting generated timetable
+    await renderSavedTimetables();
 
     showToast("Timetable deleted successfully!", "success");
 
@@ -1430,15 +1440,35 @@ async function renderSavedTimetables() {
 
     const section = document.getElementById("saved-timetables-section");
     const list = document.getElementById("savedTimetablesList");
+    const placeholder = document.querySelector(".timetable-placeholder");
+    const timetableTitle = document.getElementById("timetable-title");
+    const savedTimetablesH3 = document.querySelector("#saved-timetables-section h3");
+
     if (!section || !list) return;
 
     if (!saved || saved.length === 0) {
+      // No saved timetables - show placeholder, hide saved section
       section.style.display = "none";
+      if (placeholder) {
+        placeholder.classList.remove("hidden");
+        // Ensure CSS controls display (grid) instead of inline styles
+        placeholder.style.removeProperty("display");
+      }
+      if (timetableTitle) timetableTitle.textContent = "Generated Timetable";
+      if (savedTimetablesH3) savedTimetablesH3.style.display = "block";
       list.innerHTML = "";
       return;
     }
 
-    // Sort by Course > Department > Semester number
+    // Has saved timetables - hide placeholder, show saved section, hide redundant h3
+    if (placeholder) {
+      placeholder.classList.add("hidden");
+      // Clear any inline display so CSS can govern when shown again
+      placeholder.style.removeProperty("display");
+    }
+    if (timetableTitle) timetableTitle.textContent = "Your Saved Timetables";
+    if (savedTimetablesH3) savedTimetablesH3.style.display = "none";
+    section.style.display = "block"; // Sort by Course > Department > Semester number
     const semesterNum = (s) => {
       const m = /Semester\s*(\d+)/i.exec(s || "");
       return m ? parseInt(m[1], 10) : 0;
@@ -1454,7 +1484,6 @@ async function renderSavedTimetables() {
     // Newest saved first within same group (optional)
     // saved.sort((a,b)=> new Date(b.savedAt)-new Date(a.savedAt));
 
-    section.style.display = "block";
     list.innerHTML = saved
       .map(
         (t) => `
@@ -1462,6 +1491,11 @@ async function renderSavedTimetables() {
           <div class="saved-timetable-header">
             <div class="saved-timetable-title">
               ${t.course} • ${t.department} • ${t.semester}
+              <div class="saved-timetable-details">
+                Students: ${t.students} | Timing: ${convertTo12HourFormat(t.startTime)} - ${convertTo12HourFormat(
+          t.endTime
+        )} | Generated: ${new Date(t.generatedAt || Date.now()).toLocaleDateString()}
+              </div>
             </div>
             <div class="saved-timetable-meta">
               <span>${new Date(t.savedAt || t.generatedAt || Date.now()).toLocaleString()}</span>
@@ -1469,7 +1503,7 @@ async function renderSavedTimetables() {
             </div>
           </div>
           <div class="saved-timetable-body">
-            ${renderMiniTableGrid(t.timetable)}
+            ${renderFullTimetableTable(t.timetable, t)}
           </div>
         </div>`
       )
@@ -1488,12 +1522,82 @@ function renderMiniTableGrid(timetable) {
       const sessions = Object.values(timetable[day] || {}).filter(Boolean);
       const first = sessions[0];
       if (!first) return `<div class="mini-row"><b>${day}:</b> -</div>`;
-      return `<div class=\"mini-row\"><b>${day}:</b> ${first.subject} (${first.type}) - ${first.startTime}-${first.endTime}</div>`;
+      return `<div class=\"mini-row\"><b>${day}:</b> ${first.subject} (${first.type}) - ${convertTo12HourFormat(
+        first.startTime
+      )}-${convertTo12HourFormat(first.endTime)}</div>`;
     })
     .join("");
   return `<div class="mini-grid">${rows}</div>`;
 }
 
+/**
+ * Render a full timetable table for saved timetables
+ */
+function renderFullTimetableTable(timetableData, params) {
+  if (!timetableData || !params) return "";
+
+  // Generate time slots based on saved params
+  const timeSlots = generateTimeSlots(params.startTime, params.endTime);
+  const workingDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+
+  return `
+    <div class="timetable-container">
+      <table class="timetable-grid">
+        <thead>
+          <tr>
+            <th class="time-header">Time</th>
+            ${workingDays.map((day) => `<th class="day-header">${day}</th>`).join("")}
+          </tr>
+        </thead>
+        <tbody>
+          ${timeSlots
+            .map(
+              (slot) => `
+            <tr class="time-row">
+              <td class="time-cell">
+                <div class="time-slot">
+                  <span class="start-time">${convertTo12HourFormat(slot.startTime)} -</span>
+                  <span class="end-time">${convertTo12HourFormat(slot.endTime)}</span>
+                </div>
+              </td>
+              ${workingDays
+                .map((day) => {
+                  const session = timetableData[day] && timetableData[day][slot.id];
+                  if (!session) {
+                    return '<td class="empty-slot">Free</td>';
+                  }
+
+                  // Skip continuation slots of labs (already rendered in first slot)
+                  if (session.slotPosition && session.slotPosition !== "first") {
+                    return "";
+                  }
+
+                  const rowspan = session.duration > 1 ? `rowspan="${session.duration}"` : "";
+                  const sessionClass = session.type.toLowerCase() === "lecture" ? "lecture-session" : "lab-session";
+
+                  return `
+                    <td class="session-cell ${sessionClass}" ${rowspan}>
+                      <div class="session-content">
+                        <div class="session-subject">${session.subject}</div>
+                        <div class="session-details">
+                          <div class="session-faculty">👨‍🏫 ${session.faculty}</div>
+                          <div class="session-room">🏢 ${session.room}</div>
+                          <div class="session-type">${session.type}</div>
+                        </div>
+                      </div>
+                    </td>
+                  `;
+                })
+                .join("")}
+            </tr>
+          `
+            )
+            .join("")}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
 async function deleteSavedTimetable(id) {
   if (!confirm("Delete this saved timetable?")) return;
   try {
@@ -1501,8 +1605,19 @@ async function deleteSavedTimetable(id) {
       method: "DELETE",
     });
     if (!res.ok) throw new Error("Failed to delete saved timetable");
+
+    // Update local database by removing the deleted timetable
+    if (database && database.savedTimetables) {
+      database.savedTimetables = database.savedTimetables.filter((tt) => tt.id !== id);
+    }
+
     await renderSavedTimetables();
     showToast("Saved timetable deleted", "success");
+
+    // Update statistics count
+    if (typeof updateStatistics === "function") {
+      updateStatistics();
+    }
   } catch (e) {
     console.error(e);
     showToast("Failed to delete saved timetable", "error");
@@ -1557,31 +1672,6 @@ function updateTimetableActionButtons(isSaved, timetableId = null) {
     saveBtn.disabled = true;
     saveBtn.style.opacity = "0.6";
   }
-}
-
-/**
- * Generate subject summary for the timetable
- */
-function generateSubjectSummary(params) {
-  const filteredSubjects = subjects.filter(
-    (s) => s.course === params.course && s.department === params.department && s.semester === params.semester
-  );
-
-  return filteredSubjects
-    .map(
-      (subject) => `
-    <div class="subject-stat-card">
-      <h4>${subject.name} (${subject.code})</h4>
-      <div class="subject-stat-details">
-        <p><strong>Faculty:</strong> ${subject.assignedFaculty}</p>
-        <p><strong>Lectures:</strong> ${subject.lectureHours} hours/week</p>
-        <p><strong>Labs:</strong> ${subject.labHours} hours/week</p>
-        <p><strong>Total:</strong> ${subject.totalHours} hours/week</p>
-      </div>
-    </div>
-  `
-    )
-    .join("");
 }
 
 /**
@@ -2001,6 +2091,20 @@ function editDepartment(index) {
  */
 
 /**
+ * Convert 24-hour time format to 12-hour format
+ */
+function convertTo12HourFormat(time24) {
+  if (!time24) return time24;
+
+  const [hours, minutes] = time24.split(":");
+  const hour = parseInt(hours, 10);
+  const ampm = hour >= 12 ? "PM" : "AM";
+  const hour12 = hour % 12 || 12;
+
+  return `${hour12}:${minutes} ${ampm}`;
+}
+
+/**
  * Show toast notification
  */
 function showToast(message, type = "info") {
@@ -2075,7 +2179,20 @@ function getRooms() {
  * Initialize the system when DOM is loaded
  */
 document.addEventListener("DOMContentLoaded", () => {
+  // Disable browser scroll restoration and ensure page starts at top
+  if ("scrollRestoration" in history) {
+    history.scrollRestoration = "manual";
+  }
+
+  // Force scroll to top on page load
+  window.scrollTo(0, 0);
+
   initializeTimetableSystem();
+});
+
+// Also ensure scroll position is reset on window load (backup)
+window.addEventListener("load", () => {
+  window.scrollTo(0, 0);
 });
 
 // Export functions for global access
@@ -2095,3 +2212,6 @@ window.saveTimetable = saveTimetable;
 window.deleteTimetable = deleteTimetable;
 window.deleteSavedTimetable = deleteSavedTimetable;
 window.focusTimetableTabAndScroll = focusTimetableTabAndScroll;
+
+// Export database for statistics access
+window.getDatabase = () => database;
