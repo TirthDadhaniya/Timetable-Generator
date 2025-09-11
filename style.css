@@ -418,76 +418,84 @@ body {
 }
 
 /* Enhanced Timetable Display Styles */
-.timetable-info {
-    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 30px;
-}
-
-.timetable-meta {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 15px;
+.meta-info {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: nowrap;
+    flex: 1 1 auto;
+    border-left: 4px solid #667eea;
 }
 
 .timetable-meta p {
     margin: 0;
     padding: 8px 12px;
-    background: white;
     border-radius: 6px;
-    border-left: 4px solid #667eea;
     font-size: 14px;
 }
 
 .timetable-container {
-    overflow-x: auto;
-    background: white;
-    border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     margin-bottom: 30px;
+    overflow-x: auto;
+    border-radius: 16px;
 }
 
 .timetable-grid {
     width: 100%;
-    border-collapse: collapse;
     min-width: 800px;
+    border-collapse: collapse;
+    background: #F7FAFC;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
 .timetable-grid th {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
-    padding: 15px 10px;
+    padding: 15px 12px;
     text-align: center;
     font-weight: 600;
     font-size: 14px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .timetable-grid td {
-    border: 1px solid #e2e8f0;
-    padding: 0;
-    vertical-align: top;
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 13px;
+    min-width: 120px;
     min-height: 80px;
 }
 
 .time-slot {
-    background: #f8fafc;
-    color: #4a5568;
+    /* white-space: nowrap;
+    min-width: 100px; */
+    background: #F7FAFC;
     font-weight: 600;
-    font-size: 12px;
+    color: #4a5568;
+    width: 100px;
+    font-size: 14px;
     text-align: center;
-    padding: 15px 8px !important;
-    white-space: nowrap;
-    min-width: 100px;
 }
 
 .session-cell {
     position: relative;
     padding: 0 !important;
+}
+
+.lecture-session {
+    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+    font-weight: 600;
+}
+
+.lab-session {
+    background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+    font-weight: 600;
 }
 
 .session-content {
@@ -499,22 +507,25 @@ body {
     position: relative;
 }
 
-.lecture-session {
-    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-    border-left: 4px solid #2196f3;
-}
-
-.lab-session {
-    background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
-    border-left: 4px solid #9c27b0;
-}
-
 .session-subject {
     font-weight: 700;
     font-size: 13px;
-    color: #2d3748;
+    color: #161617;
     margin-bottom: 4px;
     line-height: 1.2;
+
+}
+
+.session-faculty,
+.session-room,
+.session-time {
+    font-size: 11px;
+    color: #4a5568;
+    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
 }
 
 .session-type {
@@ -523,6 +534,7 @@ body {
     text-transform: uppercase;
     letter-spacing: 0.5px;
     color: #718096;
+    margin-top: 8px;
     margin-bottom: 6px;
     padding: 2px 6px;
     background: rgba(255, 255, 255, 0.7);
@@ -539,38 +551,80 @@ body {
     color: #9c27b0;
 }
 
-.session-faculty,
-.session-room,
-.session-time {
-    font-size: 11px;
-    color: #4a5568;
-    margin-bottom: 2px;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-}
-
 .empty-slot {
-    background: #fafafa;
-    color: #a0aec0;
     text-align: center;
     font-weight: 500;
     padding: 20px !important;
+    background: #f7fafc;
+    color: #a0aec0;
+    font-style: italic;
 }
 
-.timetable-stats {
-    background: white;
-    border-radius: 12px;
-    padding: 25px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    margin-bottom: 30px;
+/* Timetable Action Buttons */
+.timetable-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin: 25px 0;
 }
 
-.timetable-stats h3 {
-    color: #2d3748;
-    font-size: 1.3rem;
-    margin-bottom: 20px;
-    font-weight: 700;
+.timetable-action-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 24px;
+    font-family: "Inter", sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    min-width: 140px;
+    justify-content: center;
+}
+
+.timetable-action-btn img {
+    width: 20px;
+    height: 20px;
+}
+
+.timetable-action-btn.save-btn {
+    background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+    box-shadow: 0 4px 12px rgba(72, 187, 120, 0.3);
+}
+
+.timetable-action-btn.save-btn:hover {
+    box-shadow: 0 6px 20px rgba(72, 187, 120, 0.4);
+}
+
+.timetable-action-btn.delete-btn {
+    background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+    box-shadow: 0 4px 12px rgba(245, 101, 101, 0.3);
+}
+
+.timetable-action-btn.delete-btn:hover {
+    box-shadow: 0 6px 20px rgba(245, 101, 101, 0.4);
+}
+
+.timetable-action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.timetable-action-btn:active {
+    transform: translateY(0);
+}
+
+
+
+.timetable-action-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
 }
 
 .stats-grid {
@@ -633,74 +687,7 @@ body {
     color: #2d3748;
 }
 
-/* Timetable Action Buttons */
-.timetable-actions {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-    margin: 25px 0;
-    padding: 20px;
-    background: #f8fafc;
-    border-radius: 12px;
-    border: 2px dashed #e2e8f0;
-}
 
-.timetable-action-btn {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border: none;
-    border-radius: 10px;
-    padding: 12px 24px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-    min-width: 140px;
-    justify-content: center;
-}
-
-.timetable-action-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-}
-
-.timetable-action-btn:active {
-    transform: translateY(0);
-}
-
-.timetable-action-btn img {
-    width: 18px;
-    height: 18px;
-    filter: brightness(0) invert(1);
-}
-
-.timetable-action-btn.save-btn {
-    background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
-    box-shadow: 0 4px 12px rgba(72, 187, 120, 0.3);
-}
-
-.timetable-action-btn.save-btn:hover {
-    box-shadow: 0 6px 20px rgba(72, 187, 120, 0.4);
-}
-
-.timetable-action-btn.delete-btn {
-    background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
-    box-shadow: 0 4px 12px rgba(245, 101, 101, 0.3);
-}
-
-.timetable-action-btn.delete-btn:hover {
-    box-shadow: 0 6px 20px rgba(245, 101, 101, 0.4);
-}
-
-.timetable-action-btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none !important;
-}
 
 .hidden {
     display: none;
