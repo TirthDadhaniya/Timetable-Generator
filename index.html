@@ -51,7 +51,7 @@
         </div>
       </div>
 
-      <!-- AI Timetable Generator Section -->
+      <!-- Timetable Generator Section -->
       <div class="generator-panel">
         <h2>Timetable Generator</h2>
         <p>
@@ -104,26 +104,28 @@
             Generate Complete Timetable
           </button>
           <div
-            id="timetableGenStatus"
-            style="margin-top: 8px; font-size: 0.95em; color: #555"></div>
+            id="timetableGenStatus"></div>
+          <button type="submit" class="btn generate-btn">Generate Complete Timetable</button>
+          <div id="timetableGenStatus"></div>
         </form>
       </div>
 
       <!-- Navigation Tabs -->
       <div class="tabs">
         <button class="tab active" id="timetable-tab">Timetable</button>
+        <button class="tab" id="departments-tab">Courses & Departments</button>
         <button class="tab" id="faculty-tab">Faculty</button>
         <button class="tab" id="subjects-tab">Subjects</button>
         <button class="tab" id="room-tab">Rooms</button>
-        <button class="tab" id="departments-tab">Departments</button>
       </div>
 
       <!-- Timetable Section -->
       <div class="tab-content" id="timetable-content">
         <h2 class="section-title" id="timetable-title">Generated Timetable</h2>
 
-        <!-- Dynamic Timetable Container -->
+        <!-- Generate Timetable Container -->
         <div id="dynamic-timetable">
+          <!-- When no timetables are generated, this will show -->
           <div class="timetable-placeholder">
             <div class="placeholder-content">
               <h3>No Timetable Generated Yet</h3>
@@ -137,14 +139,6 @@
           </div>
         </div>
 
-        <!-- Subject Summary Section -->
-        <div id="subject-summary" style="display: none">
-          <h2 class="section-subtitle">Subject Summary</h2>
-          <div class="stats-grid" id="subject-stats-grid">
-            <!-- Dynamic subject stats will be populated here -->
-          </div>
-        </div>
-
         <!-- Saved Timetables Section -->
         <div
           id="saved-timetables-section"
@@ -152,6 +146,41 @@
           style="display: none; margin-top: 24px">
           <h3>Saved Timetables</h3>
           <div id="savedTimetablesList" class="saved-timetables-list"></div>
+        </div>
+      </div>
+
+      <!-- Departments Section -->
+      <div class="tab-content hidden" id="departments-content">
+        <form id="courseForm" class="form-section">
+          <h2>Add New Course & Department</h2>
+          <p>Manage academic courses and their departments</p>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Course Name</label>
+              <input
+                type="text"
+                id="courseName"
+                name="courseName"
+                placeholder="e.g., Bachelor of Engineering, Master of Science"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label>Department Name</label>
+              <input
+                type="text"
+                id="departmentName"
+                name="departmentName"
+                placeholder="e.g., Computer Engineering, Information Technology"
+                required
+              />
+            </div>
+          </div>
+          <button type="submit" class="btn">Add Course & Department</button>
+        </form>
+        <div class="list-section">
+          <h3>All Course & Department Combinations</h3>
+          <div id="courseDepartmentList" class="course-department-list"></div>
         </div>
       </div>
 
@@ -377,30 +406,6 @@
         <div class="list-section">
           <h3>All Rooms</h3>
           <div id="roomList" class="room-list"></div>
-        </div>
-      </div>
-
-      <!-- Departments Section -->
-      <div class="tab-content hidden" id="departments-content">
-        <form id="departmentForm" class="form-section">
-          <h2>Add New Department</h2>
-          <p>Manage academic departments and branches</p>
-          <div class="form-row">
-            <div class="form-group">
-              <label>Department Name</label>
-              <input
-                type="text"
-                id="departmentName"
-                name="departmentName"
-                placeholder="e.g., Computer Engineering, Information Technology"
-                required />
-            </div>
-          </div>
-          <button type="submit" class="btn">Add Department</button>
-        </form>
-        <div class="list-section">
-          <h3>All Departments</h3>
-          <div id="departmentList" class="department-list"></div>
         </div>
       </div>
     </div>

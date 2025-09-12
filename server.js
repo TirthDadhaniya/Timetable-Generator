@@ -19,14 +19,9 @@ function initializeDatabase() {
       subjects: [],
       faculty: [],
       rooms: [],
-      courses: ["BTech", "Diploma", "BBA", "MBA", "BCA", "MCA"],
-      departments: [
-        "Computer Engineering",
-        "Information Technology",
-        "Artificial Intelligence & Data Science",
-        "Mechanical Engineering",
-        "Civil Engineering",
-      ],
+      courses: [],
+      departments: [],
+      courseDepartments: [],
       semesters: [
         "Semester 1",
         "Semester 2",
@@ -320,13 +315,13 @@ app.post("/api/departments", (req, res) => {
   }
 
   const { name } = req.body;
-  
-  if (!name || typeof name !== 'string' || name.trim() === '') {
+
+  if (!name || typeof name !== "string" || name.trim() === "") {
     return res.status(400).json({ error: "Department name is required" });
   }
 
   const trimmedName = name.trim();
-  
+
   // Check if department already exists
   if (database.departments.includes(trimmedName)) {
     return res.status(400).json({ error: "Department already exists" });
@@ -356,7 +351,7 @@ app.put("/api/departments/:index", (req, res) => {
     return res.status(404).json({ error: "Department not found" });
   }
 
-  if (!name || typeof name !== 'string' || name.trim() === '') {
+  if (!name || typeof name !== "string" || name.trim() === "") {
     return res.status(400).json({ error: "Department name is required" });
   }
 
@@ -393,12 +388,12 @@ app.delete("/api/departments/:index", (req, res) => {
 
   // Check if department is being used by any faculty or subjects
   const departmentName = database.departments[index];
-  const usedInFaculty = database.faculty.some(f => f.department === departmentName);
-  const usedInSubjects = database.subjects.some(s => s.department === departmentName);
+  const usedInFaculty = database.faculty.some((f) => f.department === departmentName);
+  const usedInSubjects = database.subjects.some((s) => s.department === departmentName);
 
   if (usedInFaculty || usedInSubjects) {
-    return res.status(400).json({ 
-      error: "Cannot delete department. It is being used by existing faculty or subjects." 
+    return res.status(400).json({
+      error: "Cannot delete department. It is being used by existing faculty or subjects.",
     });
   }
 
@@ -506,6 +501,69 @@ app.get("/api/timetables", (req, res) => {
   } catch (error) {
     console.error("❌ Error getting timetables:", error);
     res.status(500).json({ error: "Server error" });
+  }
+});
+
+// POST - Add new course-department combination
+app.post("/api/course-departments", (req, res) => {
+  const database = readDatabase();
+  if (!database) {
+    return res.status(500).json({ error: "Failed to read database" });
+  }
+
+  const { course, department } = req.body;
+
+  const newCourseDepartment = {
+    id: Date.now().toString(36) + Math.random().toString(36).substr(2),
+    course,
+    department,
+    createdAt: new Date().toISOString(),
+  };
+
+  // Add to courseDepartments array
+  database.courseDepartments.push(newCourseDepartment);
+
+  // Also maintain separate courses and departments arrays
+  if (!database.courses.includes(course)) {
+    database.courses.push(course);
+  }
+  if (!database.departments.includes(department)) {
+    database.departments.push(department);
+  }
+
+  if (writeDatabase(database)) {
+    res.status(201).json(newCourseDepartment);
+    console.log("➕ Course-Department added:", `${course} - ${department}`);
+  } else {
+    res.status(500).json({ error: "Failed to add course-department combination" });
+  }
+});
+
+// DELETE - Delete course-department combination
+app.delete("/api/course-departments/:id", (req, res) => {
+  const database = readDatabase();
+  if (!database) {
+    return res.status(500).json({ error: "Failed to read database" });
+  }
+
+  const courseDepartmentId = req.params.id;
+  const index = database.courseDepartments.findIndex((cd) => cd.id === courseDepartmentId);
+
+  if (index === -1) {
+    return res.status(404).json({ error: "Course-Department combination not found" });
+  }
+
+  const deleted = database.courseDepartments.splice(index, 1)[0];
+
+  // Rebuild courses and departments arrays from remaining courseDepartments
+  database.courses = [...new Set(database.courseDepartments.map((cd) => cd.course))];
+  database.departments = [...new Set(database.courseDepartments.map((cd) => cd.department))];
+
+  if (writeDatabase(database)) {
+    res.json(deleted);
+    console.log("🗑️ Course-Department deleted:", `${deleted.course} - ${deleted.department}`);
+  } else {
+    res.status(500).json({ error: "Failed to delete course-department combination" });
   }
 });
 
