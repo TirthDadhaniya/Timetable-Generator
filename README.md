@@ -12,6 +12,9 @@ A comprehensive, intelligent timetable generation system with advanced schedulin
 - ✅ **Live Statistics**: Dashboard shows real-time counts with animated counters
 - ✅ **Conflict Resolution**: Intelligent scheduling prevents faculty/room conflicts
 - ✅ **Lab Session Management**: Flexible lab duration (2-4 hours) with consecutive slot booking
+- ✅ **Course & Department Manager**: Add and manage Course–Department combinations with dependent dropdowns
+- ✅ **Consistent Sorting Everywhere**: Lists and dropdowns sorted alphabetically/numerically for fast selection
+- ✅ **Saved Timetables Management**: Persist, list, and delete saved timetables with clear sorting
 
 ### 💾 **Data Management**
 
@@ -20,6 +23,17 @@ A comprehensive, intelligent timetable generation system with advanced schedulin
 - ✅ **Cross-Reference Integrity**: Faculty assignments sync across all forms
 - ✅ **Real-time Updates**: Changes immediately reflect across all components
 - ✅ **Browser Refresh Safe**: Data persists through page reloads
+- ✅ **Centralized Course–Department Model**: Separate `courses`, `departments`, and relationship list `courseDepartments`
+- ✅ **Dependent Dropdowns**: Selecting a course filters the departments list automatically
+
+### 🔤 Sorting Behavior (Global)
+
+- Courses: A → Z in all dropdowns
+- Departments: A → Z in all dropdowns and lists
+- Faculty: A → Z by name in lists and dropdowns
+- Rooms: increasing numerical order by room number (e.g., 201, 207, 218, 310, 317)
+- Subjects: primary by semester number (1 → 8), secondary A → Z by subject name within each semester
+- Saved Timetables: primary by semester (1 → 8), then Course A → Z, then Department A → Z
 
 ### 🧠 **Advanced Algorithm Features**
 
@@ -81,6 +95,16 @@ A comprehensive, intelligent timetable generation system with advanced schedulin
 
 ### 1. **Managing Data**
 
+#### 🧭 Courses & Departments (Combinations)
+
+- Add a Course–Department combination using the form in the Courses & Departments tab
+- The system maintains three structures:
+  - `courses` (unique list of course names)
+  - `departments` (unique list of department names)
+  - `courseDepartments` (list of pairs: `{ id, course, department }`)
+- Selecting a Course in forms filters Departments to only those valid for that Course
+- The combinations list is shown alphabetically (Course then Department)
+
 #### ➕ Adding Subjects
 
 - Fill out the subject form with:
@@ -119,7 +143,7 @@ A comprehensive, intelligent timetable generation system with advanced schedulin
 
 #### 📝 Setup Parameters
 
-- Select Course, Department, Semester
+- Select Course, Department, Semester (Departments auto-filter based on Course)
 - Enter number of students
 - Set college start and end time
 - Click "Generate Timetable"
@@ -165,6 +189,15 @@ DELETE /api/faculty/:id       # Delete faculty
 POST   /api/rooms             # Add new room
 PUT    /api/rooms/:id         # Update existing room
 DELETE /api/rooms/:id         # Delete room
+GET    /api/departments       # List departments
+POST   /api/departments       # Add department (unique name)
+PUT    /api/departments/:index# Update department at index
+DELETE /api/departments/:index# Delete department at index
+POST   /api/course-departments        # Add course–department pair
+DELETE /api/course-departments/:id    # Delete course–department pair
+POST   /api/timetables         # Save a generated timetable
+GET    /api/timetables         # List saved timetables
+DELETE /api/timetables/:id     # Delete saved timetable
 ```
 
 ### 🎨 Frontend Architecture
@@ -225,12 +258,22 @@ DELETE /api/rooms/:id         # Delete room
       "equipment": "Computers, Projector"
     }
   ],
-  "courses": ["BTech", "MTech", "BCA"],
-  "departments": ["Computer Science", "Information Technology"],
+  "courses": ["BTech", "Diploma", "BBA", "MBA", "BCA", "MCA"],
+  "departments": ["Computer Engineering", "Information Technology"],
+  "courseDepartments": [
+    { "id": "cd_1", "course": "BTech", "department": "Information Technology" },
+    { "id": "cd_2", "course": "BCA", "department": "Computer Engineering" }
+  ],
   "semesters": ["Semester 1", "Semester 2", "..."],
   "roomTypes": ["Classroom", "Lab", "Auditorium"]
 }
 ```
+
+Notes:
+
+- `courses` and `departments` are maintained as unique lists.
+- `courseDepartments` is the authoritative list of valid Course–Department pairs and powers dependent dropdowns.
+- Lists and dropdowns are rendered with the sorting rules described above.
 
 ## 🎯 Advanced Algorithm Details
 
@@ -437,6 +480,40 @@ PUT /api/rooms/:id
 DELETE /api/rooms/:id
 ```
 
+#### **Departments Management**
+
+```http
+GET /api/departments
+POST /api/departments
+PUT /api/departments/:index
+DELETE /api/departments/:index
+```
+
+Body for POST/PUT:
+
+```json
+{ "name": "Information Technology" }
+```
+
+#### **Course–Department Combinations**
+
+```http
+POST /api/course-departments
+Content-Type: application/json
+
+{ "course": "BTech", "department": "Information Technology" }
+
+DELETE /api/course-departments/:id
+```
+
+#### **Timetables**
+
+```http
+POST /api/timetables
+GET  /api/timetables
+DELETE /api/timetables/:id
+```
+
 ## ⚠️ Important Notes
 
 ### **Data Management**
@@ -445,6 +522,15 @@ DELETE /api/rooms/:id
 - 🔒 **Unique Identifiers**: Subject codes, faculty emails, room numbers must be unique
 - 📝 **Auto-Update**: Duplicate identifiers automatically update existing records
 - 💾 **Backup Recommended**: Regularly backup your `database.json` file
+- 🧹 **Reset Data**: To start fresh, stop the server and delete `database.json`.
+
+Windows (PowerShell):
+
+```powershell
+Stop-Process -Name node -ErrorAction SilentlyContinue
+Remove-Item -Path .\database.json -Force -ErrorAction SilentlyContinue
+npm start
+```
 
 ### **Algorithm Limitations**
 
