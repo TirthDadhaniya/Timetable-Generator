@@ -87,52 +87,228 @@
   ],
   "faculty": [
     {
-      "id": "mfcd7aea15vggq8a922",
-      "name": "Kavita Rathod",
-      "specialization": "Internet of Things",
-      "department": "Computer Engineering",
-      "email": "kavit@aiet.edu.in",
-      "createdAt": "2025-09-09T09:45:14.338Z"
-    },
-    {
-      "id": "mfcdpzb7yxu5i6zr5v8",
+      "id": "mfgnawe81ub036yh8dk",
       "name": "Heena Patel",
-      "specialization": "Wireless Communication",
+      "specialization": "HMP",
       "department": "Information Technology",
       "email": "heena@aiet.edu.in",
-      "createdAt": "2025-09-09T09:59:46.435Z"
+      "createdAt": "2025-09-12T09:39:03.680Z"
     },
     {
-      "id": "mfcdqrg8g2mupjgucl",
+      "id": "mfgnbfosb42cr6jq6d",
       "name": "Nitesh Prajapati",
-      "specialization": "Computer Vision",
+      "specialization": "NJP",
       "department": "Information Technology",
       "email": "nitesh@aiet.edu.in",
-      "createdAt": "2025-09-09T10:00:22.904Z"
+      "createdAt": "2025-09-12T09:39:28.684Z"
     },
     {
-      "id": "mfcdriy98808ma9e0qp",
-      "name": "Smit Patel",
-      "specialization": "Applied Machine Learning ",
-      "department": "Information Technology",
-      "email": "smit@aiet.edu.in",
-      "createdAt": "2025-09-09T10:00:58.545Z"
+      "id": "mfgnbrym8ax2fka8wjk",
+      "name": "Priyanka Patani",
+      "specialization": "PJP",
+      "department": "Computer Engineering",
+      "email": "priyanka@aiet.edu.in",
+      "createdAt": "2025-09-12T09:39:44.590Z"
     },
     {
-      "id": "mfcdt5qv8nahijdk763",
+      "id": "mfgnc2iak9ojdhhpjli",
       "name": "Ankita Mevada",
-      "specialization": "Software Project Management",
+      "specialization": "ASM",
       "department": "Information Technology",
       "email": "ankita@aiet.edu.in",
-      "createdAt": "2025-09-09T10:02:14.743Z"
+      "createdAt": "2025-09-12T09:39:58.258Z"
     },
     {
-      "id": "mfcdupszztblu15f4z9",
+      "id": "mfgnce74hl9wfyqwplh",
       "name": "Kajal Chauhan",
-      "specialization": "Agile Development and UI/UX design",
+      "specialization": "KGC",
       "department": "Information Technology",
       "email": "kajal@aiet.edu.in",
-      "createdAt": "2025-09-09T10:03:27.395Z"
+      "createdAt": "2025-09-12T09:40:13.408Z"
+    },
+    {
+      "id": "mfgncu8z93nqonfnmv5",
+      "name": "Bhoomi Rajdeep",
+      "specialization": "BRR",
+      "department": "Information Technology",
+      "email": "bhoomi@aiet.edu.in",
+      "createdAt": "2025-09-12T09:40:34.211Z"
+    },
+    {
+      "id": "mfgnd5sxosg88c2brt8",
+      "name": "Janam Jain",
+      "specialization": "JKJ",
+      "department": "Computer Engineering",
+      "email": "janam@aiet.edu.in",
+      "createdAt": "2025-09-12T09:40:49.185Z"
+    },
+    {
+      "id": "mfgndkt0z37u36pu39j",
+      "name": "Priya Chodvadiya",
+      "specialization": "PPC",
+      "department": "Information Technology",
+      "email": "priya@aiet.edu.in",
+      "createdAt": "2025-09-12T09:41:08.628Z"
+    },
+    {
+      "id": "mfgndwiyfgkn6r1hnui",
+      "name": "Vandita Shah",
+      "specialization": "VS",
+      "department": "Computer Engineering",
+      "email": "vandita@aiet.edu.in",
+      "createdAt": "2025-09-12T09:41:23.818Z"
+    },
+    {
+      "id": "mfgne6rf7b8w4jyu67o",
+      "name": "Komal Prajapati",
+      "specialization": "PKJ",
+      "department": "Computer Engineering",
+      "email": "komal@aiet.edu.in",
+      "createdAt": "2025-09-12T09:41:37.083Z"
+    },
+    {
+      "id": "mfgneld53tzu5z8moe5",
+      "name": "Dharti Mahida",
+      "specialization": "DPM",
+      "department": "Information Technology",
+      "email": "dharti@aiet.edu.in",
+      "createdAt": "2025-09-12T09:41:56.009Z"
+    },
+    {
+      "id": "mfgnfevnre836bsqnbe",
+      "name": "Heena Panjwani",
+      "specialization": "PHS",
+      "department": "Computer Engineering",
+      "email": "heenap@aiet.edu.in",
+      "createdAt": "2025-09-12T09:42:34.259Z"
+    },
+    {
+      "id": "mfgng4n9mcdy92gji7n",
+      "name": "Manish Gohel",
+      "specialization": "MHG",
+      "department": "Computer Engineering",
+      "email": "manish@aiet.edu.in",
+      "createdAt": "2025-09-12T09:43:07.653Z"
+    },
+    {
+      "id": "mfgngfj0bsv0n7em1ap",
+      "name": "Nirali Patel",
+      "specialization": "NSP",
+      "department": "Computer Engineering",
+      "email": "nirali@aiet.edu.in",
+      "createdAt": "2025-09-12T09:43:21.756Z"
+    },
+    {
+      "id": "mfgnguyz2dw6q6imgec",
+      "name": "Dharmik Upadhyay",
+      "specialization": "DUJ",
+      "department": "Computer Engineering",
+      "email": "dharmik@aiet.edu.in",
+      "createdAt": "2025-09-12T09:43:41.771Z"
+    },
+    {
+      "id": "mfgnh5h76yla6okukvp",
+      "name": "Tammana Bhatt",
+      "specialization": "TMB",
+      "department": "Computer Engineering",
+      "email": "tammana@aiet.edu.in",
+      "createdAt": "2025-09-12T09:43:55.387Z"
+    },
+    {
+      "id": "mfgnhcugcwfhkdy5uq6",
+      "name": "Smit Patel",
+      "specialization": "SGP",
+      "department": "Information Technology",
+      "email": "smit@aiet.edu.in",
+      "createdAt": "2025-09-12T09:44:04.936Z"
+    },
+    {
+      "id": "mfgnhoe6r0bq0c7zxfa",
+      "name": "Supriya Tiwari",
+      "specialization": "SJT",
+      "department": "Computer Engineering",
+      "email": "supriya@aiet.edu.in",
+      "createdAt": "2025-09-12T09:44:19.902Z"
+    },
+    {
+      "id": "mfgni15sjlyu59i00cl",
+      "name": "Dhruvraj Sing",
+      "specialization": "DPR",
+      "department": "Computer Engineering",
+      "email": "dhruvraj@aiet.edu.in",
+      "createdAt": "2025-09-12T09:44:36.448Z"
+    },
+    {
+      "id": "mfgnibm53l9clv6nm7e",
+      "name": "Sagar Savaliya",
+      "specialization": "SVS",
+      "department": "Computer Engineering",
+      "email": "sagar@aiet.edu.in",
+      "createdAt": "2025-09-12T09:44:49.997Z"
+    },
+    {
+      "id": "mfgnjbq1rcmab3vv5u",
+      "name": "Roshni Bhatiya",
+      "specialization": "RB",
+      "department": "Computer Engineering",
+      "email": "roshni@aiet.edu.in",
+      "createdAt": "2025-09-12T09:45:36.793Z"
+    },
+    {
+      "id": "mfgnjk7joxtj1wb7g2",
+      "name": "Hasti Ramani",
+      "specialization": "RHR",
+      "department": "Computer Engineering",
+      "email": "hasti@aiet.edu.in",
+      "createdAt": "2025-09-12T09:45:47.791Z"
+    },
+    {
+      "id": "mfgnjvpiykwotmaco7k",
+      "name": "Krisha Patel",
+      "specialization": "KJP",
+      "department": "Computer Engineering",
+      "email": "krisha@aiet.edu.in",
+      "createdAt": "2025-09-12T09:46:02.694Z"
+    },
+    {
+      "id": "mfgnkxtdz37602ayge",
+      "name": "Nensi Patel",
+      "specialization": "NRP",
+      "department": "Information Technology",
+      "email": "nensi@aiet.edu.in",
+      "createdAt": "2025-09-12T09:46:52.081Z"
+    },
+    {
+      "id": "mfgnmdeiw9erujrbjka",
+      "name": "Dipak Chaudhari",
+      "specialization": "DRC",
+      "department": "Computer Engineering",
+      "email": "dipak@aiet.edu.in",
+      "createdAt": "2025-09-12T09:47:58.938Z"
+    },
+    {
+      "id": "mfgnmw6gbwlejmpfib6",
+      "name": "Aditi Jadav",
+      "specialization": "ABJ",
+      "department": "Computer Engineering",
+      "email": "aditi@aiet.edu.in",
+      "createdAt": "2025-09-12T09:48:23.272Z"
+    },
+    {
+      "id": "mfgnn99eawmtx6hezht",
+      "name": "Shivani Patel",
+      "specialization": "SPP",
+      "department": "Computer Engineering",
+      "email": "shivani@aiet.edu.in",
+      "createdAt": "2025-09-12T09:48:40.226Z"
+    },
+    {
+      "id": "mfgnnuy13e2hfkru4a6",
+      "name": "Smit R Patel",
+      "specialization": "SRP",
+      "department": "Computer Engineering",
+      "email": "smitr@aiet.edu.in",
+      "createdAt": "2025-09-12T09:49:08.329Z"
     }
   ],
   "rooms": [
@@ -178,20 +354,39 @@
     }
   ],
   "courses": [
-    "BTech",
-    "Diploma",
-    "BBA",
-    "MBA",
-    "BCA",
-    "MCA"
+    "Bachelor of Engineering",
+    "Diploma"
   ],
   "departments": [
-    "Computer Engineering",
     "Information Technology",
-    "Artificial Intelligence & Data Science",
-    "Mechanical Engineering",
-    "Civil Engineering",
-    "asd"
+    "Computer Engineering",
+    "Artificial Intelligence & Data Science"
+  ],
+  "courseDepartments": [
+    {
+      "id": "mfgn8vsfb2u9gvm6wi4",
+      "course": "Bachelor of Engineering",
+      "department": "Information Technology",
+      "createdAt": "2025-09-12T09:37:29.583Z"
+    },
+    {
+      "id": "mfgn99yxkzdhpwfvqhn",
+      "course": "Bachelor of Engineering",
+      "department": "Computer Engineering",
+      "createdAt": "2025-09-12T09:37:47.961Z"
+    },
+    {
+      "id": "mfgnpqaprke7iwpo4c7",
+      "course": "Bachelor of Engineering",
+      "department": "Artificial Intelligence & Data Science",
+      "createdAt": "2025-09-12T09:50:35.618Z"
+    },
+    {
+      "id": "mfgnq7gj1iuuyclpdra",
+      "course": "Diploma",
+      "department": "Computer Engineering",
+      "createdAt": "2025-09-12T09:50:57.859Z"
+    }
   ],
   "semesters": [
     "Semester 1",
