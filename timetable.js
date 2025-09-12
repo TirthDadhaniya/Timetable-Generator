@@ -44,9 +44,9 @@ async function loadDatabase() {
     subjects = database.subjects || [];
     faculty = database.faculty || [];
     rooms = database.rooms || [];
+    courseDepartments = database.courseDepartments || [];
     courses = database.courses || [];
     departments = database.departments || [];
-    courseDepartments = database.courseDepartments || [];
     semesters = database.semesters || [];
     roomTypes = database.roomTypes || [];
 
@@ -761,6 +761,9 @@ async function handleCourseFormSubmission(event) {
 
       // Update individual courses and departments arrays
       if (!isEdit) {
+        // Add the new course-department combination to local array
+        courseDepartments.push(result);
+
         // Add to courses array if not already exists
         if (!courses.includes(courseData.course)) {
           courses.push(courseData.course);
@@ -2307,7 +2310,7 @@ async function deleteCourseDepartment(index) {
   }
 
   try {
-    const response = await fetch(`${API_BASE}/api/course-departments/${index}`, {
+    const response = await fetch(`${API_BASE}/api/course-departments/${cd.id}`, {
       method: "DELETE",
     });
 
