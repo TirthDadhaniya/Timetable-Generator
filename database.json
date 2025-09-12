@@ -4,7 +4,7 @@
       "id": "mfcdw0siu5copgqqy4",
       "name": "Internet Of Things",
       "code": "3171108",
-      "course": "BTech",
+      "course": "Bachelor of Engineering",
       "department": "Information Technology",
       "lectureHours": 3,
       "labHours": 2,
@@ -18,7 +18,7 @@
       "id": "mfcdwygdwuv0z25e6jq",
       "name": "Wireless Communication",
       "code": "3171608",
-      "course": "BTech",
+      "course": "Bachelor of Engineering",
       "department": "Information Technology",
       "lectureHours": 3,
       "labHours": 2,
@@ -32,7 +32,7 @@
       "id": "mfcdxsh04p63i4q3ad5",
       "name": "Software Project Management",
       "code": "3171609",
-      "course": "BTech",
+      "course": "Bachelor of Engineering",
       "department": "Information Technology",
       "lectureHours": 3,
       "labHours": 2,
@@ -46,7 +46,7 @@
       "id": "mfcdyi1ylhuu8b4cu5r",
       "name": "Agile Development and UI/UX design",
       "code": "3171610",
-      "course": "BTech",
+      "course": "Bachelor of Engineering",
       "department": "Information Technology",
       "lectureHours": 3,
       "labHours": 0,
@@ -60,7 +60,7 @@
       "id": "mfcdzap9zp4zkrrrn5s",
       "name": "Computer Vision",
       "code": "3171614",
-      "course": "BTech",
+      "course": "Bachelor of Engineering",
       "department": "Information Technology",
       "lectureHours": 3,
       "labHours": 2,
@@ -74,7 +74,7 @@
       "id": "mfcdzr0pbfm33vyx1du",
       "name": "Applied Machine Learning",
       "code": "3171617",
-      "course": "BTech",
+      "course": "Bachelor of Engineering",
       "department": "Information Technology",
       "lectureHours": 3,
       "labHours": 2,
@@ -83,6 +83,160 @@
       "semester": "Semester 7",
       "createdAt": "2025-09-09T10:07:22.249Z",
       "labDuration": 2
+    },
+    {
+      "id": "mfgocandrzelrcszo4r",
+      "name": "Web Development",
+      "code": "3151606",
+      "course": "Bachelor of Engineering",
+      "department": "Information Technology",
+      "lectureHours": 3,
+      "labHours": 2,
+      "labDuration": 2,
+      "totalHours": 5,
+      "assignedFaculty": "Heena Patel",
+      "semester": "Semester 5",
+      "createdAt": "2025-09-12T10:08:08.425Z"
+    },
+    {
+      "id": "mfgoehbfx7ne51svknq",
+      "name": "Analysis and Design of Computer Algorithms",
+      "code": "3150703",
+      "course": "Bachelor of Engineering",
+      "department": "Information Technology",
+      "lectureHours": 4,
+      "labHours": 2,
+      "labDuration": 2,
+      "totalHours": 6,
+      "assignedFaculty": "Dharti Mahida",
+      "semester": "Semester 5",
+      "createdAt": "2025-09-12T10:09:50.379Z"
+    },
+    {
+      "id": "mfgofp3txc581iq4ru",
+      "name": "Computer Networks",
+      "code": "3150710",
+      "course": "Bachelor of Engineering",
+      "department": "Information Technology",
+      "lectureHours": 4,
+      "labHours": 2,
+      "labDuration": 2,
+      "totalHours": 6,
+      "assignedFaculty": "Vandita Shah",
+      "semester": "Semester 5",
+      "createdAt": "2025-09-12T10:10:47.129Z"
+    },
+    {
+      "id": "mfgogyk0agmjdticurt",
+      "name": "Data Science",
+      "code": "3151608",
+      "course": "Bachelor of Engineering",
+      "department": "Information Technology",
+      "lectureHours": 2,
+      "labHours": 2,
+      "labDuration": 2,
+      "totalHours": 4,
+      "assignedFaculty": "Kajal Chauhan",
+      "semester": "Semester 5",
+      "createdAt": "2025-09-12T10:11:46.032Z"
+    },
+    {
+      "id": "mfgoi3b0dkubidyvhl4",
+      "name": "Professional Ethics",
+      "code": "3150709",
+      "course": "Bachelor of Engineering",
+      "department": "Information Technology",
+      "lectureHours": 3,
+      "labHours": 0,
+      "labDuration": 0,
+      "totalHours": 3,
+      "assignedFaculty": "Priya Chodvadiya",
+      "semester": "Semester 5",
+      "createdAt": "2025-09-12T10:12:38.844Z"
+    },
+    {
+      "id": "mfgoj464f6x4pcs12w9",
+      "name": "Integrated Personality Development Course",
+      "code": "3150005",
+      "course": "Bachelor of Engineering",
+      "department": "Information Technology",
+      "lectureHours": 2,
+      "labHours": 0,
+      "labDuration": 0,
+      "totalHours": 2,
+      "assignedFaculty": "Priya Chodvadiya",
+      "semester": "Semester 5",
+      "createdAt": "2025-09-12T10:13:26.620Z"
+    },
+    {
+      "id": "mfgolnmvvbytcg61tqp",
+      "name": "Indian Constitution",
+      "code": "3130007",
+      "course": "Bachelor of Engineering",
+      "department": "Computer Engineering",
+      "lectureHours": 2,
+      "labHours": 0,
+      "labDuration": 0,
+      "totalHours": 2,
+      "assignedFaculty": "Priya Chodvadiya",
+      "semester": "Semester 3",
+      "createdAt": "2025-09-12T10:15:25.159Z"
+    },
+    {
+      "id": "mfgon45xx4quc8ls8hd",
+      "name": "Probability and Statistics",
+      "code": "3130006",
+      "course": "Bachelor of Engineering",
+      "department": "Computer Engineering",
+      "lectureHours": 3,
+      "labHours": 0,
+      "labDuration": 0,
+      "totalHours": 3,
+      "assignedFaculty": "Supriya Tiwari",
+      "semester": "Semester 3",
+      "createdAt": "2025-09-12T10:16:33.237Z"
+    },
+    {
+      "id": "mfgopbi4h0t2m8rpvoo",
+      "name": "Data Structures",
+      "code": "3130702",
+      "course": "Bachelor of Engineering",
+      "department": "Computer Engineering",
+      "lectureHours": 3,
+      "labHours": 4,
+      "labDuration": 2,
+      "totalHours": 7,
+      "assignedFaculty": "Nensi Patel",
+      "semester": "Semester 3",
+      "createdAt": "2025-09-12T10:18:16.061Z"
+    },
+    {
+      "id": "mfgorlpfffwcrt47ua",
+      "name": "Database Management Systems",
+      "code": "3130703",
+      "course": "Bachelor of Engineering",
+      "department": "Computer Engineering",
+      "lectureHours": 4,
+      "labHours": 2,
+      "labDuration": 2,
+      "totalHours": 6,
+      "assignedFaculty": "Tammana Bhatt",
+      "semester": "Semester 3",
+      "createdAt": "2025-09-12T10:20:02.595Z"
+    },
+    {
+      "id": "mfgot0ras66p8j67et",
+      "name": "Digital Fundamentals",
+      "code": "3130704",
+      "course": "Bachelor of Engineering",
+      "department": "Computer Engineering",
+      "lectureHours": 3,
+      "labHours": 2,
+      "labDuration": 2,
+      "totalHours": 5,
+      "assignedFaculty": "Dhruvraj Sing",
+      "semester": "Semester 3",
+      "createdAt": "2025-09-12T10:21:08.758Z"
     }
   ],
   "faculty": [
@@ -309,6 +463,14 @@
       "department": "Computer Engineering",
       "email": "smitr@aiet.edu.in",
       "createdAt": "2025-09-12T09:49:08.329Z"
+    },
+    {
+      "id": "mfgprx1fatgi5z6vtf6",
+      "name": "Kavita Rathod",
+      "specialization": "KVR",
+      "department": "Information Technology",
+      "email": "kavita@aiet.edu.in",
+      "createdAt": "2025-09-12T10:48:16.899Z"
     }
   ],
   "rooms": [
@@ -351,6 +513,96 @@
       "capacity": 60,
       "equipment": "",
       "createdAt": "2025-09-09T10:18:29.392Z"
+    },
+    {
+      "id": "mfgov3vwuoggbdhtokn",
+      "number": "321",
+      "type": "Lecture Hall",
+      "building": "Main Building",
+      "floor": "3rd Floor",
+      "capacity": 60,
+      "equipment": "",
+      "createdAt": "2025-09-12T10:22:46.124Z"
+    },
+    {
+      "id": "mfgovlgoiwerag5jet",
+      "number": "312",
+      "type": "Computer Lab",
+      "building": "Main Building",
+      "floor": "3rd Floor",
+      "capacity": 60,
+      "equipment": "",
+      "createdAt": "2025-09-12T10:23:08.904Z"
+    },
+    {
+      "id": "mfgowho09aushop7n6",
+      "number": "309",
+      "type": "Computer Lab",
+      "building": "Main Building",
+      "floor": "3rd Floor",
+      "capacity": 60,
+      "equipment": "",
+      "createdAt": "2025-09-12T10:23:50.640Z"
+    },
+    {
+      "id": "mfgox0zbctzpficowht",
+      "number": "201",
+      "type": "Computer Lab",
+      "building": "Main Building",
+      "floor": "2nd Floor",
+      "capacity": 60,
+      "equipment": "",
+      "createdAt": "2025-09-12T10:24:15.671Z"
+    },
+    {
+      "id": "mfgp1fcupa6us8r1bs",
+      "number": "213",
+      "type": "Lecture Hall",
+      "building": "Main Building",
+      "floor": "2nd Floor",
+      "capacity": 60,
+      "equipment": "",
+      "createdAt": "2025-09-12T10:27:40.926Z"
+    },
+    {
+      "id": "mfgp27owdzpj71bglhr",
+      "number": "216",
+      "type": "Computer Lab",
+      "building": "Main Building",
+      "floor": "2nd Floor",
+      "capacity": 60,
+      "equipment": "",
+      "createdAt": "2025-09-12T10:28:17.648Z"
+    },
+    {
+      "id": "mfgp2k5wema3f7656ik",
+      "number": "310",
+      "type": "Computer Lab",
+      "building": "Main Building",
+      "floor": "3rd Floor",
+      "capacity": 60,
+      "equipment": "",
+      "createdAt": "2025-09-12T10:28:33.812Z"
+    },
+    {
+      "id": "mfgp3kj1unhuzg2z4yo",
+      "number": "013",
+      "type": "Lecture Hall",
+      "building": "Main Building",
+      "floor": "Ground Floor",
+      "capacity": 60,
+      "equipment": "",
+      "createdAt": "2025-09-12T10:29:20.941Z"
+    },
+    {
+      "id": "mfgp4fn029nz3xzd91a",
+      "number": "001",
+      "type": "Lecture Hall",
+      "building": "Main Building",
+      "floor": "Ground Floor",
+      "capacity": 60,
+      "equipment": "",
+      "createdAt": "2025-09-12T10:30:01.260Z"
     }
   ],
   "courses": [
@@ -408,8 +660,571 @@
   "generatedTimetables": [],
   "savedTimetables": [
     {
-      "id": "1757660920986",
-      "course": "BTech",
+      "id": "1757673843063",
+      "course": "Bachelor of Engineering",
+      "department": "Computer Engineering",
+      "semester": "Semester 3",
+      "students": 50,
+      "startTime": "09:00",
+      "endTime": "15:00",
+      "timetable": {
+        "Monday": {
+          "1": null,
+          "2": {
+            "subject": "Database Management Systems",
+            "code": "3130703",
+            "faculty": "Tammana Bhatt",
+            "room": "218",
+            "type": "Lab",
+            "duration": 2,
+            "startTime": "10:00",
+            "endTime": "12:00",
+            "slotPosition": "first"
+          },
+          "3": {
+            "subject": "Database Management Systems",
+            "code": "3130703",
+            "faculty": "Tammana Bhatt",
+            "room": "218",
+            "type": "Lab",
+            "duration": 2,
+            "startTime": "10:00",
+            "endTime": "12:00",
+            "slotPosition": "last"
+          },
+          "4": null,
+          "5": {
+            "subject": "Digital Fundamentals",
+            "code": "3130704",
+            "faculty": "Dhruvraj Sing",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "13:00",
+            "endTime": "14:00"
+          },
+          "6": {
+            "subject": "Data Structures",
+            "code": "3130702",
+            "faculty": "Nensi Patel",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "14:00",
+            "endTime": "15:00"
+          }
+        },
+        "Tuesday": {
+          "1": {
+            "subject": "Data Structures",
+            "code": "3130702",
+            "faculty": "Nensi Patel",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "09:00",
+            "endTime": "10:00"
+          },
+          "2": {
+            "subject": "Digital Fundamentals",
+            "code": "3130704",
+            "faculty": "Dhruvraj Sing",
+            "room": "218",
+            "type": "Lab",
+            "duration": 2,
+            "startTime": "10:00",
+            "endTime": "12:00",
+            "slotPosition": "first"
+          },
+          "3": {
+            "subject": "Digital Fundamentals",
+            "code": "3130704",
+            "faculty": "Dhruvraj Sing",
+            "room": "218",
+            "type": "Lab",
+            "duration": 2,
+            "startTime": "10:00",
+            "endTime": "12:00",
+            "slotPosition": "last"
+          },
+          "4": null,
+          "5": {
+            "subject": "Indian Constitution",
+            "code": "3130007",
+            "faculty": "Priya Chodvadiya",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "13:00",
+            "endTime": "14:00"
+          },
+          "6": {
+            "subject": "Database Management Systems",
+            "code": "3130703",
+            "faculty": "Tammana Bhatt",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "14:00",
+            "endTime": "15:00"
+          }
+        },
+        "Wednesday": {
+          "1": {
+            "subject": "Probability and Statistics",
+            "code": "3130006",
+            "faculty": "Supriya Tiwari",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "09:00",
+            "endTime": "10:00"
+          },
+          "2": {
+            "subject": "Data Structures",
+            "code": "3130702",
+            "faculty": "Nensi Patel",
+            "room": "218",
+            "type": "Lab",
+            "duration": 2,
+            "startTime": "10:00",
+            "endTime": "12:00",
+            "slotPosition": "first"
+          },
+          "3": {
+            "subject": "Data Structures",
+            "code": "3130702",
+            "faculty": "Nensi Patel",
+            "room": "218",
+            "type": "Lab",
+            "duration": 2,
+            "startTime": "10:00",
+            "endTime": "12:00",
+            "slotPosition": "last"
+          },
+          "4": {
+            "subject": "Indian Constitution",
+            "code": "3130007",
+            "faculty": "Priya Chodvadiya",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "12:00",
+            "endTime": "13:00"
+          },
+          "5": {
+            "subject": "Database Management Systems",
+            "code": "3130703",
+            "faculty": "Tammana Bhatt",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "13:00",
+            "endTime": "14:00"
+          },
+          "6": {
+            "subject": "Digital Fundamentals",
+            "code": "3130704",
+            "faculty": "Dhruvraj Sing",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "14:00",
+            "endTime": "15:00"
+          }
+        },
+        "Thursday": {
+          "1": {
+            "subject": "Digital Fundamentals",
+            "code": "3130704",
+            "faculty": "Dhruvraj Sing",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "09:00",
+            "endTime": "10:00"
+          },
+          "2": {
+            "subject": "Data Structures",
+            "code": "3130702",
+            "faculty": "Nensi Patel",
+            "room": "218",
+            "type": "Lab",
+            "duration": 2,
+            "startTime": "10:00",
+            "endTime": "12:00",
+            "slotPosition": "first"
+          },
+          "3": {
+            "subject": "Data Structures",
+            "code": "3130702",
+            "faculty": "Nensi Patel",
+            "room": "218",
+            "type": "Lab",
+            "duration": 2,
+            "startTime": "10:00",
+            "endTime": "12:00",
+            "slotPosition": "last"
+          },
+          "4": {
+            "subject": "Probability and Statistics",
+            "code": "3130006",
+            "faculty": "Supriya Tiwari",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "12:00",
+            "endTime": "13:00"
+          },
+          "5": {
+            "subject": "Database Management Systems",
+            "code": "3130703",
+            "faculty": "Tammana Bhatt",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "13:00",
+            "endTime": "14:00"
+          },
+          "6": null
+        },
+        "Friday": {
+          "1": {
+            "subject": "Data Structures",
+            "code": "3130702",
+            "faculty": "Nensi Patel",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "09:00",
+            "endTime": "10:00"
+          },
+          "2": null,
+          "3": {
+            "subject": "Probability and Statistics",
+            "code": "3130006",
+            "faculty": "Supriya Tiwari",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "11:00",
+            "endTime": "12:00"
+          },
+          "4": null,
+          "5": {
+            "subject": "Database Management Systems",
+            "code": "3130703",
+            "faculty": "Tammana Bhatt",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "13:00",
+            "endTime": "14:00"
+          },
+          "6": null
+        }
+      },
+      "generatedAt": "2025-09-12T10:44:03.029Z",
+      "savedAt": "2025-09-12T10:44:03.063Z"
+    },
+    {
+      "id": "1757673866998",
+      "course": "Bachelor of Engineering",
+      "department": "Information Technology",
+      "semester": "Semester 5",
+      "students": 50,
+      "startTime": "09:00",
+      "endTime": "15:00",
+      "timetable": {
+        "Monday": {
+          "1": {
+            "subject": "Analysis and Design of Computer Algorithms",
+            "code": "3150703",
+            "faculty": "Dharti Mahida",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "09:00",
+            "endTime": "10:00"
+          },
+          "2": {
+            "subject": "Data Science",
+            "code": "3151608",
+            "faculty": "Kajal Chauhan",
+            "room": "218",
+            "type": "Lab",
+            "duration": 2,
+            "startTime": "10:00",
+            "endTime": "12:00",
+            "slotPosition": "first"
+          },
+          "3": {
+            "subject": "Data Science",
+            "code": "3151608",
+            "faculty": "Kajal Chauhan",
+            "room": "218",
+            "type": "Lab",
+            "duration": 2,
+            "startTime": "10:00",
+            "endTime": "12:00",
+            "slotPosition": "last"
+          },
+          "4": {
+            "subject": "Computer Networks",
+            "code": "3150710",
+            "faculty": "Vandita Shah",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "12:00",
+            "endTime": "13:00"
+          },
+          "5": {
+            "subject": "Web Development",
+            "code": "3151606",
+            "faculty": "Heena Patel",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "13:00",
+            "endTime": "14:00"
+          },
+          "6": null
+        },
+        "Tuesday": {
+          "1": {
+            "subject": "Web Development",
+            "code": "3151606",
+            "faculty": "Heena Patel",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "09:00",
+            "endTime": "10:00"
+          },
+          "2": {
+            "subject": "Analysis and Design of Computer Algorithms",
+            "code": "3150703",
+            "faculty": "Dharti Mahida",
+            "room": "218",
+            "type": "Lab",
+            "duration": 2,
+            "startTime": "10:00",
+            "endTime": "12:00",
+            "slotPosition": "first"
+          },
+          "3": {
+            "subject": "Analysis and Design of Computer Algorithms",
+            "code": "3150703",
+            "faculty": "Dharti Mahida",
+            "room": "218",
+            "type": "Lab",
+            "duration": 2,
+            "startTime": "10:00",
+            "endTime": "12:00",
+            "slotPosition": "last"
+          },
+          "4": {
+            "subject": "Integrated Personality Development Course",
+            "code": "3150005",
+            "faculty": "Priya Chodvadiya",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "12:00",
+            "endTime": "13:00"
+          },
+          "5": {
+            "subject": "Data Science",
+            "code": "3151608",
+            "faculty": "Kajal Chauhan",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "13:00",
+            "endTime": "14:00"
+          },
+          "6": {
+            "subject": "Computer Networks",
+            "code": "3150710",
+            "faculty": "Vandita Shah",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "14:00",
+            "endTime": "15:00"
+          }
+        },
+        "Wednesday": {
+          "1": {
+            "subject": "Data Science",
+            "code": "3151608",
+            "faculty": "Kajal Chauhan",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "09:00",
+            "endTime": "10:00"
+          },
+          "2": {
+            "subject": "Computer Networks",
+            "code": "3150710",
+            "faculty": "Vandita Shah",
+            "room": "218",
+            "type": "Lab",
+            "duration": 2,
+            "startTime": "10:00",
+            "endTime": "12:00",
+            "slotPosition": "first"
+          },
+          "3": {
+            "subject": "Computer Networks",
+            "code": "3150710",
+            "faculty": "Vandita Shah",
+            "room": "218",
+            "type": "Lab",
+            "duration": 2,
+            "startTime": "10:00",
+            "endTime": "12:00",
+            "slotPosition": "last"
+          },
+          "4": {
+            "subject": "Professional Ethics",
+            "code": "3150709",
+            "faculty": "Priya Chodvadiya",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "12:00",
+            "endTime": "13:00"
+          },
+          "5": null,
+          "6": {
+            "subject": "Analysis and Design of Computer Algorithms",
+            "code": "3150703",
+            "faculty": "Dharti Mahida",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "14:00",
+            "endTime": "15:00"
+          }
+        },
+        "Thursday": {
+          "1": {
+            "subject": "Integrated Personality Development Course",
+            "code": "3150005",
+            "faculty": "Priya Chodvadiya",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "09:00",
+            "endTime": "10:00"
+          },
+          "2": {
+            "subject": "Web Development",
+            "code": "3151606",
+            "faculty": "Heena Patel",
+            "room": "218",
+            "type": "Lab",
+            "duration": 2,
+            "startTime": "10:00",
+            "endTime": "12:00",
+            "slotPosition": "first"
+          },
+          "3": {
+            "subject": "Web Development",
+            "code": "3151606",
+            "faculty": "Heena Patel",
+            "room": "218",
+            "type": "Lab",
+            "duration": 2,
+            "startTime": "10:00",
+            "endTime": "12:00",
+            "slotPosition": "last"
+          },
+          "4": {
+            "subject": "Analysis and Design of Computer Algorithms",
+            "code": "3150703",
+            "faculty": "Dharti Mahida",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "12:00",
+            "endTime": "13:00"
+          },
+          "5": {
+            "subject": "Professional Ethics",
+            "code": "3150709",
+            "faculty": "Priya Chodvadiya",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "13:00",
+            "endTime": "14:00"
+          },
+          "6": {
+            "subject": "Computer Networks",
+            "code": "3150710",
+            "faculty": "Vandita Shah",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "14:00",
+            "endTime": "15:00"
+          }
+        },
+        "Friday": {
+          "1": {
+            "subject": "Professional Ethics",
+            "code": "3150709",
+            "faculty": "Priya Chodvadiya",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "09:00",
+            "endTime": "10:00"
+          },
+          "2": {
+            "subject": "Analysis and Design of Computer Algorithms",
+            "code": "3150703",
+            "faculty": "Dharti Mahida",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "10:00",
+            "endTime": "11:00"
+          },
+          "3": {
+            "subject": "Web Development",
+            "code": "3151606",
+            "faculty": "Heena Patel",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "11:00",
+            "endTime": "12:00"
+          },
+          "4": {
+            "subject": "Computer Networks",
+            "code": "3150710",
+            "faculty": "Vandita Shah",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "12:00",
+            "endTime": "13:00"
+          },
+          "5": null,
+          "6": null
+        }
+      },
+      "generatedAt": "2025-09-12T10:44:26.994Z",
+      "savedAt": "2025-09-12T10:44:26.998Z"
+    },
+    {
+      "id": "1757674150124",
+      "course": "Bachelor of Engineering",
       "department": "Information Technology",
       "semester": "Semester 7",
       "students": 50,
@@ -428,6 +1243,70 @@
             "endTime": "10:00"
           },
           "2": {
+            "subject": "Computer Vision",
+            "code": "3171614",
+            "faculty": "Nitesh Prajapati",
+            "room": "218",
+            "type": "Lab",
+            "duration": 2,
+            "startTime": "10:00",
+            "endTime": "12:00",
+            "slotPosition": "first"
+          },
+          "3": {
+            "subject": "Computer Vision",
+            "code": "3171614",
+            "faculty": "Nitesh Prajapati",
+            "room": "218",
+            "type": "Lab",
+            "duration": 2,
+            "startTime": "10:00",
+            "endTime": "12:00",
+            "slotPosition": "last"
+          },
+          "4": {
+            "subject": "Software Project Management",
+            "code": "3171609",
+            "faculty": "Ankita Mevada",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "12:00",
+            "endTime": "13:00"
+          },
+          "5": {
+            "subject": "Wireless Communication",
+            "code": "3171608",
+            "faculty": "Heena Patel",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "13:00",
+            "endTime": "14:00"
+          },
+          "6": {
+            "subject": "Applied Machine Learning",
+            "code": "3171617",
+            "faculty": "Smit Patel",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "14:00",
+            "endTime": "15:00"
+          }
+        },
+        "Tuesday": {
+          "1": {
+            "subject": "Computer Vision",
+            "code": "3171614",
+            "faculty": "Nitesh Prajapati",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "09:00",
+            "endTime": "10:00"
+          },
+          "2": {
             "subject": "Applied Machine Learning",
             "code": "3171617",
             "faculty": "Smit Patel",
@@ -460,9 +1339,9 @@
             "endTime": "13:00"
           },
           "5": {
-            "subject": "Software Project Management",
-            "code": "3171609",
-            "faculty": "Ankita Mevada",
+            "subject": "Internet Of Things",
+            "code": "3171108",
+            "faculty": "Kavita Rathod",
             "room": "317",
             "type": "Lecture",
             "duration": 1,
@@ -470,73 +1349,9 @@
             "endTime": "14:00"
           },
           "6": {
-            "subject": "Computer Vision",
-            "code": "3171614",
-            "faculty": "Nitesh Prajapati",
-            "room": "317",
-            "type": "Lecture",
-            "duration": 1,
-            "startTime": "14:00",
-            "endTime": "15:00"
-          }
-        },
-        "Tuesday": {
-          "1": {
-            "subject": "Software Project Management",
-            "code": "3171609",
-            "faculty": "Ankita Mevada",
-            "room": "317",
-            "type": "Lecture",
-            "duration": 1,
-            "startTime": "09:00",
-            "endTime": "10:00"
-          },
-          "2": {
-            "subject": "Internet Of Things",
-            "code": "3171108",
-            "faculty": "Kavita Rathod",
-            "room": "218",
-            "type": "Lab",
-            "duration": 2,
-            "startTime": "10:00",
-            "endTime": "12:00",
-            "slotPosition": "first"
-          },
-          "3": {
-            "subject": "Internet Of Things",
-            "code": "3171108",
-            "faculty": "Kavita Rathod",
-            "room": "218",
-            "type": "Lab",
-            "duration": 2,
-            "startTime": "10:00",
-            "endTime": "12:00",
-            "slotPosition": "last"
-          },
-          "4": {
-            "subject": "Computer Vision",
-            "code": "3171614",
-            "faculty": "Nitesh Prajapati",
-            "room": "317",
-            "type": "Lecture",
-            "duration": 1,
-            "startTime": "12:00",
-            "endTime": "13:00"
-          },
-          "5": {
             "subject": "Agile Development and UI/UX design",
             "code": "3171610",
             "faculty": "Kajal Chauhan",
-            "room": "317",
-            "type": "Lecture",
-            "duration": 1,
-            "startTime": "13:00",
-            "endTime": "14:00"
-          },
-          "6": {
-            "subject": "Applied Machine Learning",
-            "code": "3171617",
-            "faculty": "Smit Patel",
             "room": "317",
             "type": "Lecture",
             "duration": 1,
@@ -546,6 +1361,70 @@
         },
         "Wednesday": {
           "1": {
+            "subject": "Software Project Management",
+            "code": "3171609",
+            "faculty": "Ankita Mevada",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "09:00",
+            "endTime": "10:00"
+          },
+          "2": {
+            "subject": "Internet Of Things",
+            "code": "3171108",
+            "faculty": "Kavita Rathod",
+            "room": "218",
+            "type": "Lab",
+            "duration": 2,
+            "startTime": "10:00",
+            "endTime": "12:00",
+            "slotPosition": "first"
+          },
+          "3": {
+            "subject": "Internet Of Things",
+            "code": "3171108",
+            "faculty": "Kavita Rathod",
+            "room": "218",
+            "type": "Lab",
+            "duration": 2,
+            "startTime": "10:00",
+            "endTime": "12:00",
+            "slotPosition": "last"
+          },
+          "4": {
+            "subject": "Agile Development and UI/UX design",
+            "code": "3171610",
+            "faculty": "Kajal Chauhan",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "12:00",
+            "endTime": "13:00"
+          },
+          "5": {
+            "subject": "Wireless Communication",
+            "code": "3171608",
+            "faculty": "Heena Patel",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "13:00",
+            "endTime": "14:00"
+          },
+          "6": {
+            "subject": "Applied Machine Learning",
+            "code": "3171617",
+            "faculty": "Smit Patel",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "14:00",
+            "endTime": "15:00"
+          }
+        },
+        "Thursday": {
+          "1": {
             "subject": "Computer Vision",
             "code": "3171614",
             "faculty": "Nitesh Prajapati",
@@ -556,9 +1435,9 @@
             "endTime": "10:00"
           },
           "2": {
-            "subject": "Software Project Management",
-            "code": "3171609",
-            "faculty": "Ankita Mevada",
+            "subject": "Wireless Communication",
+            "code": "3171608",
+            "faculty": "Heena Patel",
             "room": "218",
             "type": "Lab",
             "duration": 2,
@@ -567,9 +1446,9 @@
             "slotPosition": "first"
           },
           "3": {
-            "subject": "Software Project Management",
-            "code": "3171609",
-            "faculty": "Ankita Mevada",
+            "subject": "Wireless Communication",
+            "code": "3171608",
+            "faculty": "Heena Patel",
             "room": "218",
             "type": "Lab",
             "duration": 2,
@@ -578,9 +1457,9 @@
             "slotPosition": "last"
           },
           "4": {
-            "subject": "Wireless Communication",
-            "code": "3171608",
-            "faculty": "Heena Patel",
+            "subject": "Agile Development and UI/UX design",
+            "code": "3171610",
+            "faculty": "Kajal Chauhan",
             "room": "317",
             "type": "Lecture",
             "duration": 1,
@@ -598,64 +1477,9 @@
             "endTime": "14:00"
           },
           "6": {
-            "subject": "Agile Development and UI/UX design",
-            "code": "3171610",
-            "faculty": "Kajal Chauhan",
-            "room": "317",
-            "type": "Lecture",
-            "duration": 1,
-            "startTime": "14:00",
-            "endTime": "15:00"
-          }
-        },
-        "Thursday": {
-          "1": {
             "subject": "Software Project Management",
             "code": "3171609",
             "faculty": "Ankita Mevada",
-            "room": "317",
-            "type": "Lecture",
-            "duration": 1,
-            "startTime": "09:00",
-            "endTime": "10:00"
-          },
-          "2": {
-            "subject": "Computer Vision",
-            "code": "3171614",
-            "faculty": "Nitesh Prajapati",
-            "room": "218",
-            "type": "Lab",
-            "duration": 2,
-            "startTime": "10:00",
-            "endTime": "12:00",
-            "slotPosition": "first"
-          },
-          "3": {
-            "subject": "Computer Vision",
-            "code": "3171614",
-            "faculty": "Nitesh Prajapati",
-            "room": "218",
-            "type": "Lab",
-            "duration": 2,
-            "startTime": "10:00",
-            "endTime": "12:00",
-            "slotPosition": "last"
-          },
-          "4": null,
-          "5": {
-            "subject": "Wireless Communication",
-            "code": "3171608",
-            "faculty": "Heena Patel",
-            "room": "317",
-            "type": "Lecture",
-            "duration": 1,
-            "startTime": "13:00",
-            "endTime": "14:00"
-          },
-          "6": {
-            "subject": "Applied Machine Learning",
-            "code": "3171617",
-            "faculty": "Smit Patel",
             "room": "317",
             "type": "Lecture",
             "duration": 1,
@@ -675,9 +1499,9 @@
             "endTime": "10:00"
           },
           "2": {
-            "subject": "Wireless Communication",
-            "code": "3171608",
-            "faculty": "Heena Patel",
+            "subject": "Software Project Management",
+            "code": "3171609",
+            "faculty": "Ankita Mevada",
             "room": "218",
             "type": "Lab",
             "duration": 2,
@@ -686,9 +1510,9 @@
             "slotPosition": "first"
           },
           "3": {
-            "subject": "Wireless Communication",
-            "code": "3171608",
-            "faculty": "Heena Patel",
+            "subject": "Software Project Management",
+            "code": "3171609",
+            "faculty": "Ankita Mevada",
             "room": "218",
             "type": "Lab",
             "duration": 2,
@@ -697,9 +1521,9 @@
             "slotPosition": "last"
           },
           "4": {
-            "subject": "Agile Development and UI/UX design",
-            "code": "3171610",
-            "faculty": "Kajal Chauhan",
+            "subject": "Computer Vision",
+            "code": "3171614",
+            "faculty": "Nitesh Prajapati",
             "room": "317",
             "type": "Lecture",
             "duration": 1,
@@ -707,335 +1531,11 @@
             "endTime": "13:00"
           },
           "5": null,
-          "6": {
-            "subject": "Internet Of Things",
-            "code": "3171108",
-            "faculty": "Kavita Rathod",
-            "room": "317",
-            "type": "Lecture",
-            "duration": 1,
-            "startTime": "14:00",
-            "endTime": "15:00"
-          }
-        }
-      },
-      "generatedAt": "2025-09-12T07:08:40.977Z",
-      "savedAt": "2025-09-12T07:08:40.986Z"
-    },
-    {
-      "id": "1757660937580",
-      "course": "BTech",
-      "department": "Information Technology",
-      "semester": "Semester 7",
-      "students": 30,
-      "startTime": "09:00",
-      "endTime": "15:00",
-      "timetable": {
-        "Monday": {
-          "1": {
-            "subject": "Wireless Communication",
-            "code": "3171608",
-            "faculty": "Heena Patel",
-            "room": "317",
-            "type": "Lecture",
-            "duration": 1,
-            "startTime": "09:00",
-            "endTime": "10:00"
-          },
-          "2": {
-            "subject": "Software Project Management",
-            "code": "3171609",
-            "faculty": "Ankita Mevada",
-            "room": "218",
-            "type": "Lab",
-            "duration": 2,
-            "startTime": "10:00",
-            "endTime": "12:00",
-            "slotPosition": "first"
-          },
-          "3": {
-            "subject": "Software Project Management",
-            "code": "3171609",
-            "faculty": "Ankita Mevada",
-            "room": "218",
-            "type": "Lab",
-            "duration": 2,
-            "startTime": "10:00",
-            "endTime": "12:00",
-            "slotPosition": "last"
-          },
-          "4": {
-            "subject": "Agile Development and UI/UX design",
-            "code": "3171610",
-            "faculty": "Kajal Chauhan",
-            "room": "317",
-            "type": "Lecture",
-            "duration": 1,
-            "startTime": "12:00",
-            "endTime": "13:00"
-          },
-          "5": {
-            "subject": "Applied Machine Learning",
-            "code": "3171617",
-            "faculty": "Smit Patel",
-            "room": "317",
-            "type": "Lecture",
-            "duration": 1,
-            "startTime": "13:00",
-            "endTime": "14:00"
-          },
-          "6": {
-            "subject": "Computer Vision",
-            "code": "3171614",
-            "faculty": "Nitesh Prajapati",
-            "room": "317",
-            "type": "Lecture",
-            "duration": 1,
-            "startTime": "14:00",
-            "endTime": "15:00"
-          }
-        },
-        "Tuesday": {
-          "1": {
-            "subject": "Internet Of Things",
-            "code": "3171108",
-            "faculty": "Kavita Rathod",
-            "room": "317",
-            "type": "Lecture",
-            "duration": 1,
-            "startTime": "09:00",
-            "endTime": "10:00"
-          },
-          "2": {
-            "subject": "Computer Vision",
-            "code": "3171614",
-            "faculty": "Nitesh Prajapati",
-            "room": "218",
-            "type": "Lab",
-            "duration": 2,
-            "startTime": "10:00",
-            "endTime": "12:00",
-            "slotPosition": "first"
-          },
-          "3": {
-            "subject": "Computer Vision",
-            "code": "3171614",
-            "faculty": "Nitesh Prajapati",
-            "room": "218",
-            "type": "Lab",
-            "duration": 2,
-            "startTime": "10:00",
-            "endTime": "12:00",
-            "slotPosition": "last"
-          },
-          "4": {
-            "subject": "Agile Development and UI/UX design",
-            "code": "3171610",
-            "faculty": "Kajal Chauhan",
-            "room": "317",
-            "type": "Lecture",
-            "duration": 1,
-            "startTime": "12:00",
-            "endTime": "13:00"
-          },
-          "5": {
-            "subject": "Wireless Communication",
-            "code": "3171608",
-            "faculty": "Heena Patel",
-            "room": "317",
-            "type": "Lecture",
-            "duration": 1,
-            "startTime": "13:00",
-            "endTime": "14:00"
-          },
-          "6": {
-            "subject": "Software Project Management",
-            "code": "3171609",
-            "faculty": "Ankita Mevada",
-            "room": "317",
-            "type": "Lecture",
-            "duration": 1,
-            "startTime": "14:00",
-            "endTime": "15:00"
-          }
-        },
-        "Wednesday": {
-          "1": null,
-          "2": {
-            "subject": "Applied Machine Learning",
-            "code": "3171617",
-            "faculty": "Smit Patel",
-            "room": "218",
-            "type": "Lab",
-            "duration": 2,
-            "startTime": "10:00",
-            "endTime": "12:00",
-            "slotPosition": "first"
-          },
-          "3": {
-            "subject": "Applied Machine Learning",
-            "code": "3171617",
-            "faculty": "Smit Patel",
-            "room": "218",
-            "type": "Lab",
-            "duration": 2,
-            "startTime": "10:00",
-            "endTime": "12:00",
-            "slotPosition": "last"
-          },
-          "4": {
-            "subject": "Internet Of Things",
-            "code": "3171108",
-            "faculty": "Kavita Rathod",
-            "room": "317",
-            "type": "Lecture",
-            "duration": 1,
-            "startTime": "12:00",
-            "endTime": "13:00"
-          },
-          "5": {
-            "subject": "Wireless Communication",
-            "code": "3171608",
-            "faculty": "Heena Patel",
-            "room": "317",
-            "type": "Lecture",
-            "duration": 1,
-            "startTime": "13:00",
-            "endTime": "14:00"
-          },
           "6": null
-        },
-        "Thursday": {
-          "1": {
-            "subject": "Internet Of Things",
-            "code": "3171108",
-            "faculty": "Kavita Rathod",
-            "room": "317",
-            "type": "Lecture",
-            "duration": 1,
-            "startTime": "09:00",
-            "endTime": "10:00"
-          },
-          "2": {
-            "subject": "Wireless Communication",
-            "code": "3171608",
-            "faculty": "Heena Patel",
-            "room": "218",
-            "type": "Lab",
-            "duration": 2,
-            "startTime": "10:00",
-            "endTime": "12:00",
-            "slotPosition": "first"
-          },
-          "3": {
-            "subject": "Wireless Communication",
-            "code": "3171608",
-            "faculty": "Heena Patel",
-            "room": "218",
-            "type": "Lab",
-            "duration": 2,
-            "startTime": "10:00",
-            "endTime": "12:00",
-            "slotPosition": "last"
-          },
-          "4": {
-            "subject": "Computer Vision",
-            "code": "3171614",
-            "faculty": "Nitesh Prajapati",
-            "room": "317",
-            "type": "Lecture",
-            "duration": 1,
-            "startTime": "12:00",
-            "endTime": "13:00"
-          },
-          "5": {
-            "subject": "Software Project Management",
-            "code": "3171609",
-            "faculty": "Ankita Mevada",
-            "room": "317",
-            "type": "Lecture",
-            "duration": 1,
-            "startTime": "13:00",
-            "endTime": "14:00"
-          },
-          "6": {
-            "subject": "Applied Machine Learning",
-            "code": "3171617",
-            "faculty": "Smit Patel",
-            "room": "317",
-            "type": "Lecture",
-            "duration": 1,
-            "startTime": "14:00",
-            "endTime": "15:00"
-          }
-        },
-        "Friday": {
-          "1": {
-            "subject": "Computer Vision",
-            "code": "3171614",
-            "faculty": "Nitesh Prajapati",
-            "room": "317",
-            "type": "Lecture",
-            "duration": 1,
-            "startTime": "09:00",
-            "endTime": "10:00"
-          },
-          "2": {
-            "subject": "Internet Of Things",
-            "code": "3171108",
-            "faculty": "Kavita Rathod",
-            "room": "218",
-            "type": "Lab",
-            "duration": 2,
-            "startTime": "10:00",
-            "endTime": "12:00",
-            "slotPosition": "first"
-          },
-          "3": {
-            "subject": "Internet Of Things",
-            "code": "3171108",
-            "faculty": "Kavita Rathod",
-            "room": "218",
-            "type": "Lab",
-            "duration": 2,
-            "startTime": "10:00",
-            "endTime": "12:00",
-            "slotPosition": "last"
-          },
-          "4": {
-            "subject": "Agile Development and UI/UX design",
-            "code": "3171610",
-            "faculty": "Kajal Chauhan",
-            "room": "317",
-            "type": "Lecture",
-            "duration": 1,
-            "startTime": "12:00",
-            "endTime": "13:00"
-          },
-          "5": {
-            "subject": "Software Project Management",
-            "code": "3171609",
-            "faculty": "Ankita Mevada",
-            "room": "317",
-            "type": "Lecture",
-            "duration": 1,
-            "startTime": "13:00",
-            "endTime": "14:00"
-          },
-          "6": {
-            "subject": "Applied Machine Learning",
-            "code": "3171617",
-            "faculty": "Smit Patel",
-            "room": "317",
-            "type": "Lecture",
-            "duration": 1,
-            "startTime": "14:00",
-            "endTime": "15:00"
-          }
         }
       },
-      "generatedAt": "2025-09-12T07:08:57.576Z",
-      "savedAt": "2025-09-12T07:08:57.580Z"
+      "generatedAt": "2025-09-12T10:49:10.119Z",
+      "savedAt": "2025-09-12T10:49:10.124Z"
     }
   ],
   "settings": {
