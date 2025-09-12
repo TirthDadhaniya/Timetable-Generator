@@ -320,8 +320,8 @@ function renderFaculty() {
     <div class="faculty-card" data-id="${f.id}">
       <div class="faculty-card-content">
           <div class="faculty-card-info">
-            <div class="faculty-card-name">${f.name}</div>
-            <div class="faculty-card-specialization">Specialization: <b>${f.specialization}</b></div>
+
+            <div class="faculty-card-name">${f.name} <span class="faculty-card-specialization">(${f.specialization})</span></div>
             <div class="faculty-card-department">Department: <b>${f.department}</b></div>
             <div class="faculty-card-email">Email: <b>${f.email}</b></div>
           </div>
@@ -1794,7 +1794,7 @@ function renderFullTimetableTable(timetableData, params) {
             <tr class="time-row">
               <td class="time-cell">
                 <div class="time-slot">
-                  <span class="start-time">${convertTo12HourFormat(slot.startTime)} -</span>
+                  <span class="start-time">${convertTo12HourFormat(slot.startTime)}<br />-<br /></span>
                   <span class="end-time">${convertTo12HourFormat(slot.endTime)}</span>
                 </div>
               </td>
