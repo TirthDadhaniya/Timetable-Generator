@@ -116,18 +116,20 @@ function populateSubjectFormDropdowns() {
   const facultySelect = document.getElementById("assignedFaculty");
   const semesterSelect = document.getElementById("subjectSemester");
 
-  // Populate courses
-  populateSelect(courseSelect, courses);
+  // Populate courses (sorted alphabetically)
+  const sortedCourses = [...courses].sort((a, b) => a.localeCompare(b));
+  populateSelect(courseSelect, sortedCourses);
 
   // Add event listener for course selection to filter departments
   if (courseSelect && departmentSelect) {
     courseSelect.addEventListener("change", function () {
       const selectedCourse = this.value;
       if (selectedCourse) {
-        // Filter departments based on selected course
+        // Filter departments based on selected course and sort alphabetically
         const filteredDepartments = courseDepartments
           .filter((cd) => cd.course === selectedCourse)
-          .map((cd) => cd.department);
+          .map((cd) => cd.department)
+          .sort((a, b) => a.localeCompare(b));
         populateSelect(departmentSelect, filteredDepartments);
       } else {
         // Reset department dropdown if no course selected
@@ -136,17 +138,20 @@ function populateSubjectFormDropdowns() {
     });
   }
 
-  // Initially populate all departments
-  populateSelect(departmentSelect, departments);
+  // Initially populate all departments (sorted alphabetically)
+  const sortedDepartments = [...departments].sort((a, b) => a.localeCompare(b));
+  populateSelect(departmentSelect, sortedDepartments);
 
-  // Populate semesters
+  // Populate semesters (already in correct order 1-8)
   populateSelect(semesterSelect, semesters);
 
-  // Populate faculty
-  const facultyOptions = faculty.map((f) => ({
-    value: f.name,
-    text: `${f.name} (${f.specialization})`,
-  }));
+  // Populate faculty (sorted alphabetically by name)
+  const facultyOptions = faculty
+    .map((f) => ({
+      value: f.name,
+      text: `${f.name} (${f.specialization})`,
+    }))
+    .sort((a, b) => a.value.localeCompare(b.value));
   populateSelect(facultySelect, facultyOptions);
 }
 
@@ -155,7 +160,9 @@ function populateSubjectFormDropdowns() {
  */
 function populateFacultyFormDropdowns() {
   const departmentSelect = document.getElementById("facultyDepartment");
-  populateSelect(departmentSelect, departments);
+  // Sort departments alphabetically
+  const sortedDepartments = [...departments].sort((a, b) => a.localeCompare(b));
+  populateSelect(departmentSelect, sortedDepartments);
 }
 
 /**
@@ -163,7 +170,9 @@ function populateFacultyFormDropdowns() {
  */
 function populateRoomFormDropdowns() {
   const roomTypeSelect = document.getElementById("roomType");
-  populateSelect(roomTypeSelect, roomTypes);
+  // Sort room types alphabetically
+  const sortedRoomTypes = [...roomTypes].sort((a, b) => a.localeCompare(b));
+  populateSelect(roomTypeSelect, sortedRoomTypes);
 }
 
 /**
@@ -174,17 +183,20 @@ function populateTimetableGeneratorDropdowns() {
   const genDepartmentSelect = document.getElementById("genDepartment");
   const genSemesterSelect = document.getElementById("genSemester");
 
-  populateSelect(genCourseSelect, courses);
+  // Sort courses alphabetically
+  const sortedCourses = [...courses].sort((a, b) => a.localeCompare(b));
+  populateSelect(genCourseSelect, sortedCourses);
 
   // Add event listener for course selection to filter departments
   if (genCourseSelect && genDepartmentSelect) {
     genCourseSelect.addEventListener("change", function () {
       const selectedCourse = this.value;
       if (selectedCourse) {
-        // Filter departments based on selected course
+        // Filter departments based on selected course and sort alphabetically
         const filteredDepartments = courseDepartments
           .filter((cd) => cd.course === selectedCourse)
-          .map((cd) => cd.department);
+          .map((cd) => cd.department)
+          .sort((a, b) => a.localeCompare(b));
         populateSelect(genDepartmentSelect, filteredDepartments);
       } else {
         // Reset department dropdown if no course selected
@@ -193,7 +205,11 @@ function populateTimetableGeneratorDropdowns() {
     });
   }
 
-  populateSelect(genDepartmentSelect, departments);
+  // Sort departments alphabetically
+  const sortedDepartments = [...departments].sort((a, b) => a.localeCompare(b));
+  populateSelect(genDepartmentSelect, sortedDepartments);
+
+  // Semesters are already in correct order 1-8
   populateSelect(genSemesterSelect, semesters);
 }
 
@@ -239,7 +255,22 @@ function renderSubjects() {
     return;
   }
 
-  subjectList.innerHTML = subjects
+  // Sort subjects by semester (1-8) first, then alphabetically by name
+  const sortedSubjects = [...subjects].sort((a, b) => {
+    // Extract semester number for proper numerical sorting
+    const getSemesterNumber = (semester) => {
+      const match = semester.match(/\d+/);
+      return match ? parseInt(match[0], 10) : 0;
+    };
+
+    const semesterComparison = getSemesterNumber(a.semester) - getSemesterNumber(b.semester);
+    if (semesterComparison !== 0) return semesterComparison;
+
+    // If same semester, sort alphabetically by subject name
+    return a.name.localeCompare(b.name);
+  });
+
+  subjectList.innerHTML = sortedSubjects
     .map(
       (subject) => `
     <div class="subject-card" data-id="${subject.id}">
@@ -280,7 +311,10 @@ function renderFaculty() {
     return;
   }
 
-  facultyList.innerHTML = faculty
+  // Sort faculty alphabetically by name
+  const sortedFaculty = [...faculty].sort((a, b) => a.name.localeCompare(b.name));
+
+  facultyList.innerHTML = sortedFaculty
     .map(
       (f) => `
     <div class="faculty-card" data-id="${f.id}">
@@ -314,7 +348,17 @@ function renderRooms() {
     return;
   }
 
-  roomList.innerHTML = rooms
+  // Sort rooms numerically by room number
+  const sortedRooms = [...rooms].sort((a, b) => {
+    // Extract numeric part from room number for proper numerical sorting
+    const getNumericValue = (roomNumber) => {
+      const match = roomNumber.match(/\d+/);
+      return match ? parseInt(match[0], 10) : 0;
+    };
+    return getNumericValue(a.number) - getNumericValue(b.number);
+  });
+
+  roomList.innerHTML = sortedRooms
     .map(
       (room) => `
     <div class="room-card" data-id="${room.id}">
@@ -354,23 +398,32 @@ function renderCourseDepartments() {
     return;
   }
 
-  courseDepartmentList.innerHTML = courseDepartments
-    .map(
-      (cd, index) => `
-    <div class="course-department-card" data-index="${index}">
+  // Sort course-departments alphabetically by course, then by department
+  const sortedCourseDepartments = [...courseDepartments].sort((a, b) => {
+    const courseComparison = a.course.localeCompare(b.course);
+    if (courseComparison !== 0) return courseComparison;
+    return a.department.localeCompare(b.department);
+  });
+
+  courseDepartmentList.innerHTML = sortedCourseDepartments
+    .map((cd) => {
+      // Find original index for edit/delete functions
+      const originalIndex = courseDepartments.findIndex((orig) => orig.id === cd.id);
+      return `
+    <div class="course-department-card" data-index="${originalIndex}">
       <div class="course-department-card-content">
           <div class="course-department-card-info">
             <div class="course-department-card-name">${cd.course} - ${cd.department}</div>
             <div class="course-department-card-details">Course: <b>${cd.course}</b> | Department: <b>${cd.department}</b></div>
           </div>
           <div class="course-department-card-actions">
-            <button onclick="editCourseDepartment(${index})" title="Edit" class="card-action-btn"><img src="res/edit.svg" alt="Edit"></button>
-            <button onclick="deleteCourseDepartment(${index})" title="Delete" class="card-action-btn delete-btn"><img src="res/delete.svg" alt="Delete"></button>
+            <button onclick="editCourseDepartment(${originalIndex})" title="Edit" class="card-action-btn"><img src="res/edit.svg" alt="Edit"></button>
+            <button onclick="deleteCourseDepartment(${originalIndex})" title="Delete" class="card-action-btn delete-btn"><img src="res/delete.svg" alt="Delete"></button>
           </div>
         </div>
     </div>
-  `
-    )
+  `;
+    })
     .join("");
 }
 
@@ -1647,17 +1700,25 @@ async function renderSavedTimetables() {
     }
     if (timetableTitle) timetableTitle.textContent = "Your Saved Timetables";
     if (savedTimetablesH3) savedTimetablesH3.style.display = "none";
-    section.style.display = "block"; // Sort by Course > Department > Semester number
-    const semesterNum = (s) => {
-      const m = /Semester\s*(\d+)/i.exec(s || "");
-      return m ? parseInt(m[1], 10) : 0;
+    section.style.display = "block";
+
+    // Sort timetables by Semester (1-8) first, then by Course alphabetically
+    const getSemesterNumber = (semester) => {
+      const match = (semester || "").match(/\d+/);
+      return match ? parseInt(match[0], 10) : 0;
     };
+
     saved.sort((a, b) => {
-      const c = (a.course || "").localeCompare(b.course || "");
-      if (c !== 0) return c;
-      const d = (a.department || "").localeCompare(b.department || "");
-      if (d !== 0) return d;
-      return semesterNum(a.semester) - semesterNum(b.semester);
+      // First sort by semester number
+      const semesterComparison = getSemesterNumber(a.semester) - getSemesterNumber(b.semester);
+      if (semesterComparison !== 0) return semesterComparison;
+
+      // Then sort by course alphabetically
+      const courseComparison = (a.course || "").localeCompare(b.course || "");
+      if (courseComparison !== 0) return courseComparison;
+
+      // Finally sort by department alphabetically
+      return (a.department || "").localeCompare(b.department || "");
     });
 
     // Newest saved first within same group (optional)
