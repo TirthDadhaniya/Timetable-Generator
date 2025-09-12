@@ -14,8 +14,6 @@ tabs.forEach((tab) => {
   });
 });
 document.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("timetable-content").classList.remove("hidden");
-
   // Add event listeners for automatic total calculation
   const lectureHoursInput = document.getElementById("lectureHours");
   const labHoursInput = document.getElementById("labHours");
@@ -74,13 +72,29 @@ function updateFacultyCount() {
 }
 
 function updateTimetableCount() {
-  // Count generated timetables from database
-  if (database && database.generatedTimetables) {
-    const count = database.generatedTimetables.length;
-    animateCount("total-timetables-count", count);
-  } else {
-    animateCount("total-timetables-count", 0);
-  }
+  // Fetch saved timetables count directly from server for real-time accuracy
+  const API_BASE =
+    window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+      ? `http://${window.location.hostname}:3000`
+      : window.location.origin;
+
+  fetch(`${API_BASE}/api/timetables`)
+    .then((response) => response.json())
+    .then((savedTimetables) => {
+      const count = savedTimetables ? savedTimetables.length : 0;
+      animateCount("total-timetables-count", count);
+    })
+    .catch((error) => {
+      console.error("Error fetching timetables count:", error);
+      // Fallback to database variable if fetch fails
+      const database = typeof getDatabase === "function" ? getDatabase() : null;
+      if (database && database.savedTimetables) {
+        const count = database.savedTimetables.length;
+        animateCount("total-timetables-count", count);
+      } else {
+        animateCount("total-timetables-count", 0);
+      }
+    });
 }
 
 // Animate number counting for better UX
