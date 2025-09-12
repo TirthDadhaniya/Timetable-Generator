@@ -10,6 +10,7 @@ let faculty = [];
 let rooms = [];
 let courses = [];
 let departments = [];
+let courseDepartments = []; // Store course-department combinations
 let semesters = [];
 let roomTypes = [];
 
@@ -45,6 +46,7 @@ async function loadDatabase() {
     rooms = database.rooms || [];
     courses = database.courses || [];
     departments = database.departments || [];
+    courseDepartments = database.courseDepartments || [];
     semesters = database.semesters || [];
     roomTypes = database.roomTypes || [];
 
@@ -70,6 +72,7 @@ async function initializeTimetableSystem() {
     renderSubjects();
     renderFaculty();
     renderRooms();
+    renderCourseDepartments();
     renderDepartments();
     await renderSavedTimetables();
     setupFormHandlers();
@@ -116,7 +119,24 @@ function populateSubjectFormDropdowns() {
   // Populate courses
   populateSelect(courseSelect, courses);
 
-  // Populate departments
+  // Add event listener for course selection to filter departments
+  if (courseSelect && departmentSelect) {
+    courseSelect.addEventListener("change", function () {
+      const selectedCourse = this.value;
+      if (selectedCourse) {
+        // Filter departments based on selected course
+        const filteredDepartments = courseDepartments
+          .filter((cd) => cd.course === selectedCourse)
+          .map((cd) => cd.department);
+        populateSelect(departmentSelect, filteredDepartments);
+      } else {
+        // Reset department dropdown if no course selected
+        departmentSelect.innerHTML = '<option value="">Select department</option>';
+      }
+    });
+  }
+
+  // Initially populate all departments
   populateSelect(departmentSelect, departments);
 
   // Populate semesters
@@ -155,6 +175,24 @@ function populateTimetableGeneratorDropdowns() {
   const genSemesterSelect = document.getElementById("genSemester");
 
   populateSelect(genCourseSelect, courses);
+
+  // Add event listener for course selection to filter departments
+  if (genCourseSelect && genDepartmentSelect) {
+    genCourseSelect.addEventListener("change", function () {
+      const selectedCourse = this.value;
+      if (selectedCourse) {
+        // Filter departments based on selected course
+        const filteredDepartments = courseDepartments
+          .filter((cd) => cd.course === selectedCourse)
+          .map((cd) => cd.department);
+        populateSelect(genDepartmentSelect, filteredDepartments);
+      } else {
+        // Reset department dropdown if no course selected
+        genDepartmentSelect.innerHTML = '<option value="">Select department</option>';
+      }
+    });
+  }
+
   populateSelect(genDepartmentSelect, departments);
   populateSelect(genSemesterSelect, semesters);
 }
@@ -304,6 +342,39 @@ function renderRooms() {
 }
 
 /**
+ * Render course-department combinations list
+ */
+function renderCourseDepartments() {
+  const courseDepartmentList = document.getElementById("courseDepartmentList");
+  if (!courseDepartmentList) return;
+
+  if (courseDepartments.length === 0) {
+    courseDepartmentList.innerHTML =
+      '<p class="empty-state">No course-department combinations added yet. Add your first combination above.</p>';
+    return;
+  }
+
+  courseDepartmentList.innerHTML = courseDepartments
+    .map(
+      (cd, index) => `
+    <div class="course-department-card" data-index="${index}">
+      <div class="course-department-card-content">
+          <div class="course-department-card-info">
+            <div class="course-department-card-name">${cd.course} - ${cd.department}</div>
+            <div class="course-department-card-details">Course: <b>${cd.course}</b> | Department: <b>${cd.department}</b></div>
+          </div>
+          <div class="course-department-card-actions">
+            <button onclick="editCourseDepartment(${index})" title="Edit" class="card-action-btn"><img src="res/edit.svg" alt="Edit"></button>
+            <button onclick="deleteCourseDepartment(${index})" title="Delete" class="card-action-btn delete-btn"><img src="res/delete.svg" alt="Delete"></button>
+          </div>
+        </div>
+    </div>
+  `
+    )
+    .join("");
+}
+
+/**
  * Render departments list
  */
 function renderDepartments() {
@@ -362,10 +433,10 @@ function setupFormHandlers() {
     roomForm.addEventListener("submit", handleRoomFormSubmission);
   }
 
-  // Department form
-  const departmentForm = document.getElementById("departmentForm");
-  if (departmentForm) {
-    departmentForm.addEventListener("submit", handleDepartmentFormSubmission);
+  // Course form
+  const courseForm = document.getElementById("courseForm");
+  if (courseForm) {
+    courseForm.addEventListener("submit", handleCourseFormSubmission);
   }
 
   // Timetable generation form
@@ -642,6 +713,86 @@ async function handleRoomFormSubmission(event) {
   } catch (error) {
     console.error(`Error ${isEdit ? "updating" : "adding"} room:`, error);
     showToast(`Failed to ${isEdit ? "update" : "add"} room. Please try again.`, "error");
+  }
+}
+
+/**
+ * Handle course form submission
+ */
+async function handleCourseFormSubmission(event) {
+  event.preventDefault();
+
+  const formData = new FormData(event.target);
+  const courseData = {
+    course: formData.get("courseName"),
+    department: formData.get("departmentName"),
+  };
+
+  // Validation
+  if (!validateCourseDepartmentData(courseData)) {
+    return;
+  }
+
+  // Check if this is an edit operation
+  const editIndex = event.target.dataset.editIndex;
+  let isEdit = editIndex !== undefined;
+
+  try {
+    let url, method;
+
+    if (isEdit) {
+      url = `${API_BASE}/api/course-departments/${editIndex}`;
+      method = "PUT";
+    } else {
+      url = `${API_BASE}/api/course-departments`;
+      method = "POST";
+    }
+
+    const response = await fetch(url, {
+      method: method,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(courseData),
+    });
+
+    if (response.ok) {
+      const result = await response.json();
+
+      // Update individual courses and departments arrays
+      if (!isEdit) {
+        // Add to courses array if not already exists
+        if (!courses.includes(courseData.course)) {
+          courses.push(courseData.course);
+        }
+        // Add to departments array if not already exists
+        if (!departments.includes(courseData.department)) {
+          departments.push(courseData.department);
+        }
+        showToast("Course & Department added successfully!", "success");
+      } else {
+        showToast("Course & Department updated successfully!", "success");
+        // Reset form to add mode
+        delete event.target.dataset.editIndex;
+        const submitBtn = event.target.querySelector('button[type="submit"]');
+        if (submitBtn) {
+          submitBtn.textContent = "Add Course & Department";
+        }
+      }
+
+      renderCourseDepartments();
+      populateAllDropdowns(); // Update all dropdowns with new data
+      event.target.reset();
+
+      if (typeof updateStatistics === "function") {
+        updateStatistics();
+      }
+    } else {
+      throw new Error(`Failed to ${isEdit ? "update" : "add"} course & department`);
+    }
+  } catch (error) {
+    console.error(`Error ${isEdit ? "updating" : "adding"} course & department:`, error);
+    showToast(`Failed to ${isEdit ? "update" : "add"} course & department. Please try again.`, "error");
   }
 }
 
@@ -1211,7 +1362,7 @@ function displayGeneratedTimetable(timetableData, params) {
 
   // Update title
   if (timetableTitle) {
-    timetableTitle.textContent = `Timetable: ${params.course} - ${params.department} - ${params.semester}`;
+    timetableTitle.textContent = `${params.course} - ${params.department} - ${params.semester}`;
   }
 
   // Generate timetable HTML
@@ -1247,7 +1398,7 @@ function displayGeneratedTimetable(timetableData, params) {
             <tr class="time-row">
               <td class="time-cell">
                 <div class="time-slot">
-                  <span class="start-time">${convertTo12HourFormat(slot.startTime)} -</span>
+                  <span class="start-time">${convertTo12HourFormat(slot.startTime)}<br />-<br /></span>
                   <span class="end-time">${convertTo12HourFormat(slot.endTime)}</span>
                 </div>
               </td>
@@ -1353,6 +1504,31 @@ async function saveTimetable() {
       updateTimetableActionButtons(true, savedTimetable.id);
 
       console.log("✅ Timetable saved with ID:", savedTimetable.id);
+
+      // Hide the generated timetable and restore placeholder state
+      const dynamicTimetable = document.getElementById("dynamic-timetable");
+      if (dynamicTimetable) {
+        dynamicTimetable.innerHTML = `
+          <div class="timetable-placeholder">
+            <div class="placeholder-content">
+              <h3>No Timetable Generated Yet</h3>
+              <p>Use the Timetable Generator above to create your schedule</p>
+              <div class="btn-container">
+                <button onclick="scrollToGenerator()" class="btn">Generate Timetable</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      // Reset the timetable title to default
+      const timetableTitle = document.getElementById("timetable-title");
+      if (timetableTitle) {
+        timetableTitle.textContent = "Generated Timetable";
+      }
+
+      // Clear current generated timetable since it's now saved
+      currentGeneratedTimetable = null;
 
       // Refresh saved timetables list and scroll to it
       lastSavedTimetableId = savedTimetable.id;
@@ -1487,24 +1663,22 @@ async function renderSavedTimetables() {
     list.innerHTML = saved
       .map(
         (t) => `
-        <div class="saved-timetable-card" id="saved-tt-${t.id}">
-          <div class="saved-timetable-header">
-            <div class="saved-timetable-title">
-              ${t.course} • ${t.department} • ${t.semester}
-              <div class="saved-timetable-details">
-                Students: ${t.students} | Timing: ${convertTo12HourFormat(t.startTime)} - ${convertTo12HourFormat(
+        <div class="saved-timetable-header" id="saved-tt-${t.id}">
+          <div class="saved-timetable-title">
+            ${t.course} • ${t.department} • ${t.semester}
+            <div class="saved-timetable-details">
+              Students: ${t.students} | Timing: ${convertTo12HourFormat(t.startTime)} - ${convertTo12HourFormat(
           t.endTime
         )} | Generated: ${new Date(t.generatedAt || Date.now()).toLocaleDateString()}
-              </div>
-            </div>
-            <div class="saved-timetable-meta">
-              <span>${new Date(t.savedAt || t.generatedAt || Date.now()).toLocaleString()}</span>
-              <button class="small-btn danger" onclick="deleteSavedTimetable('${t.id}')">Delete</button>
             </div>
           </div>
-          <div class="saved-timetable-body">
-            ${renderFullTimetableTable(t.timetable, t)}
+          <div class="saved-timetable-meta">
+            <span>${new Date(t.savedAt || t.generatedAt || Date.now()).toLocaleString()}</span>
+            <button class="small-btn danger" onclick="deleteSavedTimetable('${t.id}')">Delete</button>
           </div>
+        </div>
+        <div class="saved-timetable-body">
+          ${renderFullTimetableTable(t.timetable, t)}
         </div>`
       )
       .join("");
@@ -1811,6 +1985,34 @@ function validateTimetableParams(params) {
 }
 
 /**
+ * Validate course and department data
+ */
+function validateCourseDepartmentData(data) {
+  if (!data.course || typeof data.course !== "string" || data.course.trim() === "") {
+    showToast("Please enter a course name", "error");
+    return false;
+  }
+
+  if (!data.department || typeof data.department !== "string" || data.department.trim() === "") {
+    showToast("Please enter a department name", "error");
+    return false;
+  }
+
+  // Check for duplicate combination
+  const existingCombination = courseDepartments.find(
+    (cd) =>
+      cd.course.toLowerCase() === data.course.toLowerCase() &&
+      cd.department.toLowerCase() === data.department.toLowerCase()
+  );
+  if (existingCombination) {
+    showToast("This course-department combination already exists", "error");
+    return false;
+  }
+
+  return true;
+}
+
+/**
  * Validate department data
  */
 function validateDepartmentData(data) {
@@ -2054,6 +2256,81 @@ function editRoom(roomId) {
     // Scroll to form
     form.scrollIntoView({ behavior: "smooth" });
     showToast("Edit mode activated. Update the fields and submit.", "info");
+  }
+}
+
+/**
+ * Edit course-department combination
+ */
+function editCourseDepartment(index) {
+  const cd = courseDepartments[index];
+  if (!cd) {
+    showToast("Course-department combination not found!", "error");
+    return;
+  }
+
+  // Populate form fields with course-department data
+  const courseForm = document.getElementById("courseForm");
+  const courseNameInput = document.getElementById("courseName");
+  const departmentNameInput = document.getElementById("departmentName");
+
+  if (courseForm && courseNameInput && departmentNameInput) {
+    courseNameInput.value = cd.course;
+    departmentNameInput.value = cd.department;
+
+    // Set form to edit mode
+    courseForm.dataset.editIndex = index;
+    const submitBtn = courseForm.querySelector('button[type="submit"]');
+    if (submitBtn) {
+      submitBtn.textContent = "Update Course & Department";
+    }
+
+    // Switch to courses & departments tab
+    document.getElementById("departments-tab").click();
+
+    showToast("Edit mode activated. Update the fields and submit.", "info");
+  }
+}
+
+/**
+ * Delete course-department combination
+ */
+async function deleteCourseDepartment(index) {
+  const cd = courseDepartments[index];
+  if (!cd) {
+    showToast("Course-department combination not found!", "error");
+    return;
+  }
+
+  if (!confirm(`Are you sure you want to delete "${cd.course} - ${cd.department}"?`)) {
+    return;
+  }
+
+  try {
+    const response = await fetch(`${API_BASE}/api/course-departments/${index}`, {
+      method: "DELETE",
+    });
+
+    if (response.ok) {
+      courseDepartments.splice(index, 1);
+
+      // Rebuild courses and departments arrays from remaining combinations
+      courses = [...new Set(courseDepartments.map((cd) => cd.course))];
+      departments = [...new Set(courseDepartments.map((cd) => cd.department))];
+
+      showToast("Course-department combination deleted successfully!", "success");
+      renderCourseDepartments();
+      populateAllDropdowns(); // Update all dropdowns after deletion
+
+      if (typeof updateStatistics === "function") {
+        updateStatistics();
+      }
+    } else {
+      throw new Error("Failed to delete course-department combination");
+    }
+  } catch (error) {
+    console.error("Error deleting course-department combination:", error);
+    showToast("Failed to delete course-department combination. Please try again.", "error");
   }
 }
 
