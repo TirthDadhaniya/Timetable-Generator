@@ -660,274 +660,6 @@
   "generatedTimetables": [],
   "savedTimetables": [
     {
-      "id": "1757673843063",
-      "course": "Bachelor of Engineering",
-      "department": "Computer Engineering",
-      "semester": "Semester 3",
-      "students": 50,
-      "startTime": "09:00",
-      "endTime": "15:00",
-      "timetable": {
-        "Monday": {
-          "1": null,
-          "2": {
-            "subject": "Database Management Systems",
-            "code": "3130703",
-            "faculty": "Tammana Bhatt",
-            "room": "218",
-            "type": "Lab",
-            "duration": 2,
-            "startTime": "10:00",
-            "endTime": "12:00",
-            "slotPosition": "first"
-          },
-          "3": {
-            "subject": "Database Management Systems",
-            "code": "3130703",
-            "faculty": "Tammana Bhatt",
-            "room": "218",
-            "type": "Lab",
-            "duration": 2,
-            "startTime": "10:00",
-            "endTime": "12:00",
-            "slotPosition": "last"
-          },
-          "4": null,
-          "5": {
-            "subject": "Digital Fundamentals",
-            "code": "3130704",
-            "faculty": "Dhruvraj Sing",
-            "room": "317",
-            "type": "Lecture",
-            "duration": 1,
-            "startTime": "13:00",
-            "endTime": "14:00"
-          },
-          "6": {
-            "subject": "Data Structures",
-            "code": "3130702",
-            "faculty": "Nensi Patel",
-            "room": "317",
-            "type": "Lecture",
-            "duration": 1,
-            "startTime": "14:00",
-            "endTime": "15:00"
-          }
-        },
-        "Tuesday": {
-          "1": {
-            "subject": "Data Structures",
-            "code": "3130702",
-            "faculty": "Nensi Patel",
-            "room": "317",
-            "type": "Lecture",
-            "duration": 1,
-            "startTime": "09:00",
-            "endTime": "10:00"
-          },
-          "2": {
-            "subject": "Digital Fundamentals",
-            "code": "3130704",
-            "faculty": "Dhruvraj Sing",
-            "room": "218",
-            "type": "Lab",
-            "duration": 2,
-            "startTime": "10:00",
-            "endTime": "12:00",
-            "slotPosition": "first"
-          },
-          "3": {
-            "subject": "Digital Fundamentals",
-            "code": "3130704",
-            "faculty": "Dhruvraj Sing",
-            "room": "218",
-            "type": "Lab",
-            "duration": 2,
-            "startTime": "10:00",
-            "endTime": "12:00",
-            "slotPosition": "last"
-          },
-          "4": null,
-          "5": {
-            "subject": "Indian Constitution",
-            "code": "3130007",
-            "faculty": "Priya Chodvadiya",
-            "room": "317",
-            "type": "Lecture",
-            "duration": 1,
-            "startTime": "13:00",
-            "endTime": "14:00"
-          },
-          "6": {
-            "subject": "Database Management Systems",
-            "code": "3130703",
-            "faculty": "Tammana Bhatt",
-            "room": "317",
-            "type": "Lecture",
-            "duration": 1,
-            "startTime": "14:00",
-            "endTime": "15:00"
-          }
-        },
-        "Wednesday": {
-          "1": {
-            "subject": "Probability and Statistics",
-            "code": "3130006",
-            "faculty": "Supriya Tiwari",
-            "room": "317",
-            "type": "Lecture",
-            "duration": 1,
-            "startTime": "09:00",
-            "endTime": "10:00"
-          },
-          "2": {
-            "subject": "Data Structures",
-            "code": "3130702",
-            "faculty": "Nensi Patel",
-            "room": "218",
-            "type": "Lab",
-            "duration": 2,
-            "startTime": "10:00",
-            "endTime": "12:00",
-            "slotPosition": "first"
-          },
-          "3": {
-            "subject": "Data Structures",
-            "code": "3130702",
-            "faculty": "Nensi Patel",
-            "room": "218",
-            "type": "Lab",
-            "duration": 2,
-            "startTime": "10:00",
-            "endTime": "12:00",
-            "slotPosition": "last"
-          },
-          "4": {
-            "subject": "Indian Constitution",
-            "code": "3130007",
-            "faculty": "Priya Chodvadiya",
-            "room": "317",
-            "type": "Lecture",
-            "duration": 1,
-            "startTime": "12:00",
-            "endTime": "13:00"
-          },
-          "5": {
-            "subject": "Database Management Systems",
-            "code": "3130703",
-            "faculty": "Tammana Bhatt",
-            "room": "317",
-            "type": "Lecture",
-            "duration": 1,
-            "startTime": "13:00",
-            "endTime": "14:00"
-          },
-          "6": {
-            "subject": "Digital Fundamentals",
-            "code": "3130704",
-            "faculty": "Dhruvraj Sing",
-            "room": "317",
-            "type": "Lecture",
-            "duration": 1,
-            "startTime": "14:00",
-            "endTime": "15:00"
-          }
-        },
-        "Thursday": {
-          "1": {
-            "subject": "Digital Fundamentals",
-            "code": "3130704",
-            "faculty": "Dhruvraj Sing",
-            "room": "317",
-            "type": "Lecture",
-            "duration": 1,
-            "startTime": "09:00",
-            "endTime": "10:00"
-          },
-          "2": {
-            "subject": "Data Structures",
-            "code": "3130702",
-            "faculty": "Nensi Patel",
-            "room": "218",
-            "type": "Lab",
-            "duration": 2,
-            "startTime": "10:00",
-            "endTime": "12:00",
-            "slotPosition": "first"
-          },
-          "3": {
-            "subject": "Data Structures",
-            "code": "3130702",
-            "faculty": "Nensi Patel",
-            "room": "218",
-            "type": "Lab",
-            "duration": 2,
-            "startTime": "10:00",
-            "endTime": "12:00",
-            "slotPosition": "last"
-          },
-          "4": {
-            "subject": "Probability and Statistics",
-            "code": "3130006",
-            "faculty": "Supriya Tiwari",
-            "room": "317",
-            "type": "Lecture",
-            "duration": 1,
-            "startTime": "12:00",
-            "endTime": "13:00"
-          },
-          "5": {
-            "subject": "Database Management Systems",
-            "code": "3130703",
-            "faculty": "Tammana Bhatt",
-            "room": "317",
-            "type": "Lecture",
-            "duration": 1,
-            "startTime": "13:00",
-            "endTime": "14:00"
-          },
-          "6": null
-        },
-        "Friday": {
-          "1": {
-            "subject": "Data Structures",
-            "code": "3130702",
-            "faculty": "Nensi Patel",
-            "room": "317",
-            "type": "Lecture",
-            "duration": 1,
-            "startTime": "09:00",
-            "endTime": "10:00"
-          },
-          "2": null,
-          "3": {
-            "subject": "Probability and Statistics",
-            "code": "3130006",
-            "faculty": "Supriya Tiwari",
-            "room": "317",
-            "type": "Lecture",
-            "duration": 1,
-            "startTime": "11:00",
-            "endTime": "12:00"
-          },
-          "4": null,
-          "5": {
-            "subject": "Database Management Systems",
-            "code": "3130703",
-            "faculty": "Tammana Bhatt",
-            "room": "317",
-            "type": "Lecture",
-            "duration": 1,
-            "startTime": "13:00",
-            "endTime": "14:00"
-          },
-          "6": null
-        }
-      },
-      "generatedAt": "2025-09-12T10:44:03.029Z",
-      "savedAt": "2025-09-12T10:44:03.063Z"
-    },
-    {
       "id": "1757673866998",
       "course": "Bachelor of Engineering",
       "department": "Information Technology",
@@ -1536,6 +1268,274 @@
       },
       "generatedAt": "2025-09-12T10:49:10.119Z",
       "savedAt": "2025-09-12T10:49:10.124Z"
+    },
+    {
+      "id": "1757760382907",
+      "course": "Bachelor of Engineering",
+      "department": "Computer Engineering",
+      "semester": "Semester 3",
+      "students": 50,
+      "startTime": "09:00",
+      "endTime": "15:00",
+      "timetable": {
+        "Monday": {
+          "1": null,
+          "2": {
+            "subject": "Data Structures",
+            "code": "3130702",
+            "faculty": "Nensi Patel",
+            "room": "218",
+            "type": "Lab",
+            "duration": 2,
+            "startTime": "10:00",
+            "endTime": "12:00",
+            "slotPosition": "first"
+          },
+          "3": {
+            "subject": "Data Structures",
+            "code": "3130702",
+            "faculty": "Nensi Patel",
+            "room": "218",
+            "type": "Lab",
+            "duration": 2,
+            "startTime": "10:00",
+            "endTime": "12:00",
+            "slotPosition": "last"
+          },
+          "4": {
+            "subject": "Database Management Systems",
+            "code": "3130703",
+            "faculty": "Tammana Bhatt",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "12:00",
+            "endTime": "13:00"
+          },
+          "5": {
+            "subject": "Indian Constitution",
+            "code": "3130007",
+            "faculty": "Priya Chodvadiya",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "13:00",
+            "endTime": "14:00"
+          },
+          "6": {
+            "subject": "Probability and Statistics",
+            "code": "3130006",
+            "faculty": "Supriya Tiwari",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "14:00",
+            "endTime": "15:00"
+          }
+        },
+        "Tuesday": {
+          "1": null,
+          "2": {
+            "subject": "Data Structures",
+            "code": "3130702",
+            "faculty": "Nensi Patel",
+            "room": "218",
+            "type": "Lab",
+            "duration": 2,
+            "startTime": "10:00",
+            "endTime": "12:00",
+            "slotPosition": "first"
+          },
+          "3": {
+            "subject": "Data Structures",
+            "code": "3130702",
+            "faculty": "Nensi Patel",
+            "room": "218",
+            "type": "Lab",
+            "duration": 2,
+            "startTime": "10:00",
+            "endTime": "12:00",
+            "slotPosition": "last"
+          },
+          "4": null,
+          "5": {
+            "subject": "Database Management Systems",
+            "code": "3130703",
+            "faculty": "Tammana Bhatt",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "13:00",
+            "endTime": "14:00"
+          },
+          "6": {
+            "subject": "Digital Fundamentals",
+            "code": "3130704",
+            "faculty": "Dhruvraj Sing",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "14:00",
+            "endTime": "15:00"
+          }
+        },
+        "Wednesday": {
+          "1": {
+            "subject": "Probability and Statistics",
+            "code": "3130006",
+            "faculty": "Supriya Tiwari",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "09:00",
+            "endTime": "10:00"
+          },
+          "2": {
+            "subject": "Digital Fundamentals",
+            "code": "3130704",
+            "faculty": "Dhruvraj Sing",
+            "room": "218",
+            "type": "Lab",
+            "duration": 2,
+            "startTime": "10:00",
+            "endTime": "12:00",
+            "slotPosition": "first"
+          },
+          "3": {
+            "subject": "Digital Fundamentals",
+            "code": "3130704",
+            "faculty": "Dhruvraj Sing",
+            "room": "218",
+            "type": "Lab",
+            "duration": 2,
+            "startTime": "10:00",
+            "endTime": "12:00",
+            "slotPosition": "last"
+          },
+          "4": null,
+          "5": {
+            "subject": "Database Management Systems",
+            "code": "3130703",
+            "faculty": "Tammana Bhatt",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "13:00",
+            "endTime": "14:00"
+          },
+          "6": {
+            "subject": "Data Structures",
+            "code": "3130702",
+            "faculty": "Nensi Patel",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "14:00",
+            "endTime": "15:00"
+          }
+        },
+        "Thursday": {
+          "1": {
+            "subject": "Indian Constitution",
+            "code": "3130007",
+            "faculty": "Priya Chodvadiya",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "09:00",
+            "endTime": "10:00"
+          },
+          "2": {
+            "subject": "Database Management Systems",
+            "code": "3130703",
+            "faculty": "Tammana Bhatt",
+            "room": "218",
+            "type": "Lab",
+            "duration": 2,
+            "startTime": "10:00",
+            "endTime": "12:00",
+            "slotPosition": "first"
+          },
+          "3": {
+            "subject": "Database Management Systems",
+            "code": "3130703",
+            "faculty": "Tammana Bhatt",
+            "room": "218",
+            "type": "Lab",
+            "duration": 2,
+            "startTime": "10:00",
+            "endTime": "12:00",
+            "slotPosition": "last"
+          },
+          "4": {
+            "subject": "Data Structures",
+            "code": "3130702",
+            "faculty": "Nensi Patel",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "12:00",
+            "endTime": "13:00"
+          },
+          "5": {
+            "subject": "Probability and Statistics",
+            "code": "3130006",
+            "faculty": "Supriya Tiwari",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "13:00",
+            "endTime": "14:00"
+          },
+          "6": {
+            "subject": "Digital Fundamentals",
+            "code": "3130704",
+            "faculty": "Dhruvraj Sing",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "14:00",
+            "endTime": "15:00"
+          }
+        },
+        "Friday": {
+          "1": {
+            "subject": "Digital Fundamentals",
+            "code": "3130704",
+            "faculty": "Dhruvraj Sing",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "09:00",
+            "endTime": "10:00"
+          },
+          "2": {
+            "subject": "Data Structures",
+            "code": "3130702",
+            "faculty": "Nensi Patel",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "10:00",
+            "endTime": "11:00"
+          },
+          "3": null,
+          "4": null,
+          "5": null,
+          "6": {
+            "subject": "Database Management Systems",
+            "code": "3130703",
+            "faculty": "Tammana Bhatt",
+            "room": "317",
+            "type": "Lecture",
+            "duration": 1,
+            "startTime": "14:00",
+            "endTime": "15:00"
+          }
+        }
+      },
+      "generatedAt": "2025-09-13T10:46:22.873Z",
+      "savedAt": "2025-09-13T10:46:22.907Z"
     }
   ],
   "settings": {
