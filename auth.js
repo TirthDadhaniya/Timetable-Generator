@@ -166,10 +166,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       if (!validatePassword(password)) {
-        showToast(
-          "Password must be at least 8 characters with letters and numbers",
-          "error"
-        );
+        showToast("Password must be at least 8 characters with letters and numbers", "error");
         return;
       }
 
@@ -184,10 +181,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       if (!institution || institution.trim().length < 2) {
-        showToast(
-          "Institution name must be at least 2 characters long",
-          "error"
-        );
+        showToast("Institution name must be at least 2 characters long", "error");
         return;
       }
 
@@ -243,10 +237,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (response.ok) {
           // Registration successful
-          showToast(
-            "Account created successfully! Redirecting to login...",
-            "success"
-          );
+          showToast("Account created successfully! Redirecting to login...", "success");
 
           // Redirect to login page after 2 seconds
           setTimeout(() => {
@@ -271,10 +262,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const confirmPasswordField = registerForm.querySelector("#confirmPassword");
 
     function checkPasswordMatch() {
-      if (
-        confirmPasswordField.value &&
-        passwordField.value !== confirmPasswordField.value
-      ) {
+      if (confirmPasswordField.value && passwordField.value !== confirmPasswordField.value) {
         confirmPasswordField.setCustomValidity("Passwords do not match");
       } else {
         confirmPasswordField.setCustomValidity("");
@@ -309,9 +297,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // Show relevant fields based on role
         if (selectedRole === "student") {
           studentFields.style.display = "block";
-          studentInputs.forEach((input) =>
-            input.setAttribute("required", "required")
-          );
+          studentInputs.forEach((input) => input.setAttribute("required", "required"));
         } else if (selectedRole === "teacher") {
           teacherFields.style.display = "block";
         }
@@ -320,9 +306,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Add smooth transitions to form inputs
-  const inputs = document.querySelectorAll(
-    ".auth-form input, .auth-form select"
-  );
+  const inputs = document.querySelectorAll(".auth-form input, .auth-form select");
   inputs.forEach((input) => {
     input.addEventListener("focus", function () {
       this.parentElement.classList.add("focused");
@@ -421,16 +405,10 @@ function setLoginSession(user, token, rememberMe = false) {
   if (rememberMe) {
     localStorage.setItem("rememberMe", "true");
     // Set longer session for remember me (30 days)
-    localStorage.setItem(
-      "sessionExpiry",
-      (Date.now() + 30 * 24 * 60 * 60 * 1000).toString()
-    );
+    localStorage.setItem("sessionExpiry", (Date.now() + 30 * 24 * 60 * 60 * 1000).toString());
   } else {
     // Default session (24 hours)
-    localStorage.setItem(
-      "sessionExpiry",
-      (Date.now() + 24 * 60 * 60 * 1000).toString()
-    );
+    localStorage.setItem("sessionExpiry", (Date.now() + 24 * 60 * 60 * 1000).toString());
   }
 }
 
@@ -502,10 +480,7 @@ function getUserToken() {
 async function checkAuthStatus() {
   const currentPage = window.location.pathname.split("/").pop();
 
-  if (
-    (await isSessionValid()) &&
-    (currentPage === "login.html" || currentPage === "register.html")
-  ) {
+  if ((await isSessionValid()) && (currentPage === "login.html" || currentPage === "register.html")) {
     // User is already logged in, redirect to main app
     showToast("You are already logged in. Redirecting...", "info");
     setTimeout(() => {
@@ -519,10 +494,7 @@ async function requireAuthenticationForIndex() {
   const currentPage = window.location.pathname.split("/").pop();
 
   // Check if we're trying to access the main app without being logged in
-  if (
-    (currentPage === "index.html" || currentPage === "") &&
-    !(await isSessionValid())
-  ) {
+  if ((currentPage === "index.html" || currentPage === "") && !(await isSessionValid())) {
     // Clear any existing auth data to be safe
     clearAuthData();
 
