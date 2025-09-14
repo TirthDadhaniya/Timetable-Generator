@@ -3,6 +3,48 @@
  * Handles all timetable generation, data management, and UI interactions
  */
 
+// Authentication helper functions
+function getUserToken() {
+  return localStorage.getItem("userToken");
+}
+
+function clearAuthData() {
+  localStorage.removeItem("isLoggedIn");
+  localStorage.removeItem("userToken");
+  localStorage.removeItem("userData");
+  localStorage.removeItem("rememberMe");
+  localStorage.removeItem("registeredUser");
+  localStorage.removeItem("loginTimestamp");
+  localStorage.removeItem("sessionExpiry");
+}
+
+// Helper function for authenticated API calls
+async function authenticatedFetch(url, options = {}) {
+  const token = getUserToken();
+  const headers = {
+    "Content-Type": "application/json",
+    ...options.headers,
+  };
+
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+
+  const response = await fetch(url, {
+    ...options,
+    headers,
+  });
+
+  if (response.status === 401) {
+    // Token expired or invalid, redirect to login
+    clearAuthData();
+    window.location.href = "login.html?redirect=true";
+    throw new Error("Authentication required");
+  }
+
+  return response;
+}
+
 // Global variables to store database data
 let database = null;
 let subjects = [];
@@ -35,7 +77,9 @@ const API_BASE =
  */
 async function loadDatabase() {
   try {
-    const response = await fetch(`${API_BASE}/api/database`);
+    // Use /api/data endpoint for role-based data access instead of /api/database
+    const response = await authenticatedFetch(`${API_BASE}/api/data`);
+
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -751,11 +795,8 @@ async function handleSubjectFormSubmission(event) {
     const url = isEdit ? `${API_BASE}/api/subjects/${finalEditId}` : `${API_BASE}/api/subjects`;
     const method = isEdit ? "PUT" : "POST";
 
-    const response = await fetch(url, {
+    const response = await authenticatedFetch(url, {
       method: method,
-      headers: {
-        "Content-Type": "application/json",
-      },
       body: JSON.stringify(subjectData),
     });
 
@@ -838,11 +879,8 @@ async function handleFacultyFormSubmission(event) {
     const url = isEdit ? `${API_BASE}/api/faculty/${finalEditId}` : `${API_BASE}/api/faculty`;
     const method = isEdit ? "PUT" : "POST";
 
-    const response = await fetch(url, {
+    const response = await authenticatedFetch(url, {
       method: method,
-      headers: {
-        "Content-Type": "application/json",
-      },
       body: JSON.stringify(facultyData),
     });
 
@@ -928,11 +966,8 @@ async function handleRoomFormSubmission(event) {
     const url = isEdit ? `${API_BASE}/api/rooms/${finalEditId}` : `${API_BASE}/api/rooms`;
     const method = isEdit ? "PUT" : "POST";
 
-    const response = await fetch(url, {
+    const response = await authenticatedFetch(url, {
       method: method,
-      headers: {
-        "Content-Type": "application/json",
-      },
       body: JSON.stringify(roomData),
     });
 
@@ -1006,11 +1041,8 @@ async function handleCourseFormSubmission(event) {
       method = "POST";
     }
 
-    const response = await fetch(url, {
+    const response = await authenticatedFetch(url, {
       method: method,
-      headers: {
-        "Content-Type": "application/json",
-      },
       body: JSON.stringify(courseData),
     });
 
@@ -1088,11 +1120,8 @@ async function handleDepartmentFormSubmission(event) {
       method = "POST";
     }
 
-    const response = await fetch(url, {
+    const response = await authenticatedFetch(url, {
       method: method,
-      headers: {
-        "Content-Type": "application/json",
-      },
       body: JSON.stringify(departmentData),
     });
 
@@ -1144,7 +1173,7 @@ async function handleDepartmentFormSubmission(event) {
  */
 async function checkDuplicateTimetable(params) {
   try {
-    const response = await fetch(`${API_BASE}/api/timetables`);
+    const response = await authenticatedFetch(`${API_BASE}/api/timetables`);
     if (!response.ok) return null;
     const saved = await response.json();
 
@@ -1318,7 +1347,7 @@ function showDeleteConfirmationModal(config) {
  */
 async function deleteExistingTimetable(timetableId) {
   try {
-    const response = await fetch(`${API_BASE}/api/timetables/${timetableId}`, {
+    const response = await authenticatedFetch(`${API_BASE}/api/timetables/${timetableId}`, {
       method: "DELETE",
     });
 
@@ -2138,11 +2167,15 @@ function displayGeneratedTimetable(timetableData, params) {
     </div>
 
     <div class="timetable-actions">
-      <button onclick="saveTimetable()" title="Save Timetable" class="timetable-action-btn save-btn">
+      <button onclick="downloadCurrentTimetable()" title="Download Timetable" class="timetable-action-btn download-btn">
+        <img src="res/save-w.svg" alt="Download">
+        Download Timetable
+      </button>
+      <button onclick="saveTimetable()" title="Save Timetable" class="timetable-action-btn save-btn admin-only">
         <img src="res/save-bold.svg" alt="Save">
         Save Timetable
       </button>
-      <button onclick="deleteTimetable()" title="Delete Timetable" class="timetable-action-btn delete-btn">
+      <button onclick="deleteTimetable()" title="Delete Timetable" class="timetable-action-btn delete-btn admin-only">
         <img src="res/delete-bold.svg" alt="Delete">
         Delete Timetable
       </button>
@@ -2186,11 +2219,8 @@ async function saveTimetable() {
       generatedAt: new Date().toISOString(),
     };
 
-    const response = await fetch(`${API_BASE}/api/timetables`, {
+    const response = await authenticatedFetch(`${API_BASE}/api/timetables`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
       body: JSON.stringify(timetableToSave),
     });
 
@@ -2322,7 +2352,7 @@ async function deleteTimetable() {
  */
 async function renderSavedTimetables() {
   try {
-    const response = await fetch(`${API_BASE}/api/timetables`);
+    const response = await authenticatedFetch(`${API_BASE}/api/timetables`);
     if (!response.ok) throw new Error("Failed to load saved timetables");
     const saved = await response.json();
 
@@ -2354,7 +2384,17 @@ async function renderSavedTimetables() {
       // Clear any inline display so CSS can govern when shown again
       placeholder.style.removeProperty("display");
     }
-    if (timetableTitle) timetableTitle.textContent = "Your Saved Timetables";
+
+    // Set title based on user role
+    if (timetableTitle) {
+      const currentUser = window.getCurrentUser ? window.getCurrentUser() : null;
+      if (currentUser && currentUser.role === "admin") {
+        timetableTitle.textContent = "Your Saved Timetables";
+      } else {
+        timetableTitle.textContent = "Timetables";
+      }
+    }
+
     if (savedTimetablesH3) savedTimetablesH3.style.display = "none";
     section.style.display = "block";
 
@@ -2396,7 +2436,8 @@ async function renderSavedTimetables() {
           </div>
           <div class="saved-timetable-meta">
             <span>${new Date(t.savedAt || t.generatedAt || Date.now()).toLocaleString()}</span>
-            <button class="small-btn danger" onclick="deleteSavedTimetable('${t.id}')">Delete</button>
+            <button class="small-btn primary" onclick="downloadTimetable('${t.id}')">Download</button>
+            <button class="small-btn danger admin-only" onclick="deleteSavedTimetable('${t.id}')">Delete</button>
           </div>
         </div>
         <div class="saved-timetable-body">
@@ -2404,6 +2445,12 @@ async function renderSavedTimetables() {
         </div>`
       )
       .join("");
+
+    // Update UI based on user role to hide/show admin-only elements
+    const currentUser = window.getCurrentUser ? window.getCurrentUser() : null;
+    if (currentUser && window.updateUIForUserRole) {
+      window.updateUIForUserRole(currentUser.role);
+    }
   } catch (e) {
     console.error(e);
   }
@@ -2497,7 +2544,7 @@ async function deleteSavedTimetable(id) {
   }
 
   try {
-    const res = await fetch(`${API_BASE}/api/timetables/${id}`, {
+    const res = await authenticatedFetch(`${API_BASE}/api/timetables/${id}`, {
       method: "DELETE",
     });
     if (!res.ok) throw new Error("Failed to delete saved timetable");
@@ -2870,7 +2917,7 @@ async function deleteSubject(subjectId) {
   }
 
   try {
-    const response = await fetch(`${API_BASE}/api/subjects/${subjectId}`, {
+    const response = await authenticatedFetch(`${API_BASE}/api/subjects/${subjectId}`, {
       method: "DELETE",
     });
 
@@ -2919,7 +2966,7 @@ async function deleteFaculty(facultyId) {
   }
 
   try {
-    const response = await fetch(`${API_BASE}/api/faculty/${facultyId}`, {
+    const response = await authenticatedFetch(`${API_BASE}/api/faculty/${facultyId}`, {
       method: "DELETE",
     });
 
@@ -2970,7 +3017,7 @@ async function deleteRoom(roomId) {
   }
 
   try {
-    const response = await fetch(`${API_BASE}/api/rooms/${roomId}`, {
+    const response = await authenticatedFetch(`${API_BASE}/api/rooms/${roomId}`, {
       method: "DELETE",
     });
 
@@ -3018,7 +3065,7 @@ async function deleteDepartment(index) {
   }
 
   try {
-    const response = await fetch(`${API_BASE}/api/departments/${index}`, {
+    const response = await authenticatedFetch(`${API_BASE}/api/departments/${index}`, {
       method: "DELETE",
     });
 
@@ -3206,7 +3253,7 @@ async function deleteCourseDepartment(index) {
   }
 
   try {
-    const response = await fetch(`${API_BASE}/api/course-departments/${cd.id}`, {
+    const response = await authenticatedFetch(`${API_BASE}/api/course-departments/${cd.id}`, {
       method: "DELETE",
     });
 
@@ -3403,7 +3450,285 @@ window.getSubjects = getSubjects;
 window.getFaculty = getFaculty;
 window.getRooms = getRooms;
 window.saveTimetable = saveTimetable;
+/**
+ * Download the current generated timetable as PDF
+ */
+function downloadCurrentTimetable() {
+  if (!currentGeneratedTimetable) {
+    showToast("No timetable to download. Please generate a timetable first.", "error");
+    return;
+  }
+
+  const { timetableData, params } = currentGeneratedTimetable;
+  downloadTimetableAsPDF(timetableData, params);
+}
+
+/**
+ * Download a saved timetable by ID as PDF
+ */
+async function downloadTimetable(timetableId) {
+  try {
+    const response = await authenticatedFetch(`${API_BASE}/api/timetables`);
+    const data = await response.json();
+
+    const timetable = data.find((t) => t.id === timetableId);
+    if (!timetable) {
+      showToast("Timetable not found", "error");
+      return;
+    }
+
+    downloadTimetableAsPDF(timetable.timetable, timetable);
+  } catch (error) {
+    console.error("Error downloading timetable:", error);
+    showToast("Failed to download timetable. Please try again.", "error");
+  }
+}
+
+/**
+ * Generate and download PDF for a timetable using jsPDF with AutoTable
+ */
+function downloadTimetableAsPDF(timetableData, params) {
+  try {
+    showToast("Generating PDF...", "info");
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({
+      orientation: "landscape",
+      unit: "mm",
+      format: "a4",
+    });
+
+    // Set document properties
+    doc.setProperties({
+      title: `${params.course} - ${params.department} - ${params.semester} Timetable`,
+      subject: "Timetable",
+      author: "Interactive Timetable Generator",
+      creator: "Interactive Timetable Generator",
+    });
+
+    // Generate and add only the timetable table
+    addSimpleTimetableToPDF(doc, timetableData, params);
+
+    // Generate filename and save
+    const filename = `${params.course}_${params.department}_${params.semester}_Timetable.pdf`.replace(/\s+/g, "_");
+    doc.save(filename);
+
+    showToast("Timetable downloaded successfully!", "success");
+  } catch (error) {
+    console.error("Error generating PDF:", error);
+    showToast("Failed to generate PDF. Please try again.", "error");
+  }
+}
+
+/**
+ * Add simple black and white timetable table to PDF
+ */
+function addSimpleTimetableToPDF(doc, timetableData, params) {
+  const timeSlots = generateTimeSlots(
+    params.startTime,
+    params.endTime,
+    params.slotDuration,
+    params.hasBreak ? params.breakStartTime : null,
+    params.hasBreak ? params.breakDuration : null
+  );
+
+  const workingDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+
+  // Prepare table headers
+  const headers = [["Time", ...workingDays]];
+
+  // Prepare table data
+  const tableData = [];
+
+  timeSlots.forEach((slot, index) => {
+    const slotNumber = (index + 1).toString();
+    const row = [`${convertTo12HourFormat(slot.startTime)} - ${convertTo12HourFormat(slot.endTime)}`];
+
+    workingDays.forEach((day) => {
+      const session = timetableData[day] && timetableData[day][slotNumber];
+      if (session) {
+        // Skip continuation slots of multi-hour sessions
+        if (session.slotPosition && session.slotPosition !== "first") {
+          return; // Skip this iteration, don't add to row
+        }
+
+        const sessionText = `${session.subject}\n${session.faculty}\n${session.room}`;
+        row.push(sessionText);
+      } else {
+        row.push("");
+      }
+    });
+
+    // Only add row if it has the correct number of columns
+    if (row.length === 6) {
+      // 1 time column + 5 day columns
+      tableData.push(row);
+    }
+  });
+
+  // Generate the simple black and white table
+  doc.autoTable({
+    head: headers,
+    body: tableData,
+    startY: 20,
+    theme: "grid",
+    styles: {
+      fontSize: 10,
+      cellPadding: 4,
+      overflow: "linebreak",
+      halign: "center",
+      valign: "middle",
+      lineColor: [0, 0, 0], // Black lines
+      lineWidth: 0.5,
+      textColor: [0, 0, 0], // Black text
+      fillColor: [255, 255, 255], // White background
+    },
+    headStyles: {
+      fillColor: [255, 255, 255], // White header background
+      textColor: [0, 0, 0], // Black header text
+      fontSize: 12,
+      fontStyle: "bold",
+      halign: "center",
+      lineColor: [0, 0, 0], // Black border
+      lineWidth: 1,
+    },
+    columnStyles: {
+      0: {
+        cellWidth: 40,
+        halign: "center",
+        fillColor: [255, 255, 255], // White background
+        textColor: [0, 0, 0], // Black text
+        fontStyle: "bold",
+      },
+    },
+    margin: { left: 15, right: 15, top: 15, bottom: 15 },
+    tableWidth: "auto",
+    showHead: "everyPage",
+  });
+}
+
+/**
+ * Generate printable HTML for timetable
+ */
+function generatePrintableHTML(timetableData, params, title) {
+  const timeSlots = generateTimeSlots(
+    params.startTime || "09:00",
+    params.endTime || "17:00",
+    params.slotDuration || 60
+  );
+
+  const daysOrder = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const days = daysOrder.filter((day) => timetableData[day]);
+
+  let tableHTML = `
+    <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+      <thead>
+        <tr style="background-color: #f5f5f5;">
+          <th style="border: 1px solid #ddd; padding: 12px; text-align: center; font-weight: bold;">Time</th>
+          ${days
+            .map(
+              (day) =>
+                `<th style="border: 1px solid #ddd; padding: 12px; text-align: center; font-weight: bold;">${day}</th>`
+            )
+            .join("")}
+        </tr>
+      </thead>
+      <tbody>
+  `;
+
+  timeSlots.forEach((slot, index) => {
+    const slotNumber = (index + 1).toString();
+    tableHTML += `
+      <tr>
+        <td style="border: 1px solid #ddd; padding: 8px; text-align: center; font-weight: bold; background-color: #f9f9f9;">
+          Slot ${slotNumber}<br>
+          <small style="color: #666;">${slot.startTime} - ${slot.endTime}</small>
+        </td>
+    `;
+
+    days.forEach((day) => {
+      const daySchedule = timetableData[day];
+      const slotData = daySchedule ? daySchedule[slotNumber] : null;
+
+      if (slotData) {
+        const bgColor = slotData.type === "Lab" ? "#e3f2fd" : "#f3e5f5";
+        tableHTML += `
+          <td style="border: 1px solid #ddd; padding: 8px; background-color: ${bgColor};">
+            <div style="font-weight: bold; margin-bottom: 4px;">${slotData.subject}</div>
+            <div style="font-size: 0.9em; color: #666;">
+              ${slotData.faculty}<br>
+              Room: ${slotData.room}<br>
+              ${slotData.type}${slotData.duration > 1 ? ` (${slotData.duration}h)` : ""}
+            </div>
+          </td>
+        `;
+      } else {
+        tableHTML += `<td style="border: 1px solid #ddd; padding: 8px; text-align: center; color: #999;">Free</td>`;
+      }
+    });
+
+    tableHTML += "</tr>";
+  });
+
+  tableHTML += "</tbody></table>";
+
+  return `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>${title}</title>
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          margin: 20px;
+          color: #333;
+        }
+        h1 {
+          text-align: center;
+          color: #2c3e50;
+          margin-bottom: 10px;
+        }
+        .header-info {
+          text-align: center;
+          margin-bottom: 30px;
+          color: #666;
+        }
+        .header-info div {
+          margin: 5px 0;
+        }
+        table {
+          page-break-inside: avoid;
+        }
+        @media print {
+          body { margin: 0; }
+          .no-print { display: none; }
+        }
+      </style>
+    </head>
+    <body>
+      <h1>${title}</h1>
+      <div class="header-info">
+        <div><strong>Students:</strong> ${params.students || "N/A"}</div>
+        <div><strong>Timing:</strong> ${convertTo12HourFormat(params.startTime || "09:00")} - ${convertTo12HourFormat(
+    params.endTime || "17:00"
+  )}</div>
+        <div><strong>Slot Duration:</strong> ${Math.floor((params.slotDuration || 60) / 60)}h ${
+    (params.slotDuration || 60) % 60
+  }m</div>
+        <div><strong>Generated on:</strong> ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}</div>
+      </div>
+      ${tableHTML}
+      <div style="margin-top: 30px; text-align: center; color: #666; font-size: 0.9em;">
+        Generated by Interactive Timetable Generator
+      </div>
+    </body>
+    </html>
+  `;
+}
+
 window.deleteTimetable = deleteTimetable;
+window.downloadCurrentTimetable = downloadCurrentTimetable;
+window.downloadTimetable = downloadTimetable;
 window.deleteSavedTimetable = deleteSavedTimetable;
 window.focusTimetableTabAndScroll = focusTimetableTabAndScroll;
 
