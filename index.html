@@ -66,7 +66,7 @@
       </div>
 
       <!-- Timetable Generator Section -->
-      <div class="generator-panel">
+      <div class="generator-panel admin-only">
         <h2>Timetable Generator</h2>
         <p>
           Automatically generate subjects, faculty, and optimized timetable.
@@ -125,11 +125,12 @@
                 step="5"
                 required
                 title="Duration in minutes (e.g., 90 for 1 hour 30 minutes)"
-                placeholder="90 minutes"
-              />
+                placeholder="90 minutes" />
             </div>
             <div class="form-group checkbox-group">
-              <label class="checkbox-label" style="display: flex; margin-bottom: 0px; margin-left: 0px">
+              <label
+                class="checkbox-label"
+                style="display: flex; margin-bottom: 0px; margin-left: 0px">
                 <input type="checkbox" id="hasBreak" name="hasBreak" />
                 <span>Enable Break Time</span>
               </label>
@@ -142,8 +143,7 @@
                 name="breakStartTime"
                 value="12:00"
                 disabled
-                title="When does the break start?"
-              />
+                title="When does the break start?" />
             </div>
             <div class="form-group">
               <label>Break Duration</label>
@@ -156,8 +156,7 @@
                 max="02:00"
                 step="300"
                 disabled
-                title="How long is the break? (e.g., 01:30 for 1 hour 30 minutes)"
-              />
+                title="How long is the break? (e.g., 01:30 for 1 hour 30 minutes)" />
             </div>
           </div>
 
@@ -187,8 +186,9 @@
           <div class="timetable-placeholder">
             <div class="placeholder-content">
               <h3>No Timetable Generated Yet</h3>
-              <p>Use the Timetable Generator above to create your schedule</p>
-              <div class="btn-container">
+              <p class="admin-only">Use the Timetable Generator above to create your schedule</p>
+              <p class="teacher-only student-only">Please contact your administrator to generate timetables</p>
+              <div class="btn-container admin-only">
                 <button onclick="scrollToGenerator()" class="btn">
                   Generate Timetable
                 </button>
@@ -209,7 +209,7 @@
 
       <!-- Departments Section -->
       <div class="tab-content hidden" id="departments-content">
-        <form id="courseForm" class="form-section">
+        <form id="courseForm" class="form-section admin-only">
           <h2>Add New Course & Department</h2>
           <p>Manage academic courses and their departments</p>
           <div class="form-row">
@@ -242,7 +242,7 @@
 
       <!-- Faculty Section -->
       <div class="tab-content hidden" id="faculty-content">
-        <form id="facultyForm" class="form-section">
+        <form id="facultyForm" class="form-section admin-only">
           <h2>Add New Faculty</h2>
           <p>Add faculty members with their details and specialization.</p>
           <div class="form-row">
@@ -292,7 +292,7 @@
 
       <!-- Subjects Section -->
       <div class="tab-content hidden" id="subjects-content">
-        <form id="subjectForm" class="form-section">
+        <form id="subjectForm" class="form-section admin-only">
           <h2>Add New Subject</h2>
           <p>Configure subjects with their lecture and lab hour requirements</p>
           <div class="form-row">
@@ -395,7 +395,7 @@
 
       <!-- Room Section -->
       <div class="tab-content hidden" id="room-content">
-        <form id="roomForm" class="form-section">
+        <form id="roomForm" class="form-section admin-only">
           <h2>Add New Room</h2>
           <p>Add classroom and labs with their specifications</p>
           <div class="form-row">
@@ -474,6 +474,9 @@
       aria-label="Notifications"></div>
 
     <!-- JavaScript for Tab Functionality and Data Management -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <script src="auth.js"></script>
     <script src="timetable.js"></script>
     <script src="script.js"></script>
   </body>

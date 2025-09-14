@@ -1,4 +1,6 @@
 // Authentication JavaScript Functions
+const API_BASE_URL = "http://localhost:3000/api";
+
 document.addEventListener("DOMContentLoaded", function () {
   // Check for redirect parameter and show appropriate message
   const urlParams = new URLSearchParams(window.location.search);
@@ -68,7 +70,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Login form handler
   if (loginForm) {
-    loginForm.addEventListener("submit", function (e) {
+    loginForm.addEventListener("submit", async function (e) {
       e.preventDefault();
 
       const formData = new FormData(loginForm);
@@ -93,29 +95,47 @@ document.addEventListener("DOMContentLoaded", function () {
       submitBtn.textContent = "Signing In...";
       submitBtn.disabled = true;
 
-      // Simulate API call (replace with actual implementation)
-      setTimeout(() => {
+      try {
+        // Make API call to login
+        const response = await fetch(`${API_BASE_URL}/auth/login`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          // Login successful
+          showToast("Login successful! Redirecting...", "success");
+
+          // Store login state with session management
+          setLoginSession(data.user, data.token, rememberMe);
+
+          // Redirect to main application after 1 second
+          setTimeout(() => {
+            window.location.href = "index.html?login=success";
+          }, 1000);
+        } else {
+          // Login failed
+          showToast(data.error || "Login failed", "error");
+        }
+      } catch (error) {
+        console.error("Login error:", error);
+        showToast("Network error. Please try again.", "error");
+      } finally {
         // Reset button
         submitBtn.textContent = originalText;
         submitBtn.disabled = false;
-
-        // For demo purposes, show success message
-        showToast("Login successful! Redirecting...", "success");
-
-        // Store login state with session management
-        setLoginSession(email, rememberMe);
-
-        // Redirect to main application after 2 seconds
-        setTimeout(() => {
-          window.location.href = "index.html?login=success";
-        }, 200);
-      }, 1500);
+      }
     });
   }
 
   // Register form handler
   if (registerForm) {
-    registerForm.addEventListener("submit", function (e) {
+    registerForm.addEventListener("submit", async function (e) {
       e.preventDefault();
 
       const formData = new FormData(registerForm);
@@ -126,6 +146,8 @@ document.addEventListener("DOMContentLoaded", function () {
       const confirmPassword = formData.get("confirmPassword");
       const role = formData.get("role");
       const institution = formData.get("institution");
+      const department = formData.get("department");
+      const semester = formData.get("semester");
 
       // Validation
       if (!validateName(firstName)) {
@@ -169,41 +191,79 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
       }
 
+      // Role-specific validation
+      if (role === "student" && (!department || !semester)) {
+        showToast("Students must select department and semester", "error");
+        return;
+      }
+
       // Show loading state
       const submitBtn = registerForm.querySelector('button[type="submit"]');
       const originalText = submitBtn.textContent;
       submitBtn.textContent = "Creating Account...";
       submitBtn.disabled = true;
 
-      // Simulate API call (replace with actual implementation)
-      setTimeout(() => {
+      try {
+        // Prepare registration data
+        const registrationData = {
+          firstName,
+          lastName,
+          email,
+          password,
+          role,
+          institution,
+          profileData: {},
+        };
+
+        // Add role-specific profile data
+        if (role === "student") {
+          registrationData.profileData = {
+            department,
+            semester,
+            facultyId: null,
+          };
+        } else if (role === "teacher") {
+          registrationData.profileData = {
+            department: department || null,
+            semester: null,
+            facultyId: null,
+          };
+        }
+
+        // Make API call to register
+        const response = await fetch(`${API_BASE_URL}/auth/register`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(registrationData),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          // Registration successful
+          showToast(
+            "Account created successfully! Redirecting to login...",
+            "success"
+          );
+
+          // Redirect to login page after 2 seconds
+          setTimeout(() => {
+            window.location.href = "login.html";
+          }, 2000);
+        } else {
+          // Registration failed
+          showToast(data.error || "Registration failed", "error");
+        }
+      } catch (error) {
+        console.error("Registration error:", error);
+        showToast("Network error. Please try again.", "error");
+      } finally {
         // Reset button
         submitBtn.textContent = originalText;
         submitBtn.disabled = false;
-
-        // For demo purposes, show success message
-        showToast(
-          "Account created successfully! Redirecting to login...",
-          "success"
-        );
-
-        // Store registration data (for demo)
-        localStorage.setItem(
-          "registeredUser",
-          JSON.stringify({
-            firstName,
-            lastName,
-            email,
-            role,
-            institution,
-          })
-        );
-
-        // Redirect to login page after 2 seconds
-        setTimeout(() => {
-          window.location.href = "login.html";
-        }, 2000);
-      }, 1500);
+      }
     });
 
     // Password confirmation validation
@@ -224,6 +284,38 @@ document.addEventListener("DOMContentLoaded", function () {
     if (passwordField && confirmPasswordField) {
       passwordField.addEventListener("input", checkPasswordMatch);
       confirmPasswordField.addEventListener("input", checkPasswordMatch);
+    }
+
+    // Role-based field visibility for registration form
+    const roleSelect = registerForm.querySelector("#role");
+    const studentFields = document.getElementById("studentFields");
+    const teacherFields = document.getElementById("teacherFields");
+
+    if (roleSelect && studentFields && teacherFields) {
+      roleSelect.addEventListener("change", function () {
+        const selectedRole = this.value;
+
+        // Hide all role-specific fields first
+        studentFields.style.display = "none";
+        teacherFields.style.display = "none";
+
+        // Clear required attributes
+        const studentInputs = studentFields.querySelectorAll("select");
+        const teacherInputs = teacherFields.querySelectorAll("select");
+
+        studentInputs.forEach((input) => input.removeAttribute("required"));
+        teacherInputs.forEach((input) => input.removeAttribute("required"));
+
+        // Show relevant fields based on role
+        if (selectedRole === "student") {
+          studentFields.style.display = "block";
+          studentInputs.forEach((input) =>
+            input.setAttribute("required", "required")
+          );
+        } else if (selectedRole === "teacher") {
+          teacherFields.style.display = "block";
+        }
+      });
     }
   }
 
@@ -320,9 +412,10 @@ function redirectToApp() {
 }
 
 // Session management functions (shared with script.js)
-function setLoginSession(email, rememberMe = false) {
+function setLoginSession(user, token, rememberMe = false) {
   localStorage.setItem("isLoggedIn", "true");
-  localStorage.setItem("userEmail", email);
+  localStorage.setItem("userToken", token);
+  localStorage.setItem("userData", JSON.stringify(user));
   localStorage.setItem("loginTimestamp", Date.now().toString());
 
   if (rememberMe) {
@@ -341,11 +434,12 @@ function setLoginSession(email, rememberMe = false) {
   }
 }
 
-function isSessionValid() {
+async function isSessionValid() {
   const isLoggedIn = localStorage.getItem("isLoggedIn");
+  const token = localStorage.getItem("userToken");
   const sessionExpiry = localStorage.getItem("sessionExpiry");
 
-  if (isLoggedIn !== "true" || !sessionExpiry) {
+  if (isLoggedIn !== "true" || !token || !sessionExpiry) {
     return false;
   }
 
@@ -354,25 +448,62 @@ function isSessionValid() {
 
   if (currentTime > expiryTime) {
     // Session expired, clear all auth data
-    localStorage.removeItem("isLoggedIn");
-    localStorage.removeItem("userEmail");
-    localStorage.removeItem("rememberMe");
-    localStorage.removeItem("registeredUser");
-    localStorage.removeItem("loginTimestamp");
-    localStorage.removeItem("sessionExpiry");
+    clearAuthData();
     return false;
   }
 
-  return true;
+  // Verify token with server
+  try {
+    const response = await fetch(`${API_BASE_URL}/auth/verify`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ token }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      if (data.valid) {
+        // Update user data if needed
+        localStorage.setItem("userData", JSON.stringify(data.user));
+        return true;
+      }
+    }
+  } catch (error) {
+    console.error("Token verification error:", error);
+  }
+
+  // Token invalid, clear auth data
+  clearAuthData();
+  return false;
+}
+
+function clearAuthData() {
+  localStorage.removeItem("isLoggedIn");
+  localStorage.removeItem("userToken");
+  localStorage.removeItem("userData");
+  localStorage.removeItem("rememberMe");
+  localStorage.removeItem("registeredUser");
+  localStorage.removeItem("loginTimestamp");
+  localStorage.removeItem("sessionExpiry");
+}
+
+function getCurrentUser() {
+  const userData = localStorage.getItem("userData");
+  return userData ? JSON.parse(userData) : null;
+}
+
+function getUserToken() {
+  return localStorage.getItem("userToken");
 }
 
 // Check if user is already logged in (for demo purposes)
-function checkAuthStatus() {
-  const isLoggedIn = localStorage.getItem("isLoggedIn");
+async function checkAuthStatus() {
   const currentPage = window.location.pathname.split("/").pop();
 
   if (
-    isLoggedIn === "true" &&
+    (await isSessionValid()) &&
     (currentPage === "login.html" || currentPage === "register.html")
   ) {
     // User is already logged in, redirect to main app
@@ -384,19 +515,16 @@ function checkAuthStatus() {
 }
 
 // Enhanced authentication protection for main app
-function requireAuthenticationForIndex() {
-  const isLoggedIn = localStorage.getItem("isLoggedIn");
+async function requireAuthenticationForIndex() {
   const currentPage = window.location.pathname.split("/").pop();
 
   // Check if we're trying to access the main app without being logged in
   if (
     (currentPage === "index.html" || currentPage === "") &&
-    isLoggedIn !== "true"
+    !(await isSessionValid())
   ) {
     // Clear any existing auth data to be safe
-    localStorage.removeItem("isLoggedIn");
-    localStorage.removeItem("userEmail");
-    localStorage.removeItem("rememberMe");
+    clearAuthData();
 
     // Redirect to login with a message
     window.location.href = "login.html?redirect=true";
