@@ -2062,7 +2062,7 @@ function displayGeneratedTimetable(timetableData, params) {
 
     <div class="timetable-actions">
       <button onclick="downloadCurrentTimetable()" title="Download Timetable" class="timetable-action-btn download-btn">
-        <img src="res/save-w.svg" alt="Download">
+        <img src="res/download-bold.svg" alt="Download">
         Download Timetable
       </button>
       <button onclick="saveTimetable()" title="Save Timetable" class="timetable-action-btn save-btn admin-only">
