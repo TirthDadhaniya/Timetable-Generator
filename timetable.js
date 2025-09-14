@@ -58,7 +58,6 @@ let roomTypes = [];
 
 // Current generated timetable (temporary until saved)
 let currentGeneratedTimetable = null;
-let lastSavedTimetableId = null; // for scrolling after save
 
 // API Base URL - automatically detects environment
 const API_BASE =
@@ -139,7 +138,6 @@ async function initializeTimetableSystem() {
     renderFaculty();
     renderRooms();
     renderCourseDepartments();
-    renderDepartments();
     await renderSavedTimetables();
     setupFormHandlers();
     loadSettingsIntoForm(); // Load settings like defaultSlotsPerDay into form fields
@@ -495,37 +493,6 @@ function renderCourseDepartments() {
 }
 
 /**
- * Render departments list
- */
-function renderDepartments() {
-  const departmentList = document.getElementById("departmentList");
-  if (!departmentList) return;
-
-  if (departments.length === 0) {
-    departmentList.innerHTML = '<p class="empty-state">No departments added yet. Add your first department above.</p>';
-    return;
-  }
-
-  departmentList.innerHTML = departments
-    .map(
-      (department, index) => `
-    <div class="department-card" data-index="${index}">
-      <div class="department-card-content">
-          <div class="department-card-info">
-            <div class="department-card-name">${department}</div>
-          </div>
-          <div class="department-card-actions">
-            <button onclick="editDepartment(${index})" title="Edit" class="card-action-btn"><img src="res/edit.svg" alt="Edit"></button>
-            <button onclick="deleteDepartment(${index})" title="Delete" class="card-action-btn delete-btn"><img src="res/delete.svg" alt="Delete"></button>
-          </div>
-        </div>
-    </div>
-  `
-    )
-    .join("");
-}
-
-/**
  * ========================================
  * FORM HANDLING FUNCTIONS
  * ========================================
@@ -670,7 +637,6 @@ function updateTimeCalculation() {
     // Check if auto-calculation would be triggered
     const isAutoMode = lecturesPerDay === 0;
     let displayLecturesPerDay = lecturesPerDay;
-    let autoCalculationNote = "";
 
     if (isAutoMode) {
       // Get current form values for auto-calculation preview
@@ -691,10 +657,8 @@ function updateTimeCalculation() {
           breakEndTime: hasBreak ? breakEndTime : null,
         };
         displayLecturesPerDay = calculateOptimalLecturesPerDay(mockParams);
-        autoCalculationNote = " (Auto-calculated)";
       } else {
         displayLecturesPerDay = "?";
-        autoCalculationNote = " (Auto-calc: Select course/dept/semester first)";
       }
     }
 
@@ -714,7 +678,7 @@ function updateTimeCalculation() {
     )} - ${convertTo12HourFormat(endTime)})
       </div>
       <div style="margin-bottom: 5px;">
-        📚 <strong>Lecture Time Needed:</strong> ${displayLecturesPerDay} slots × ${slotDuration}min = ${lectureHours}h ${lectureMins}m${autoCalculationNote}
+        📚 <strong>Lecture Time Needed:</strong> ${displayLecturesPerDay} slots × ${slotDuration}min = ${lectureHours}h ${lectureMins}m
       </div>
     `;
 
@@ -1092,76 +1056,6 @@ async function handleCourseFormSubmission(event) {
 /**
  * Handle department form submission
  */
-async function handleDepartmentFormSubmission(event) {
-  event.preventDefault();
-
-  const formData = new FormData(event.target);
-  const departmentData = {
-    name: formData.get("departmentName"),
-  };
-
-  // Validation
-  if (!validateDepartmentData(departmentData)) {
-    return;
-  }
-
-  // Check if this is an edit operation
-  const editIndex = event.target.dataset.editIndex;
-  let isEdit = editIndex !== undefined;
-
-  try {
-    let url, method;
-
-    if (isEdit) {
-      url = `${API_BASE}/api/departments/${editIndex}`;
-      method = "PUT";
-    } else {
-      url = `${API_BASE}/api/departments`;
-      method = "POST";
-    }
-
-    const response = await authenticatedFetch(url, {
-      method: method,
-      body: JSON.stringify(departmentData),
-    });
-
-    if (response.ok) {
-      const result = await response.json();
-
-      if (isEdit) {
-        // Update existing department
-        departments[parseInt(editIndex)] = result.newName;
-        showToast("Department updated successfully!", "success");
-
-        // Reset form to add mode
-        delete event.target.dataset.editIndex;
-        const submitBtn = event.target.querySelector('button[type="submit"]');
-        if (submitBtn) {
-          submitBtn.textContent = "Add Department";
-        }
-      } else {
-        // Add new department
-        departments.push(result.name);
-        showToast("Department added successfully!", "success");
-      }
-
-      renderDepartments();
-      populateAllDropdowns(); // Refresh department dropdowns everywhere
-      event.target.reset();
-
-      if (typeof updateStatistics === "function") {
-        updateStatistics();
-      }
-    } else {
-      const errorData = await response.json();
-      throw new Error(errorData.error || `Failed to ${isEdit ? "update" : "add"} department`);
-    }
-  } catch (error) {
-    console.error(`Error ${isEdit ? "updating" : "adding"} department:`, error);
-    showToast(error.message || `Failed to ${isEdit ? "update" : "add"} department. Please try again.`, "error");
-  }
-}
-
 /**
  * ========================================
  * TIMETABLE GENERATION FUNCTIONS
@@ -2043,7 +1937,7 @@ function generateTimetableRows(timeSlots, timetableData, workingDays, params) {
               <span class="end-time">${convertTo12HourFormat(slot.endTime)}</span>
             </div>
           </td>
-          ${workingDays.map(() => '<td class="break-cell">🍽️ BREAK TIME</td>').join("")}
+          ${workingDays.map(() => '<td class="break-cell">BREAK</td>').join("")}
         </tr>
       `);
     } else {
@@ -2060,7 +1954,7 @@ function generateTimetableRows(timeSlots, timetableData, workingDays, params) {
             </td>
             ${workingDays
               .map((day) => {
-                const session = timetableData[day] && timetableData[day][actualSlot.id];
+                const session = timetableData[day] && timetableData[day][actualSlot.id.toString()];
                 if (!session) {
                   return '<td class="empty-slot">Free</td>';
                 }
@@ -2215,6 +2109,11 @@ async function saveTimetable() {
       students: params.students,
       startTime: params.startTime,
       endTime: params.endTime,
+      slotDuration: params.slotDuration || 60,
+      lecturesPerDay: params.lecturesPerDay || 6,
+      hasBreak: params.hasBreak || false,
+      breakStartTime: params.breakStartTime || null,
+      breakEndTime: params.breakEndTime || null,
       timetable: timetableData,
       generatedAt: new Date().toISOString(),
     };
@@ -2259,7 +2158,6 @@ async function saveTimetable() {
       currentGeneratedTimetable = null;
 
       // Refresh saved timetables list and scroll to it
-      lastSavedTimetableId = savedTimetable.id;
       await renderSavedTimetables();
       scrollToSavedTimetable(savedTimetable.id);
 
@@ -2481,18 +2379,58 @@ function renderFullTimetableTable(timetableData, params) {
 
   const workingDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
-  // Generate time slots based on saved params
+  // For saved timetables without break info, try to detect breaks from the data
+  let inferredBreakStart = null;
+  let inferredBreakEnd = null;
+  let inferredSlotDuration = params.slotDuration || 60;
+  let inferredHasBreak = params.hasBreak || false;
+
+  // If break parameters are missing, try to infer from timetable data
+  if (!params.hasBreak && timetableData.Monday) {
+    const mondaySlots = Object.values(timetableData.Monday);
+    if (mondaySlots.length >= 2) {
+      // Look for time gaps between slots to detect breaks
+      const sortedSlots = mondaySlots.sort((a, b) => {
+        const timeA = new Date(`1970-01-01T${a.startTime}:00`);
+        const timeB = new Date(`1970-01-01T${b.startTime}:00`);
+        return timeA - timeB;
+      });
+
+      for (let i = 0; i < sortedSlots.length - 1; i++) {
+        const currentEnd = new Date(`1970-01-01T${sortedSlots[i].endTime}:00`);
+        const nextStart = new Date(`1970-01-01T${sortedSlots[i + 1].startTime}:00`);
+        const gap = (nextStart - currentEnd) / (1000 * 60); // Gap in minutes
+
+        // If there's a gap of 30+ minutes, assume it's a break
+        if (gap >= 30) {
+          inferredBreakStart = sortedSlots[i].endTime;
+          inferredBreakEnd = sortedSlots[i + 1].startTime;
+          inferredHasBreak = true;
+          break;
+        }
+      }
+    }
+  }
+
+  // Generate time slots based on saved params (with inferred values for missing ones)
   const timeSlots = generateTimeSlots(
     params.startTime,
     params.endTime,
-    params.slotDuration || 60,
-    params.hasBreak ? params.breakStartTime : null,
-    params.hasBreak ? params.breakEndTime : null,
-    params.lecturesPerDay || 6
+    inferredSlotDuration,
+    inferredHasBreak ? params.breakStartTime || inferredBreakStart : null,
+    inferredHasBreak ? params.breakEndTime || inferredBreakEnd : null,
+    params.lecturesPerDay || 6 // Default to 6 lectures per day
   );
 
   // Use the generateTimetableRows function for consistency
-  const tableRows = generateTimetableRows(timeSlots, timetableData, workingDays, params);
+  const enhancedParams = {
+    ...params,
+    slotDuration: inferredSlotDuration,
+    hasBreak: inferredHasBreak,
+    breakStartTime: params.breakStartTime || inferredBreakStart,
+    breakEndTime: params.breakEndTime || inferredBreakEnd,
+  };
+  const tableRows = generateTimetableRows(timeSlots, timetableData, workingDays, enhancedParams);
   return `
     <div class="timetable-container">
       <table class="timetable-grid">
@@ -2503,7 +2441,7 @@ function renderFullTimetableTable(timetableData, params) {
           </tr>
         </thead>
         <tbody>
-          ${tableRows}
+          ${tableRows.join("")}
         </tbody>
       </table>
     </div>
@@ -2870,18 +2808,6 @@ function validateCourseDepartmentData(data) {
 }
 
 /**
- * Validate department data
- */
-function validateDepartmentData(data) {
-  if (!data.name || typeof data.name !== "string" || data.name.trim() === "") {
-    showToast("Please enter a department name", "error");
-    return false;
-  }
-
-  return true;
-}
-
-/**
  * ========================================
  * CRUD OPERATIONS
  * ========================================
@@ -3034,56 +2960,6 @@ async function deleteRoom(roomId) {
   } catch (error) {
     console.error("Error deleting room:", error);
     showToast("Failed to delete room. Please try again.", "error");
-  }
-}
-
-/**
- * Delete department
- */
-async function deleteDepartment(index) {
-  // Get the department to be deleted
-  const department = departments[index];
-  if (!department) {
-    showToast("Department not found", "error");
-    return;
-  }
-
-  // Show confirmation modal
-  const confirmed = await showDeleteConfirmationModal({
-    title: "🗑️ Delete Department",
-    message: "Are you sure you want to delete this department?",
-    itemDetails: `
-      <p><strong>Department Name:</strong> ${department}</p>
-      <p><strong>Warning:</strong> This action cannot be undone if the department is being used by existing faculty or subjects.</p>
-    `,
-    confirmText: "Yes, Delete Department",
-    cancelText: "Cancel",
-  });
-
-  if (!confirmed) {
-    return;
-  }
-
-  try {
-    const response = await authenticatedFetch(`${API_BASE}/api/departments/${index}`, {
-      method: "DELETE",
-    });
-
-    if (response.ok) {
-      departments.splice(index, 1);
-      renderDepartments();
-      populateAllDropdowns(); // Refresh department dropdowns everywhere
-      showToast("Department deleted successfully!", "success");
-      if (typeof updateStatistics === "function") {
-        updateStatistics();
-      }
-    } else {
-      const errorData = await response.json();
-      throw new Error(errorData.error || "Failed to delete department");
-    }
-  } catch (error) {
-    console.error("Error deleting department:", error);
-    showToast(error.message || "Failed to delete department. Please try again.", "error");
   }
 }
 
@@ -3281,33 +3157,6 @@ async function deleteCourseDepartment(index) {
 }
 
 /**
- * Edit department
- */
-function editDepartment(index) {
-  const department = departments[index];
-  if (!department) {
-    showToast("Department not found!", "error");
-    return;
-  }
-
-  // Populate the form with existing data
-  const form = document.getElementById("departmentForm");
-  if (form) {
-    form.querySelector('[name="departmentName"]').value = department;
-
-    // Change form to edit mode
-    form.dataset.editIndex = index;
-    const submitBtn = form.querySelector('button[type="submit"]');
-    if (submitBtn) {
-      submitBtn.textContent = "Update Department";
-    }
-
-    // Scroll to form
-    form.scrollIntoView({ behavior: "smooth" });
-    showToast("Edit mode activated. Update the fields and submit.", "info");
-  }
-}
-/**
  * ========================================
  * UTILITY FUNCTIONS
  * ========================================
@@ -3440,11 +3289,9 @@ window.addEventListener("load", () => {
 window.deleteSubject = deleteSubject;
 window.deleteFaculty = deleteFaculty;
 window.deleteRoom = deleteRoom;
-window.deleteDepartment = deleteDepartment;
 window.editSubject = editSubject;
 window.editFaculty = editFaculty;
 window.editRoom = editRoom;
-window.editDepartment = editDepartment;
 window.scrollToGenerator = scrollToGenerator;
 window.getSubjects = getSubjects;
 window.getFaculty = getFaculty;
