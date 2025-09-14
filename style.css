@@ -749,6 +749,16 @@ body {
   transform: translateY(-2px);
 }
 
+.timetable-action-btn.download-btn {
+  background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+  box-shadow: 0 4px 12px rgba(66, 153, 225, 0.3);
+}
+
+.timetable-action-btn.download-btn:hover {
+  box-shadow: 0 6px 20px rgba(66, 153, 225, 0.4);
+  transform: translateY(-2px);
+}
+
 .timetable-action-btn.delete-btn {
   background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
   box-shadow: 0 4px 12px rgba(245, 101, 101, 0.3);
@@ -847,6 +857,16 @@ body {
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
+}
+
+.small-btn.primary {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.small-btn.primary:hover {
+  background: #bfdbfe;
+  transform: translateY(-1px);
 }
 
 .small-btn.danger {

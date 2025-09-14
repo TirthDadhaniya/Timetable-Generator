@@ -79,22 +79,34 @@ function updateTimetableCount() {
       ? `http://${window.location.hostname}:3000`
       : window.location.origin;
 
-  fetch(`${API_BASE}/api/timetables`)
-    .then((response) => response.json())
+  const token = getUserToken();
+  const headers = {
+    "Content-Type": "application/json",
+  };
+
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+
+  fetch(`${API_BASE}/api/timetables`, { headers })
+    .then((response) => {
+      if (response.status === 401) {
+        // Token expired or invalid
+        clearAuthData();
+        window.location.href = "login.html?redirect=true";
+        return;
+      }
+      return response.json();
+    })
     .then((savedTimetables) => {
-      const count = savedTimetables ? savedTimetables.length : 0;
-      animateCount("total-timetables-count", count);
+      if (savedTimetables) {
+        const count = savedTimetables ? savedTimetables.length : 0;
+        animateCount("total-timetables-count", count);
+      }
     })
     .catch((error) => {
       console.error("Error fetching timetables count:", error);
-      // Fallback to database variable if fetch fails
-      const database = typeof getDatabase === "function" ? getDatabase() : null;
-      if (database && database.savedTimetables) {
-        const count = database.savedTimetables.length;
-        animateCount("total-timetables-count", count);
-      } else {
-        animateCount("total-timetables-count", 0);
-      }
+      animateCount("total-timetables-count", 0);
     });
 }
 
@@ -122,51 +134,200 @@ function animateCount(elementId, targetValue) {
 window.updateStatistics = updateStatistics;
 
 // Authentication functions for main app
-function checkAuthenticationStatus() {
+// Using API_BASE_URL already declared in auth.js
+
+// Authentication helper functions (shared with auth.js)
+function getCurrentUser() {
+  const userData = localStorage.getItem("userData");
+  return userData ? JSON.parse(userData) : null;
+}
+
+function getUserToken() {
+  return localStorage.getItem("userToken");
+}
+
+async function isSessionValid() {
   const isLoggedIn = localStorage.getItem("isLoggedIn");
-  const userEmail = localStorage.getItem("userEmail");
-  const registeredUser = JSON.parse(
-    localStorage.getItem("registeredUser") || "{}"
-  );
+  const token = localStorage.getItem("userToken");
+  const sessionExpiry = localStorage.getItem("sessionExpiry");
+
+  if (isLoggedIn !== "true" || !token || !sessionExpiry) {
+    return false;
+  }
+
+  const currentTime = Date.now();
+  const expiryTime = parseInt(sessionExpiry);
+
+  if (currentTime > expiryTime) {
+    // Session expired, clear all auth data
+    clearAuthData();
+    return false;
+  }
+
+  // Verify token with server
+  try {
+    const response = await fetch(`${API_BASE_URL}/auth/verify`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ token }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      if (data.valid) {
+        // Update user data if needed
+        localStorage.setItem("userData", JSON.stringify(data.user));
+        return true;
+      }
+    }
+  } catch (error) {
+    console.error("Token verification error:", error);
+  }
+
+  // Token invalid, clear auth data
+  clearAuthData();
+  return false;
+}
+
+function clearAuthData() {
+  localStorage.removeItem("isLoggedIn");
+  localStorage.removeItem("userToken");
+  localStorage.removeItem("userData");
+  localStorage.removeItem("rememberMe");
+  localStorage.removeItem("registeredUser");
+  localStorage.removeItem("loginTimestamp");
+  localStorage.removeItem("sessionExpiry");
+}
+
+async function checkAuthenticationStatus() {
+  const currentUser = getCurrentUser();
+  const token = getUserToken();
 
   const userInfo = document.getElementById("userInfo");
   const authButtons = document.getElementById("authButtons");
   const userName = document.getElementById("userName");
 
-  if (isLoggedIn === "true" && userEmail && isSessionValid()) {
+  if (currentUser && token && (await isSessionValid())) {
     // User is logged in and session is valid
     if (userInfo) userInfo.style.display = "flex";
     if (authButtons) authButtons.style.display = "none";
 
-    // Set user name
+    // Set user name and role
     if (userName) {
-      if (registeredUser.firstName) {
-        userName.textContent = registeredUser.firstName;
-      } else {
-        userName.textContent = userEmail.split("@")[0];
-      }
+      userName.textContent = `${currentUser.firstName} ${currentUser.lastName} (${currentUser.role})`;
     }
+
+    // Update UI based on user role
+    updateUIForUserRole(currentUser.role);
   } else {
     // User is not logged in or session is invalid
-    if (userInfo) userInfo.style.display = "none";
-    if (authButtons) authButtons.style.display = "flex";
+    clearAuthData();
+    window.location.href = "login.html?redirect=true";
   }
 }
 
-function handleLogout() {
+function updateUIForUserRole(role) {
+  // Hide/show elements based on user role
+  const adminOnlyElements = document.querySelectorAll(".admin-only");
+  const teacherElements = document.querySelectorAll(".teacher-only");
+  const studentElements = document.querySelectorAll(".student-only");
+
+  // Hide all role-specific elements first
+  adminOnlyElements.forEach((el) => (el.style.display = "none"));
+  teacherElements.forEach((el) => (el.style.display = "none"));
+  studentElements.forEach((el) => (el.style.display = "none"));
+
+  // Show elements based on role
+  switch (role) {
+    case "admin":
+      adminOnlyElements.forEach((el) => (el.style.display = "block"));
+      break;
+    case "teacher":
+      teacherElements.forEach((el) => (el.style.display = "block"));
+      // Also show elements that are for both teacher and student
+      document
+        .querySelectorAll(".teacher-only.student-only")
+        .forEach((el) => (el.style.display = "block"));
+      break;
+    case "student":
+      studentElements.forEach((el) => (el.style.display = "block"));
+      // Also show elements that are for both teacher and student
+      document
+        .querySelectorAll(".teacher-only.student-only")
+        .forEach((el) => (el.style.display = "block"));
+      break;
+  }
+
+  // Update navigation based on role
+  updateNavigationForRole(role);
+}
+
+function updateNavigationForRole(role) {
+  const tabs = document.querySelectorAll(".tab");
+
+  tabs.forEach((tab) => {
+    const tabId = tab.id;
+
+    // Define which tabs are available for each role
+    switch (role) {
+      case "admin":
+        // Admin can see all tabs
+        tab.style.display = "block";
+        break;
+      case "teacher":
+        // Teachers can only see timetable tab
+        if (tabId === "timetable-tab") {
+          tab.style.display = "block";
+        } else {
+          tab.style.display = "none";
+        }
+        break;
+      case "student":
+        // Students can only see timetable tab
+        if (tabId === "timetable-tab") {
+          tab.style.display = "block";
+        } else {
+          tab.style.display = "none";
+        }
+        break;
+    }
+  });
+
+  // If current tab is hidden, switch to timetable tab
+  const activeTab = document.querySelector(".tab.active");
+  if (activeTab && activeTab.style.display === "none") {
+    const timetableTab = document.getElementById("timetable-tab");
+    if (timetableTab) {
+      timetableTab.click();
+    }
+  }
+}
+
+async function handleLogout() {
+  const token = getUserToken();
+
+  if (token) {
+    try {
+      // Call logout API
+      await fetch(`${API_BASE_URL}/auth/logout`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+    } catch (error) {
+      console.error("Logout API error:", error);
+    }
+  }
+
   // Clear authentication data
-  localStorage.removeItem("isLoggedIn");
-  localStorage.removeItem("userEmail");
-  localStorage.removeItem("rememberMe");
-  localStorage.removeItem("registeredUser");
-  localStorage.removeItem("loginTimestamp");
-  localStorage.removeItem("sessionExpiry");
+  clearAuthData();
 
   // Show toast notification
   showToast("Logged out successfully", "success");
-
-  // Update UI
-  checkAuthenticationStatus();
 
   // Redirect to login page
   setTimeout(() => {
@@ -174,75 +335,19 @@ function handleLogout() {
   }, 1500);
 }
 
-// Session management functions
-function setLoginSession(email, rememberMe = false) {
-  localStorage.setItem("isLoggedIn", "true");
-  localStorage.setItem("userEmail", email);
-  localStorage.setItem("loginTimestamp", Date.now().toString());
-  
-  if (rememberMe) {
-    localStorage.setItem("rememberMe", "true");
-    // Set longer session for remember me (30 days)
-    localStorage.setItem("sessionExpiry", (Date.now() + 30 * 24 * 60 * 60 * 1000).toString());
-  } else {
-    // Default session (24 hours)
-    localStorage.setItem("sessionExpiry", (Date.now() + 24 * 60 * 60 * 1000).toString());
-  }
-}
-
-function isSessionValid() {
-  const isLoggedIn = localStorage.getItem("isLoggedIn");
-  const sessionExpiry = localStorage.getItem("sessionExpiry");
-  
-  // If user is not logged in or no session expiry is set, return false
-  if (isLoggedIn !== "true") {
-    return false;
-  }
-  
-  // If no session expiry is set, assume session is invalid
-  if (!sessionExpiry) {
-    return false;
-  }
-  
-  const currentTime = Date.now();
-  const expiryTime = parseInt(sessionExpiry);
-  
-  // Check if session has expired
-  if (currentTime > expiryTime) {
-    // Session expired, clear all auth data
-    localStorage.removeItem("isLoggedIn");
-    localStorage.removeItem("userEmail");
-    localStorage.removeItem("rememberMe");
-    localStorage.removeItem("registeredUser");
-    localStorage.removeItem("loginTimestamp");
-    localStorage.removeItem("sessionExpiry");
-    return false;
-  }
-  
-  return true;
-}
-
 // Enhanced authentication protection
-function requireAuthentication() {
+async function requireAuthentication() {
   const currentPage = window.location.pathname.split("/").pop();
-  
+
   // Check if we're on the main index page
   if (currentPage === "index.html" || currentPage === "") {
-    const isLoggedIn = localStorage.getItem("isLoggedIn");
-    
-    // Simple check: if not logged in, redirect immediately
-    if (isLoggedIn !== "true") {
-      window.location.href = "login.html?redirect=true";
-      return false;
-    }
-    
-    // If logged in but session is invalid, redirect
-    if (!isSessionValid()) {
+    // Check session validity
+    if (!(await isSessionValid())) {
       window.location.href = "login.html?redirect=true";
       return false;
     }
   }
-  
+
   return true; // User is authenticated or on a public page
 }
 
@@ -282,96 +387,29 @@ function showToast(message, type = "success") {
   }, 5000);
 }
 
-
-
-// Protect the page content until authentication is verified
-function protectPageContent() {
-  const currentPage = window.location.pathname.split("/").pop();
-  
-  // Only protect index.html
-  if (currentPage === "index.html" || currentPage === "") {
-    const isLoggedIn = localStorage.getItem("isLoggedIn");
-    
-    // Check if user is not logged in at all
-    if (isLoggedIn !== "true") {
-      showAuthRedirectScreen();
-      return false;
-    }
-    
-    // Check if session is valid
-    if (!isSessionValid()) {
-      showAuthRedirectScreen();
-      return false;
-    }
-  }
-  
-  return true;
-}
-
-// Helper function to show the authentication redirect screen
-function showAuthRedirectScreen() {
-  // Hide the main content
-  const container = document.querySelector(".container");
-  if (container) {
-    container.style.display = "none";
-  }
-  
-  // Show a loading/redirect message with proper styling
-  document.body.innerHTML = `
-    <div class="auth-redirect-screen">
-      <div class="auth-redirect-card">
-        <div class="auth-loading-spinner"></div>
-        <h2 class="auth-redirect-title">Authentication Required</h2>
-        <p class="auth-redirect-message">You need to log in to access the Timetable Generator</p>
-        <p class="auth-redirect-note">Redirecting to login page...</p>
-      </div>
-      
-      <!-- Toast Container -->
-      <div id="toast-container" style="
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        z-index: 9999;
-      "></div>
-    </div>
-  `;
-  
-  // Show toast and redirect
-  setTimeout(() => {
-    showToast("Please log in to access the Timetable Generator", "warning");
-  }, 500);
-  
-  setTimeout(() => {
-    window.location.href = "login.html?redirect=true";
-  }, 200);
-}
-
 // Initialize authentication status on page load
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   console.log("Page loaded, checking authentication...");
-  
-  // Debug: Log current authentication state
-  const isLoggedIn = localStorage.getItem("isLoggedIn");
-  const sessionExpiry = localStorage.getItem("sessionExpiry");
-  console.log("isLoggedIn:", isLoggedIn);
-  console.log("sessionExpiry:", sessionExpiry);
-  console.log("Current time:", Date.now());
-  
+
   // First protect the page content
-  if (!protectPageContent()) {
-    console.log("Page content protected, user will be redirected");
+  if (!(await requireAuthentication())) {
+    console.log("User not authenticated, redirecting to login");
     return;
   }
-  
+
   console.log("User is authenticated, proceeding normally");
-  
+
   // If user is authenticated, proceed normally
-  checkAuthenticationStatus();
+  await checkAuthenticationStatus();
 
   // Check for login redirect
   const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.get("login") === "success") {
-    showToast("Welcome! You have successfully logged in.", "success");
+    const currentUser = getCurrentUser();
+    const welcomeMessage = currentUser
+      ? `Welcome, ${currentUser.firstName}! You have successfully logged in as ${currentUser.role}.`
+      : "Welcome! You have successfully logged in.";
+    showToast(welcomeMessage, "success");
     // Clean up URL
     window.history.replaceState({}, document.title, window.location.pathname);
   }
@@ -390,3 +428,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }, 5 * 60 * 1000); // Check every 5 minutes
 });
+
+// Export functions to global scope for access from other files
+window.getCurrentUser = getCurrentUser;
+window.updateUIForUserRole = updateUIForUserRole;
