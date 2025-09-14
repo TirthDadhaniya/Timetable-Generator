@@ -60,6 +60,28 @@ async function loadDatabase() {
 }
 
 /**
+ * Load settings from database into form fields
+ */
+function loadSettingsIntoForm() {
+  if (database && database.settings) {
+    // Note: Not loading lecturesPerDay from database to show placeholder instead
+    // Users can set 0 for auto-calculation or specify their preferred number
+
+    // Load other settings if needed (start time, end time, etc.)
+    const startTimeInput = document.getElementById("collegeStartTime");
+    if (startTimeInput && database.settings.defaultCollegeStartTime) {
+      startTimeInput.value = database.settings.defaultCollegeStartTime;
+    }
+
+    const endTimeInput = document.getElementById("collegeEndTime");
+    if (endTimeInput && database.settings.defaultCollegeEndTime) {
+      endTimeInput.value = database.settings.defaultCollegeEndTime;
+    }
+  } // Update time calculation after loading settings
+  setTimeout(updateTimeCalculation, 100); // Small delay to ensure all inputs are populated
+}
+
+/**
  * Initialize all components after database load
  */
 async function initializeTimetableSystem() {
@@ -76,6 +98,7 @@ async function initializeTimetableSystem() {
     renderDepartments();
     await renderSavedTimetables();
     setupFormHandlers();
+    loadSettingsIntoForm(); // Load settings like defaultSlotsPerDay into form fields
 
     // Update statistics after database is loaded
     if (typeof updateStatistics === "function") {
@@ -501,19 +524,183 @@ function setupFormHandlers() {
   // Break checkbox handler
   const hasBreakCheckbox = document.getElementById("hasBreak");
   const breakStartTimeInput = document.getElementById("breakStartTime");
-  const breakDurationInput = document.getElementById("breakDuration");
+  const breakEndTimeInput = document.getElementById("breakEndTime");
 
-  if (hasBreakCheckbox && breakStartTimeInput && breakDurationInput) {
+  if (hasBreakCheckbox && breakStartTimeInput && breakEndTimeInput) {
     hasBreakCheckbox.addEventListener("change", function () {
       const isEnabled = this.checked;
       breakStartTimeInput.disabled = !isEnabled;
-      breakDurationInput.disabled = !isEnabled;
+      breakEndTimeInput.disabled = !isEnabled;
 
       // If enabling, focus on start time field
       if (isEnabled) {
         breakStartTimeInput.focus();
       }
     });
+  }
+
+  // Lectures per day handler - update database setting when changed
+  const lecturesPerDayInput = document.getElementById("lecturesPerDay");
+  if (lecturesPerDayInput) {
+    lecturesPerDayInput.addEventListener("change", async function () {
+      const newValue = parseInt(this.value);
+      if (!isNaN(newValue) && newValue >= 0 && newValue <= 12) {
+        try {
+          const response = await fetch("/api/settings", {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              defaultSlotsPerDay: newValue,
+            }),
+          });
+
+          if (response.ok) {
+            console.log(`✅ Updated defaultSlotsPerDay to ${newValue}`);
+          } else {
+            console.error("❌ Failed to update settings");
+          }
+        } catch (error) {
+          console.error("❌ Error updating settings:", error);
+        }
+      }
+    });
+  }
+
+  // Update time calculation display when inputs change
+  updateTimeCalculation();
+
+  // Add event listeners to update calculation in real-time
+  const inputs = [
+    "collegeStartTime",
+    "collegeEndTime",
+    "slotDuration",
+    "lecturesPerDay",
+    "breakStartTime",
+    "breakEndTime",
+    "hasBreak",
+  ];
+  inputs.forEach((id) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.addEventListener("change", updateTimeCalculation);
+      element.addEventListener("input", updateTimeCalculation);
+    }
+  });
+}
+
+/**
+ * Update the time configuration summary display
+ */
+function updateTimeCalculation() {
+  const startTime = document.getElementById("collegeStartTime")?.value || "09:00";
+  const endTime = document.getElementById("collegeEndTime")?.value || "17:00";
+  const slotDuration = parseInt(document.getElementById("slotDuration")?.value) || 60;
+  const lecturesPerDay = parseInt(document.getElementById("lecturesPerDay")?.value) || 0;
+  const hasBreak = document.getElementById("hasBreak")?.checked || false;
+  const breakStartTime = document.getElementById("breakStartTime")?.value || "12:00";
+  const breakEndTime = document.getElementById("breakEndTime")?.value || "13:00";
+
+  const timeDetailsDiv = document.getElementById("timeDetails");
+  if (!timeDetailsDiv) return;
+
+  try {
+    // Calculate total available time
+    const start = new Date(`1970-01-01T${startTime}:00`);
+    const end = new Date(`1970-01-01T${endTime}:00`);
+    const totalMinutes = (end - start) / (1000 * 60);
+    const totalHours = Math.floor(totalMinutes / 60);
+    const totalMins = totalMinutes % 60;
+
+    // Calculate break time
+    let breakTimeNeeded = 0;
+    if (hasBreak && breakStartTime && breakEndTime) {
+      const breakStart = new Date(`1970-01-01T${breakStartTime}:00`);
+      const breakEnd = new Date(`1970-01-01T${breakEndTime}:00`);
+      breakTimeNeeded = (breakEnd - breakStart) / (1000 * 60);
+    }
+    const breakHours = Math.floor(breakTimeNeeded / 60);
+    const breakMins = breakTimeNeeded % 60;
+
+    // Check if auto-calculation would be triggered
+    const isAutoMode = lecturesPerDay === 0;
+    let displayLecturesPerDay = lecturesPerDay;
+    let autoCalculationNote = "";
+
+    if (isAutoMode) {
+      // Get current form values for auto-calculation preview
+      const course = document.getElementById("genCourse")?.value;
+      const department = document.getElementById("genDepartment")?.value;
+      const semester = document.getElementById("genSemester")?.value;
+
+      if (course && department && semester) {
+        const mockParams = {
+          course,
+          department,
+          semester,
+          startTime,
+          endTime,
+          slotDuration,
+          hasBreak,
+          breakStartTime: hasBreak ? breakStartTime : null,
+          breakEndTime: hasBreak ? breakEndTime : null,
+        };
+        displayLecturesPerDay = calculateOptimalLecturesPerDay(mockParams);
+        autoCalculationNote = " (Auto-calculated)";
+      } else {
+        displayLecturesPerDay = "?";
+        autoCalculationNote = " (Auto-calc: Select course/dept/semester first)";
+      }
+    }
+
+    const lectureTimeNeeded = displayLecturesPerDay !== "?" ? displayLecturesPerDay * slotDuration : 0;
+    const lectureHours = Math.floor(lectureTimeNeeded / 60);
+    const lectureMins = lectureTimeNeeded % 60;
+
+    // Calculate remaining time
+    const remainingTime = totalMinutes - lectureTimeNeeded - breakTimeNeeded;
+    const remainingHours = Math.floor(Math.abs(remainingTime) / 60);
+    const remainingMins = Math.abs(remainingTime) % 60;
+
+    let html = `
+      <div style="margin-bottom: 5px;">
+        📅 <strong>Total College Time:</strong> ${totalHours}h ${totalMins}m (${convertTo12HourFormat(
+      startTime
+    )} - ${convertTo12HourFormat(endTime)})
+      </div>
+      <div style="margin-bottom: 5px;">
+        📚 <strong>Lecture Time Needed:</strong> ${displayLecturesPerDay} slots × ${slotDuration}min = ${lectureHours}h ${lectureMins}m${autoCalculationNote}
+      </div>
+    `;
+
+    if (hasBreak) {
+      html += `
+        <div style="margin-bottom: 5px;">
+          🍽️ <strong>Break Time:</strong> ${breakHours}h ${breakMins}m (${convertTo12HourFormat(
+        breakStartTime
+      )} - ${convertTo12HourFormat(breakEndTime)})
+        </div>
+      `;
+    }
+
+    if (remainingTime >= 0) {
+      html += `
+        <div style="color: #059669;">
+          ✅ <strong>Remaining Time:</strong> ${remainingHours}h ${remainingMins}m available
+        </div>
+      `;
+    } else {
+      html += `
+        <div style="color: #dc2626;">
+          ❌ <strong>Time Shortage:</strong> Need ${remainingHours}h ${remainingMins}m more time
+        </div>
+      `;
+    }
+
+    timeDetailsDiv.innerHTML = html;
+  } catch (error) {
+    timeDetailsDiv.innerHTML = '<div style="color: #dc2626;">Error calculating time configuration</div>';
   }
 }
 
@@ -1162,14 +1349,11 @@ async function handleTimetableGeneration(event) {
   // Handle break time data
   const hasBreak = document.getElementById("hasBreak").checked;
   let breakStartTime = null;
-  let breakDurationMinutes = null;
+  let breakEndTime = null;
 
   if (hasBreak) {
     breakStartTime = formData.get("breakStartTime") || document.getElementById("breakStartTime").value;
-    const breakDurationTime =
-      formData.get("breakDuration") || document.getElementById("breakDuration").value || "01:00";
-    const [breakHours, breakMins] = breakDurationTime.split(":").map(Number);
-    breakDurationMinutes = breakHours * 60 + breakMins;
+    breakEndTime = formData.get("breakEndTime") || document.getElementById("breakEndTime").value;
   }
 
   const generationParams = {
@@ -1180,10 +1364,26 @@ async function handleTimetableGeneration(event) {
     startTime: formData.get("startTime") || document.getElementById("collegeStartTime").value,
     endTime: formData.get("endTime") || document.getElementById("collegeEndTime").value,
     slotDuration: slotDurationMinutes,
+    lecturesPerDay: 0, // Will be set below based on user input or auto-calculation
     hasBreak: hasBreak,
     breakStartTime: breakStartTime,
-    breakDuration: breakDurationMinutes,
+    breakEndTime: breakEndTime,
   };
+
+  // Handle lectures per day - auto-calculate if 0 or empty, otherwise use user input
+  const userLecturesPerDay =
+    parseInt(formData.get("lecturesPerDay")) || parseInt(document.getElementById("lecturesPerDay").value) || 0;
+
+  if (userLecturesPerDay === 0) {
+    console.log("🤖 Auto-calculating optimal lectures per day...");
+    generationParams.lecturesPerDay = calculateOptimalLecturesPerDay(generationParams);
+    generationParams.isAutoCalculated = true;
+    console.log(`✅ Auto-calculated: ${generationParams.lecturesPerDay} lectures per day`);
+  } else {
+    generationParams.lecturesPerDay = userLecturesPerDay;
+    generationParams.isAutoCalculated = false;
+    console.log(`👤 User specified: ${generationParams.lecturesPerDay} lectures per day`);
+  }
 
   // Validation
   if (!validateTimetableParams(generationParams)) {
@@ -1261,9 +1461,11 @@ async function generateTimetable(params) {
     startTime,
     endTime,
     slotDuration = 60,
+    lecturesPerDay = 6,
     hasBreak = false,
     breakStartTime = null,
-    breakDuration = null,
+    breakEndTime = null,
+    isAutoCalculated = false,
   } = params;
 
   console.log("🔍 GenerateTimetable Debug:", {
@@ -1309,7 +1511,8 @@ async function generateTimetable(params) {
       endTime,
       slotDuration,
       hasBreak ? breakStartTime : null,
-      hasBreak ? breakDuration : null
+      hasBreak ? breakEndTime : null,
+      lecturesPerDay
     );
 
     if (timeSlots.length === 0) {
@@ -1332,9 +1535,11 @@ async function generateTimetable(params) {
         startTime,
         endTime,
         slotDuration,
+        lecturesPerDay,
+        isAutoCalculated,
         hasBreak,
         breakStartTime,
-        breakDuration,
+        breakEndTime,
         timetable: timetableResult.timetable,
         generatedAt: new Date().toISOString(),
       });
@@ -1358,7 +1563,14 @@ async function generateTimetable(params) {
 /**
  * Generate time slots based on start and end time
  */
-function generateTimeSlots(startTime, endTime, slotDuration = 60, breakStartTime = null, breakDuration = null) {
+function generateTimeSlots(
+  startTime,
+  endTime,
+  slotDuration = 60,
+  breakStartTime = null,
+  breakEndTime = null,
+  lecturesPerDay = null
+) {
   const slots = [];
   const start = new Date(`1970-01-01T${startTime}:00`);
   const end = new Date(`1970-01-01T${endTime}:00`);
@@ -1369,9 +1581,9 @@ function generateTimeSlots(startTime, endTime, slotDuration = 60, breakStartTime
   // Parse break time if provided
   let breakStart = null;
   let breakEnd = null;
-  if (breakStartTime && breakDuration) {
+  if (breakStartTime && breakEndTime) {
     breakStart = new Date(`1970-01-01T${breakStartTime}:00`);
-    breakEnd = new Date(breakStart.getTime() + breakDuration * 60 * 1000);
+    breakEnd = new Date(`1970-01-01T${breakEndTime}:00`);
   }
 
   while (current < end) {
@@ -1397,6 +1609,16 @@ function generateTimeSlots(startTime, endTime, slotDuration = 60, breakStartTime
       }
     }
     current = next;
+  }
+
+  // Validate if the number of slots matches the desired lectures per day
+  if (lecturesPerDay && slots.length !== lecturesPerDay) {
+    console.warn(
+      `⚠️ Time configuration mismatch: Generated ${slots.length} slots but expected ${lecturesPerDay} lectures per day`
+    );
+    console.warn(
+      `💡 Suggestion: Adjust start/end time or slot duration to get exactly ${lecturesPerDay} lecture slots`
+    );
   }
 
   return slots;
@@ -1710,6 +1932,149 @@ function generateOptimizedSchedule(subjects, availableRooms, timeSlots) {
 }
 
 /**
+ * Generate timetable rows including break rows
+ */
+function generateTimetableRows(timeSlots, timetableData, workingDays, params) {
+  console.log("🔍 generateTimetableRows Debug:", {
+    timeSlots: timeSlots?.length,
+    hasBreak: params?.hasBreak,
+    breakStartTime: params?.breakStartTime,
+    breakEndTime: params?.breakEndTime,
+    params,
+  });
+
+  const rows = [];
+  const allTimeSlots = [];
+
+  // Create all time slots including break slots
+  const start = new Date(`1970-01-01T${params.startTime}:00`);
+  const end = new Date(`1970-01-01T${params.endTime}:00`);
+  const slotDuration = params.slotDuration;
+
+  // Parse break times if provided
+  let breakStart = null;
+  let breakEnd = null;
+  if (params.hasBreak && params.breakStartTime && params.breakEndTime) {
+    breakStart = new Date(`1970-01-01T${params.breakStartTime}:00`);
+    breakEnd = new Date(`1970-01-01T${params.breakEndTime}:00`);
+    console.log("🔍 Break times parsed:", {
+      breakStartTime: params.breakStartTime,
+      breakEndTime: params.breakEndTime,
+      breakStart: breakStart.toTimeString(),
+      breakEnd: breakEnd.toTimeString(),
+    });
+  }
+
+  let current = new Date(start);
+
+  while (current < end) {
+    const next = new Date(current.getTime() + slotDuration * 60 * 1000);
+
+    if (next <= end) {
+      // Check if this slot overlaps with break time
+      const isBreakTime =
+        breakStart &&
+        breakEnd &&
+        ((current >= breakStart && current < breakEnd) ||
+          (next > breakStart && next <= breakEnd) ||
+          (current <= breakStart && next >= breakEnd));
+
+      console.log(`🔍 Slot ${current.toTimeString().slice(0, 5)}-${next.toTimeString().slice(0, 5)}:`, {
+        current: current.toTimeString().slice(0, 5),
+        next: next.toTimeString().slice(0, 5),
+        breakStart: breakStart?.toTimeString().slice(0, 5),
+        breakEnd: breakEnd?.toTimeString().slice(0, 5),
+        isBreakTime,
+      });
+
+      allTimeSlots.push({
+        startTime: current.toTimeString().slice(0, 5),
+        endTime: next.toTimeString().slice(0, 5),
+        isBreak: isBreakTime,
+      });
+    }
+    current = next;
+  }
+
+  // Generate rows for each time slot
+  allTimeSlots.forEach((slot, index) => {
+    console.log(`🔍 Slot ${index + 1}:`, {
+      startTime: slot.startTime,
+      endTime: slot.endTime,
+      isBreak: slot.isBreak,
+    });
+
+    if (slot.isBreak) {
+      // Generate break row
+      rows.push(`
+        <tr class="break-row">
+          <td class="time-cell break-time">
+            <div class="time-slot">
+              <span class="start-time">${convertTo12HourFormat(slot.startTime)}<br />-<br /></span>
+              <span class="end-time">${convertTo12HourFormat(slot.endTime)}</span>
+            </div>
+          </td>
+          ${workingDays.map(() => '<td class="break-cell">🍽️ BREAK TIME</td>').join("")}
+        </tr>
+      `);
+    } else {
+      // Find the corresponding slot from timeSlots (which excludes break slots)
+      const actualSlot = timeSlots.find((ts) => ts.startTime === slot.startTime);
+      if (actualSlot) {
+        rows.push(`
+          <tr class="time-row">
+            <td class="time-cell">
+              <div class="time-slot">
+                <span class="start-time">${convertTo12HourFormat(actualSlot.startTime)}<br />-<br /></span>
+                <span class="end-time">${convertTo12HourFormat(actualSlot.endTime)}</span>
+              </div>
+            </td>
+            ${workingDays
+              .map((day) => {
+                const session = timetableData[day] && timetableData[day][actualSlot.id];
+                if (!session) {
+                  return '<td class="empty-slot">Free</td>';
+                }
+
+                // Skip continuation slots of labs (already rendered in first slot)
+                if (session.slotPosition && session.slotPosition !== "first") {
+                  return "";
+                }
+
+                const rowspan = session.duration > 1 ? `rowspan="${session.duration}"` : "";
+                const sessionClass = session.type.toLowerCase() === "lecture" ? "lecture-session" : "lab-session";
+
+                return `
+                  <td class="session-cell ${sessionClass}" ${rowspan}>
+                    <div class="session-content">
+                      <div class="session-subject">${session.subject}</div>
+                      <div class="session-details">
+                        <div class="session-faculty">👨‍🏫 ${session.faculty}</div>
+                        <div class="session-room">🏢 ${session.room}</div>
+                        <div class="session-type">${session.type}</div>
+                      </div>
+                    </div>
+                  </td>
+                `;
+              })
+              .join("")}
+          </tr>
+        `);
+      }
+    }
+  });
+
+  console.log("🔍 Final slot summary:", {
+    totalSlots: allTimeSlots.length,
+    breakSlots: allTimeSlots.filter((s) => s.isBreak).length,
+    regularSlots: allTimeSlots.filter((s) => !s.isBreak).length,
+    rowsGenerated: rows.length,
+  });
+
+  return rows;
+}
+
+/**
  * Display the generated timetable in the UI
  */
 function displayGeneratedTimetable(timetableData, params) {
@@ -1724,12 +2089,15 @@ function displayGeneratedTimetable(timetableData, params) {
   }
 
   // Generate timetable HTML
+  // Note: generateTimeSlots excludes break periods (used for scheduling logic)
+  // But generateTimetableRows creates ALL slots including break rows
   const timeSlots = generateTimeSlots(
     params.startTime,
     params.endTime,
     params.slotDuration,
     params.hasBreak ? params.breakStartTime : null,
-    params.hasBreak ? params.breakDuration : null
+    params.hasBreak ? params.breakEndTime : null,
+    params.lecturesPerDay
   );
   const workingDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
@@ -1746,9 +2114,9 @@ function displayGeneratedTimetable(timetableData, params) {
         <p><strong>Slot Duration:</strong> ${Math.floor(params.slotDuration / 60)}h ${params.slotDuration % 60}m</p>
         ${
           params.hasBreak
-            ? `<p><strong>Break:</strong> ${convertTo12HourFormat(params.breakStartTime)} (${Math.floor(
-                params.breakDuration / 60
-              )}h ${params.breakDuration % 60}m)</p>`
+            ? `<p><strong>Break:</strong> ${convertTo12HourFormat(params.breakStartTime)} - ${convertTo12HourFormat(
+                params.breakEndTime
+              )}</p>`
             : ""
         }
         <p><strong>Generated:</strong> ${new Date().toLocaleDateString()}</p>
@@ -1764,49 +2132,7 @@ function displayGeneratedTimetable(timetableData, params) {
           </tr>
         </thead>
         <tbody>
-          ${timeSlots
-            .map(
-              (slot) => `
-            <tr class="time-row">
-              <td class="time-cell">
-                <div class="time-slot">
-                  <span class="start-time">${convertTo12HourFormat(slot.startTime)}<br />-<br /></span>
-                  <span class="end-time">${convertTo12HourFormat(slot.endTime)}</span>
-                </div>
-              </td>
-        ${workingDays
-          .map((day) => {
-            const session = timetableData[day] && timetableData[day][slot.id];
-            if (!session) {
-              return '<td class="empty-slot">Free</td>';
-            }
-
-            // Skip continuation slots of labs (already rendered in first slot)
-            if (session.slotPosition && session.slotPosition !== "first") {
-              return "";
-            }
-
-            const rowspan = session.duration > 1 ? `rowspan="${session.duration}"` : "";
-            const sessionClass = session.type.toLowerCase() === "lecture" ? "lecture-session" : "lab-session";
-
-            return `
-          <td class="session-cell ${sessionClass}" ${rowspan}>
-                    <div class="session-content">
-                      <div class="session-subject">${session.subject}</div>
-                      <div class="session-details">
-            <div class="session-faculty">👨‍🏫 ${session.faculty}</div>
-            <div class="session-room">🏢 ${session.room}</div>
-                        <div class="session-type">${session.type}</div>
-                      </div>
-                    </div>
-                  </td>
-                `;
-          })
-          .join("")}
-            </tr>
-          `
-            )
-            .join("")}
+          ${generateTimetableRows(timeSlots, timetableData, workingDays, params).join("")}
         </tbody>
       </table>
     </div>
@@ -2106,16 +2432,20 @@ function renderMiniTableGrid(timetable) {
 function renderFullTimetableTable(timetableData, params) {
   if (!timetableData || !params) return "";
 
+  const workingDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+
   // Generate time slots based on saved params
   const timeSlots = generateTimeSlots(
     params.startTime,
     params.endTime,
     params.slotDuration || 60,
     params.hasBreak ? params.breakStartTime : null,
-    params.hasBreak ? params.breakDuration : null
+    params.hasBreak ? params.breakEndTime : null,
+    params.lecturesPerDay || 6
   );
-  const workingDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
+  // Use the generateTimetableRows function for consistency
+  const tableRows = generateTimetableRows(timeSlots, timetableData, workingDays, params);
   return `
     <div class="timetable-container">
       <table class="timetable-grid">
@@ -2126,49 +2456,7 @@ function renderFullTimetableTable(timetableData, params) {
           </tr>
         </thead>
         <tbody>
-          ${timeSlots
-            .map(
-              (slot) => `
-            <tr class="time-row">
-              <td class="time-cell">
-                <div class="time-slot">
-                  <span class="start-time">${convertTo12HourFormat(slot.startTime)}<br />-<br /></span>
-                  <span class="end-time">${convertTo12HourFormat(slot.endTime)}</span>
-                </div>
-              </td>
-              ${workingDays
-                .map((day) => {
-                  const session = timetableData[day] && timetableData[day][slot.id];
-                  if (!session) {
-                    return '<td class="empty-slot">Free</td>';
-                  }
-
-                  // Skip continuation slots of labs (already rendered in first slot)
-                  if (session.slotPosition && session.slotPosition !== "first") {
-                    return "";
-                  }
-
-                  const rowspan = session.duration > 1 ? `rowspan="${session.duration}"` : "";
-                  const sessionClass = session.type.toLowerCase() === "lecture" ? "lecture-session" : "lab-session";
-
-                  return `
-                    <td class="session-cell ${sessionClass}" ${rowspan}>
-                      <div class="session-content">
-                        <div class="session-subject">${session.subject}</div>
-                        <div class="session-details">
-                          <div class="session-faculty">👨‍🏫 ${session.faculty}</div>
-                          <div class="session-room">🏢 ${session.room}</div>
-                          <div class="session-type">${session.type}</div>
-                        </div>
-                      </div>
-                    </td>
-                  `;
-                })
-                .join("")}
-            </tr>
-          `
-            )
-            .join("")}
+          ${tableRows}
         </tbody>
       </table>
     </div>
@@ -2379,6 +2667,94 @@ function validateRoomData(data) {
   // Note: Duplicate checking removed - will be handled by auto-update logic
 
   return true;
+}
+
+/**
+ * Auto-calculate optimal lectures per day based on weekly hour requirements
+ */
+function calculateOptimalLecturesPerDay(params) {
+  try {
+    // Get subjects for the selected course, department, and semester
+    const filteredSubjects = subjects.filter(
+      (s) => s.course === params.course && s.department === params.department && s.semester === params.semester
+    );
+
+    if (filteredSubjects.length === 0) {
+      console.warn("No subjects found for auto-calculation");
+      return 6; // Default fallback
+    }
+
+    // Calculate total weekly hours needed
+    let totalWeeklyLectureHours = 0;
+    let totalWeeklyLabHours = 0;
+
+    filteredSubjects.forEach((subject) => {
+      totalWeeklyLectureHours += subject.lectureHours || 0;
+      totalWeeklyLabHours += subject.labHours || 0;
+    });
+
+    console.log("📊 Weekly Requirements:", {
+      subjects: filteredSubjects.length,
+      totalLectureHours: totalWeeklyLectureHours,
+      totalLabHours: totalWeeklyLabHours,
+    });
+
+    // Calculate available time per day
+    const start = new Date(`1970-01-01T${params.startTime}:00`);
+    const end = new Date(`1970-01-01T${params.endTime}:00`);
+    const dailyMinutes = (end - start) / (1000 * 60);
+
+    // Subtract break time if enabled
+    let breakMinutes = 0;
+    if (params.hasBreak && params.breakStartTime && params.breakEndTime) {
+      const breakStart = new Date(`1970-01-01T${params.breakStartTime}:00`);
+      const breakEnd = new Date(`1970-01-01T${params.breakEndTime}:00`);
+      breakMinutes = (breakEnd - breakStart) / (1000 * 60);
+    }
+
+    const availableDailyMinutes = dailyMinutes - breakMinutes;
+    const slotDurationMinutes = params.slotDuration || 60;
+    const maxSlotsPerDay = Math.floor(availableDailyMinutes / slotDurationMinutes);
+
+    // Convert hours to slots (assuming 1 hour = 1 slot for lectures)
+    // For labs, we need to consider lab duration (usually 2+ hours per lab session)
+    const lectureSlotDuration = slotDurationMinutes / 60; // in hours
+    const totalWeeklyLectureSlots = Math.ceil(totalWeeklyLectureHours / lectureSlotDuration);
+
+    // Labs need special handling - each lab session is typically 2+ hours
+    const avgLabSessionDuration = 2; // hours per lab session
+    const labSessionsPerWeek = Math.ceil(totalWeeklyLabHours / avgLabSessionDuration);
+    const labSlotsNeeded = labSessionsPerWeek * Math.ceil(avgLabSessionDuration / lectureSlotDuration);
+
+    const totalWeeklySlots = totalWeeklyLectureSlots + labSlotsNeeded;
+    const workingDays = 5; // Monday to Friday
+    const optimalSlotsPerDay = Math.ceil(totalWeeklySlots / workingDays);
+
+    console.log("🧮 Auto-calculation Details:", {
+      dailyMinutes,
+      breakMinutes,
+      availableDailyMinutes,
+      maxSlotsPerDay,
+      totalWeeklyLectureSlots,
+      labSlotsNeeded,
+      totalWeeklySlots,
+      optimalSlotsPerDay,
+    });
+
+    // Ensure we don't exceed available time
+    const finalSlotsPerDay = Math.min(optimalSlotsPerDay, maxSlotsPerDay);
+
+    if (finalSlotsPerDay < optimalSlotsPerDay) {
+      console.warn(
+        `⚠️ Time constraint: Need ${optimalSlotsPerDay} slots but only ${finalSlotsPerDay} fit in available time`
+      );
+    }
+
+    return Math.max(1, finalSlotsPerDay); // At least 1 slot
+  } catch (error) {
+    console.error("❌ Error in auto-calculation:", error);
+    return 6; // Default fallback
+  }
 }
 
 /**
