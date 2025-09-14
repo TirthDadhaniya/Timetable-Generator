@@ -699,6 +699,30 @@ body {
   font-style: italic;
 }
 
+/* Break Row Styles */
+.break-row {
+  background: linear-gradient(135deg, #fff3e0 0%, #ffcc80 100%);
+}
+
+.break-cell {
+  background: linear-gradient(135deg, #fff3e0 0%, #ffcc80 100%);
+  color: #e65100;
+  font-weight: 700;
+  font-size: 14px;
+  text-align: center;
+  padding: 20px !important;
+  border: 2px solid #ffb74d;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.break-time {
+  background: linear-gradient(135deg, #fff3e0 0%, #ffcc80 100%);
+  color: #e65100;
+  font-weight: 700;
+  border: 2px solid #ffb74d;
+}
+
 /* Timetable Action Buttons */
 .timetable-actions {
   display: flex;
