@@ -102,7 +102,7 @@
               <input type="time" id="collegeEndTime" value="17:00" required />
             </div>
           </div>
-          <div class="last-row">
+          <div class="form-row">
             <div class="form-group">
               <label>Lecture Duration (minutes)</label>
               <input
@@ -118,7 +118,7 @@
               />
             </div>
             <div class="form-group">
-              <label>Number of Lectures per Day</label>
+              <label>Number of Lectures per Day<small> (0 for auto-calculate)</small></label>
               <input
                 type="number"
                 id="lecturesPerDay"
@@ -128,9 +128,11 @@
                 step="1"
                 required
                 title="Set to 0 for auto-calculation based on weekly hour requirements, or specify exact number"
-                placeholder="0: auto-calculate slots"
+                placeholder="6"
               />
             </div>
+          </div>
+          <div class="last-row">
             <div class="form-group checkbox-group">
               <label class="checkbox-label" style="display: flex; margin-bottom: 0px; margin-left: 0px">
                 <input type="checkbox" id="hasBreak" name="hasBreak" />
@@ -162,17 +164,7 @@
           </div>
 
           <div class="form-group">
-            <div
-              id="timeCalculation"
-              style="
-                background: #f0f9ff;
-                border: 1px solid #0ea5e9;
-                border-radius: 6px;
-                padding: 12px;
-                margin: 10px 0;
-                font-size: 0.9em;
-              "
-            >
+            <div class="info-box" id="timeCalculation">
               <strong style="color: #0369a1">⏰ Time Configuration Summary:</strong>
               <div id="timeDetails" style="margin-top: 5px; color: #0369a1">
                 Select your preferences above to see the time breakdown
