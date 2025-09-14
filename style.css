@@ -1835,6 +1835,30 @@ body {
     padding: 6px 12px;
     font-size: 13px;
   }
+
+  /* Responsive Modal */
+  .duplicate-modal {
+    width: 95%;
+    margin: 10px;
+  }
+
+  .duplicate-modal-header,
+  .duplicate-modal-body,
+  .duplicate-modal-footer {
+    padding: 20px;
+  }
+
+  .duplicate-modal-header h3 {
+    font-size: 1.2rem;
+  }
+
+  .duplicate-modal-footer {
+    flex-direction: column;
+  }
+
+  .duplicate-modal-footer .btn {
+    width: 100%;
+  }
 }
 
 /* Authentication Pages Styles */
