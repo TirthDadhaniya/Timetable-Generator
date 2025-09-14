@@ -497,6 +497,24 @@ function setupFormHandlers() {
   if (timetableGenForm) {
     timetableGenForm.addEventListener("submit", handleTimetableGeneration);
   }
+
+  // Break checkbox handler
+  const hasBreakCheckbox = document.getElementById("hasBreak");
+  const breakStartTimeInput = document.getElementById("breakStartTime");
+  const breakDurationInput = document.getElementById("breakDuration");
+
+  if (hasBreakCheckbox && breakStartTimeInput && breakDurationInput) {
+    hasBreakCheckbox.addEventListener("change", function () {
+      const isEnabled = this.checked;
+      breakStartTimeInput.disabled = !isEnabled;
+      breakDurationInput.disabled = !isEnabled;
+
+      // If enabling, focus on start time field
+      if (isEnabled) {
+        breakStartTimeInput.focus();
+      }
+    });
+  }
 }
 
 /**
@@ -935,12 +953,225 @@ async function handleDepartmentFormSubmission(event) {
  */
 
 /**
+ * Check if a timetable with the same parameters already exists
+ */
+async function checkDuplicateTimetable(params) {
+  try {
+    const response = await fetch(`${API_BASE}/api/timetables`);
+    if (!response.ok) return null;
+    const saved = await response.json();
+
+    if (!saved || saved.length === 0) return null;
+
+    // Find existing timetable with matching parameters (excluding slotDuration for backward compatibility)
+    const duplicate = saved.find(
+      (tt) =>
+        tt.course === params.course &&
+        tt.department === params.department &&
+        tt.semester === params.semester &&
+        tt.students === params.students &&
+        tt.startTime === params.startTime &&
+        tt.endTime === params.endTime
+    );
+
+    return duplicate || null;
+  } catch (error) {
+    console.error("Error checking for duplicate timetable:", error);
+    return null;
+  }
+}
+
+/**
+ * Show confirmation modal for duplicate timetable
+ */
+function showDuplicateConfirmationModal(existingTimetable, params) {
+  return new Promise((resolve) => {
+    // Create modal HTML
+    const modalHTML = `
+      <div class="duplicate-modal-overlay" id="duplicateModal">
+        <div class="duplicate-modal">
+          <div class="duplicate-modal-header">
+            <h3>⚠️ Duplicate Timetable Found</h3>
+          </div>
+          <div class="duplicate-modal-body">
+            <p>A timetable with the same configuration already exists:</p>
+            <div class="existing-timetable-info">
+              <p><strong>Course:</strong> ${params.course}</p>
+              <p><strong>Department:</strong> ${params.department}</p>
+              <p><strong>Semester:</strong> ${params.semester}</p>
+              <p><strong>Students:</strong> ${params.students}</p>
+              <p><strong>Timing:</strong> ${params.startTime} - ${params.endTime}</p>
+              <p><strong>Slot Duration:</strong> ${convertMinutesToHourFormat(params.slotDuration)}</p>
+              <p><strong>Generated:</strong> ${new Date(existingTimetable.generatedAt).toLocaleDateString()}</p>
+            </div>
+            <p><strong>Do you want to generate a new timetable?</strong></p>
+            <p class="warning-text">⚠️ This will replace the existing timetable with the same configuration.</p>
+          </div>
+          <div class="duplicate-modal-footer">
+            <button class="btn btn-secondary" id="cancelGeneration">No, Cancel</button>
+            <button class="btn btn-danger" id="replaceExisting">Yes, Replace Existing</button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Add modal to DOM
+    document.body.insertAdjacentHTML("beforeend", modalHTML);
+
+    const modal = document.getElementById("duplicateModal");
+    const cancelBtn = document.getElementById("cancelGeneration");
+    const replaceBtn = document.getElementById("replaceExisting");
+
+    // Handle cancel
+    cancelBtn.addEventListener("click", () => {
+      modal.remove();
+      resolve(false);
+    });
+
+    // Handle replace
+    replaceBtn.addEventListener("click", () => {
+      modal.remove();
+      resolve(true);
+    });
+
+    // Handle overlay click
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) {
+        modal.remove();
+        resolve(false);
+      }
+    });
+
+    // Handle escape key
+    const handleEscape = (e) => {
+      if (e.key === "Escape") {
+        modal.remove();
+        document.removeEventListener("keydown", handleEscape);
+        resolve(false);
+      }
+    };
+    document.addEventListener("keydown", handleEscape);
+  });
+}
+
+/**
+ * Show confirmation modal for delete operations
+ */
+function showDeleteConfirmationModal(config) {
+  return new Promise((resolve) => {
+    const {
+      title = "⚠️ Confirm Deletion",
+      message = "Are you sure you want to delete this item?",
+      itemDetails = "",
+      confirmText = "Yes, Delete",
+      cancelText = "Cancel",
+    } = config;
+
+    // Create modal HTML
+    const modalHTML = `
+      <div class="delete-modal-overlay" id="deleteModal">
+        <div class="delete-modal">
+          <div class="delete-modal-header">
+            <h3>${title}</h3>
+          </div>
+          <div class="delete-modal-body">
+            <p>${message}</p>
+            ${itemDetails ? `<div class="item-details">${itemDetails}</div>` : ""}
+            <p class="warning-text">⚠️ This action cannot be undone.</p>
+          </div>
+          <div class="delete-modal-footer">
+            <button class="btn btn-secondary" id="cancelDelete">${cancelText}</button>
+            <button class="btn btn-danger" id="confirmDelete">${confirmText}</button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Add modal to DOM
+    document.body.insertAdjacentHTML("beforeend", modalHTML);
+
+    const modal = document.getElementById("deleteModal");
+    const cancelBtn = document.getElementById("cancelDelete");
+    const confirmBtn = document.getElementById("confirmDelete");
+
+    // Handle cancel
+    cancelBtn.addEventListener("click", () => {
+      modal.remove();
+      resolve(false);
+    });
+
+    // Handle confirm
+    confirmBtn.addEventListener("click", () => {
+      modal.remove();
+      resolve(true);
+    });
+
+    // Handle overlay click
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) {
+        modal.remove();
+        resolve(false);
+      }
+    });
+
+    // Handle escape key
+    const handleEscape = (e) => {
+      if (e.key === "Escape") {
+        modal.remove();
+        document.removeEventListener("keydown", handleEscape);
+        resolve(false);
+      }
+    };
+    document.addEventListener("keydown", handleEscape);
+  });
+}
+
+/**
+ * Delete existing timetable by ID
+ */
+async function deleteExistingTimetable(timetableId) {
+  try {
+    const response = await fetch(`${API_BASE}/api/timetables/${timetableId}`, {
+      method: "DELETE",
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to delete existing timetable");
+    }
+
+    return true;
+  } catch (error) {
+    console.error("Error deleting existing timetable:", error);
+    return false;
+  }
+}
+
+/**
  * Handle timetable generation form submission
  */
 async function handleTimetableGeneration(event) {
   event.preventDefault();
 
   const formData = new FormData(event.target);
+
+  // Get slot duration directly in minutes from number input
+  const slotDurationMinutes = parseInt(
+    formData.get("slotDuration") || document.getElementById("slotDuration").value || "60"
+  );
+
+  // Handle break time data
+  const hasBreak = document.getElementById("hasBreak").checked;
+  let breakStartTime = null;
+  let breakDurationMinutes = null;
+
+  if (hasBreak) {
+    breakStartTime = formData.get("breakStartTime") || document.getElementById("breakStartTime").value;
+    const breakDurationTime =
+      formData.get("breakDuration") || document.getElementById("breakDuration").value || "01:00";
+    const [breakHours, breakMins] = breakDurationTime.split(":").map(Number);
+    breakDurationMinutes = breakHours * 60 + breakMins;
+  }
+
   const generationParams = {
     course: formData.get("course") || document.getElementById("genCourse").value,
     department: formData.get("department") || document.getElementById("genDepartment").value,
@@ -948,11 +1179,42 @@ async function handleTimetableGeneration(event) {
     students: parseInt(formData.get("students")) || parseInt(document.getElementById("genStudents").value) || 0,
     startTime: formData.get("startTime") || document.getElementById("collegeStartTime").value,
     endTime: formData.get("endTime") || document.getElementById("collegeEndTime").value,
+    slotDuration: slotDurationMinutes,
+    hasBreak: hasBreak,
+    breakStartTime: breakStartTime,
+    breakDuration: breakDurationMinutes,
   };
 
   // Validation
   if (!validateTimetableParams(generationParams)) {
     return;
+  }
+
+  // Check for duplicate timetable
+  const existingTimetable = await checkDuplicateTimetable(generationParams);
+
+  if (existingTimetable) {
+    // Show confirmation modal
+    const shouldReplace = await showDuplicateConfirmationModal(existingTimetable, generationParams);
+
+    if (!shouldReplace) {
+      // User chose not to replace - cancel the operation
+      const statusDiv = document.getElementById("timetableGenStatus");
+      if (statusDiv) {
+        statusDiv.innerHTML = '<span style="color: #f59e0b;">⚠️ Timetable generation cancelled by user</span>';
+        setTimeout(() => {
+          statusDiv.innerHTML = "";
+        }, 3000);
+      }
+      return;
+    }
+
+    // User chose to replace - delete the existing timetable
+    const deleteSuccess = await deleteExistingTimetable(existingTimetable.id);
+    if (!deleteSuccess) {
+      showToast("Failed to delete existing timetable. Please try again.", "error");
+      return;
+    }
   }
 
   // Show loading status
@@ -991,7 +1253,18 @@ async function handleTimetableGeneration(event) {
  * Main timetable generation logic
  */
 async function generateTimetable(params) {
-  const { course, department, semester, students, startTime, endTime } = params;
+  const {
+    course,
+    department,
+    semester,
+    students,
+    startTime,
+    endTime,
+    slotDuration = 60,
+    hasBreak = false,
+    breakStartTime = null,
+    breakDuration = null,
+  } = params;
 
   console.log("🔍 GenerateTimetable Debug:", {
     params,
@@ -1031,7 +1304,13 @@ async function generateTimetable(params) {
     }
 
     // Generate time slots
-    const timeSlots = generateTimeSlots(startTime, endTime);
+    const timeSlots = generateTimeSlots(
+      startTime,
+      endTime,
+      slotDuration,
+      hasBreak ? breakStartTime : null,
+      hasBreak ? breakDuration : null
+    );
 
     if (timeSlots.length === 0) {
       return {
@@ -1052,6 +1331,10 @@ async function generateTimetable(params) {
         students,
         startTime,
         endTime,
+        slotDuration,
+        hasBreak,
+        breakStartTime,
+        breakDuration,
         timetable: timetableResult.timetable,
         generatedAt: new Date().toISOString(),
       });
@@ -1075,7 +1358,7 @@ async function generateTimetable(params) {
 /**
  * Generate time slots based on start and end time
  */
-function generateTimeSlots(startTime, endTime) {
+function generateTimeSlots(startTime, endTime, slotDuration = 60, breakStartTime = null, breakDuration = null) {
   const slots = [];
   const start = new Date(`1970-01-01T${startTime}:00`);
   const end = new Date(`1970-01-01T${endTime}:00`);
@@ -1083,16 +1366,35 @@ function generateTimeSlots(startTime, endTime) {
   let current = new Date(start);
   let slotNumber = 1;
 
+  // Parse break time if provided
+  let breakStart = null;
+  let breakEnd = null;
+  if (breakStartTime && breakDuration) {
+    breakStart = new Date(`1970-01-01T${breakStartTime}:00`);
+    breakEnd = new Date(breakStart.getTime() + breakDuration * 60 * 1000);
+  }
+
   while (current < end) {
-    const next = new Date(current.getTime() + 60 * 60 * 1000); // Add 1 hour
+    const next = new Date(current.getTime() + slotDuration * 60 * 1000); // Add slot duration in minutes
+
     if (next <= end) {
-      slots.push({
-        id: slotNumber,
-        startTime: current.toTimeString().slice(0, 5),
-        endTime: next.toTimeString().slice(0, 5),
-        duration: 1, // 1 hour
-      });
-      slotNumber++;
+      // Check if this slot overlaps with break time
+      const isBreakSlot =
+        breakStart &&
+        breakEnd &&
+        ((current >= breakStart && current < breakEnd) ||
+          (next > breakStart && next <= breakEnd) ||
+          (current <= breakStart && next >= breakEnd));
+
+      if (!isBreakSlot) {
+        slots.push({
+          id: slotNumber,
+          startTime: current.toTimeString().slice(0, 5),
+          endTime: next.toTimeString().slice(0, 5),
+          duration: slotDuration / 60, // Duration in hours
+        });
+        slotNumber++;
+      }
     }
     current = next;
   }
@@ -1422,7 +1724,13 @@ function displayGeneratedTimetable(timetableData, params) {
   }
 
   // Generate timetable HTML
-  const timeSlots = generateTimeSlots(params.startTime, params.endTime);
+  const timeSlots = generateTimeSlots(
+    params.startTime,
+    params.endTime,
+    params.slotDuration,
+    params.hasBreak ? params.breakStartTime : null,
+    params.hasBreak ? params.breakDuration : null
+  );
   const workingDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
   let timetableHTML = `
@@ -1435,6 +1743,14 @@ function displayGeneratedTimetable(timetableData, params) {
         <p><strong>Timing:</strong> ${convertTo12HourFormat(params.startTime)} - ${convertTo12HourFormat(
     params.endTime
   )}</p>
+        <p><strong>Slot Duration:</strong> ${Math.floor(params.slotDuration / 60)}h ${params.slotDuration % 60}m</p>
+        ${
+          params.hasBreak
+            ? `<p><strong>Break:</strong> ${convertTo12HourFormat(params.breakStartTime)} (${Math.floor(
+                params.breakDuration / 60
+              )}h ${params.breakDuration % 60}m)</p>`
+            : ""
+        }
         <p><strong>Generated:</strong> ${new Date().toLocaleDateString()}</p>
       </div>
     </div>
@@ -1619,7 +1935,21 @@ async function deleteTimetable() {
     return;
   }
 
-  if (!confirm("Are you sure you want to delete this timetable? This will clear the display.")) {
+  // Show confirmation modal
+  const confirmed = await showDeleteConfirmationModal({
+    title: "🗑️ Delete Generated Timetable",
+    message: "Are you sure you want to delete this timetable?",
+    itemDetails: `
+      <p><strong>Course:</strong> ${currentGeneratedTimetable.params?.course || "Unknown"}</p>
+      <p><strong>Department:</strong> ${currentGeneratedTimetable.params?.department || "Unknown"}</p>
+      <p><strong>Semester:</strong> ${currentGeneratedTimetable.params?.semester || "Unknown"}</p>
+      <p><strong>Note:</strong> This will clear the display and remove the current timetable.</p>
+    `,
+    confirmText: "Yes, Delete Timetable",
+    cancelText: "Cancel",
+  });
+
+  if (!confirmed) {
     return;
   }
 
@@ -1733,7 +2063,9 @@ async function renderSavedTimetables() {
             <div class="saved-timetable-details">
               Students: ${t.students} | Timing: ${convertTo12HourFormat(t.startTime)} - ${convertTo12HourFormat(
           t.endTime
-        )} | Generated: ${new Date(t.generatedAt || Date.now()).toLocaleDateString()}
+        )} | Slot: ${Math.floor((t.slotDuration || 60) / 60)}h ${(t.slotDuration || 60) % 60}m | Generated: ${new Date(
+          t.generatedAt || Date.now()
+        ).toLocaleDateString()}
             </div>
           </div>
           <div class="saved-timetable-meta">
@@ -1775,7 +2107,13 @@ function renderFullTimetableTable(timetableData, params) {
   if (!timetableData || !params) return "";
 
   // Generate time slots based on saved params
-  const timeSlots = generateTimeSlots(params.startTime, params.endTime);
+  const timeSlots = generateTimeSlots(
+    params.startTime,
+    params.endTime,
+    params.slotDuration || 60,
+    params.hasBreak ? params.breakStartTime : null,
+    params.hasBreak ? params.breakDuration : null
+  );
   const workingDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
   return `
@@ -1837,7 +2175,39 @@ function renderFullTimetableTable(timetableData, params) {
   `;
 }
 async function deleteSavedTimetable(id) {
-  if (!confirm("Delete this saved timetable?")) return;
+  // Find the saved timetable to get its details for the modal
+  let savedTimetable = null;
+  if (database && database.savedTimetables) {
+    savedTimetable = database.savedTimetables.find((t) => t.id === id);
+  }
+
+  if (!savedTimetable) {
+    showToast("Saved timetable not found", "error");
+    return;
+  }
+
+  // Show confirmation modal
+  const confirmed = await showDeleteConfirmationModal({
+    title: "🗑️ Delete Saved Timetable",
+    message: "Are you sure you want to delete this saved timetable?",
+    itemDetails: `
+      <p><strong>Course:</strong> ${savedTimetable.course}</p>
+      <p><strong>Department:</strong> ${savedTimetable.department}</p>
+      <p><strong>Semester:</strong> ${savedTimetable.semester}</p>
+      <p><strong>Students:</strong> ${savedTimetable.students}</p>
+      <p><strong>Timing:</strong> ${convertTo12HourFormat(savedTimetable.startTime)} - ${convertTo12HourFormat(
+      savedTimetable.endTime
+    )}</p>
+      <p><strong>Generated:</strong> ${new Date(savedTimetable.generatedAt || Date.now()).toLocaleDateString()}</p>
+    `,
+    confirmText: "Yes, Delete Saved Timetable",
+    cancelText: "Cancel",
+  });
+
+  if (!confirmed) {
+    return;
+  }
+
   try {
     const res = await fetch(`${API_BASE}/api/timetables/${id}`, {
       method: "DELETE",
@@ -2098,7 +2468,28 @@ function validateDepartmentData(data) {
  * Delete subject
  */
 async function deleteSubject(subjectId) {
-  if (!confirm("Are you sure you want to delete this subject?")) {
+  // Find the subject to get its details for the modal
+  const subject = subjects.find((s) => s.id === subjectId);
+  if (!subject) {
+    showToast("Subject not found", "error");
+    return;
+  }
+
+  // Show confirmation modal
+  const confirmed = await showDeleteConfirmationModal({
+    title: "🗑️ Delete Subject",
+    message: "Are you sure you want to delete this subject?",
+    itemDetails: `
+      <p><strong>Subject Code:</strong> ${subject.code}</p>
+      <p><strong>Subject Name:</strong> ${subject.name}</p>
+      <p><strong>Credits:</strong> ${subject.credits}</p>
+      <p><strong>Type:</strong> ${subject.type}</p>
+    `,
+    confirmText: "Yes, Delete Subject",
+    cancelText: "Cancel",
+  });
+
+  if (!confirmed) {
     return;
   }
 
@@ -2127,7 +2518,27 @@ async function deleteSubject(subjectId) {
  * Delete faculty
  */
 async function deleteFaculty(facultyId) {
-  if (!confirm("Are you sure you want to delete this faculty member?")) {
+  // Find the faculty to get its details for the modal
+  const facultyMember = faculty.find((f) => f.id === facultyId);
+  if (!facultyMember) {
+    showToast("Faculty not found", "error");
+    return;
+  }
+
+  // Show confirmation modal
+  const confirmed = await showDeleteConfirmationModal({
+    title: "🗑️ Delete Faculty",
+    message: "Are you sure you want to delete this faculty member?",
+    itemDetails: `
+      <p><strong>Faculty Name:</strong> ${facultyMember.name}</p>
+      <p><strong>Department:</strong> ${facultyMember.department}</p>
+      <p><strong>Specialization:</strong> ${facultyMember.specialization || "Not specified"}</p>
+    `,
+    confirmText: "Yes, Delete Faculty",
+    cancelText: "Cancel",
+  });
+
+  if (!confirmed) {
     return;
   }
 
@@ -2157,7 +2568,28 @@ async function deleteFaculty(facultyId) {
  * Delete room
  */
 async function deleteRoom(roomId) {
-  if (!confirm("Are you sure you want to delete this room?")) {
+  // Find the room to get its details for the modal
+  const room = rooms.find((r) => r.id === roomId);
+  if (!room) {
+    showToast("Room not found", "error");
+    return;
+  }
+
+  // Show confirmation modal
+  const confirmed = await showDeleteConfirmationModal({
+    title: "🗑️ Delete Room",
+    message: "Are you sure you want to delete this room?",
+    itemDetails: `
+      <p><strong>Room Number:</strong> ${room.number}</p>
+      <p><strong>Room Type:</strong> ${room.type}</p>
+      <p><strong>Capacity:</strong> ${room.capacity} students</p>
+      <p><strong>Location:</strong> ${room.location || "Not specified"}</p>
+    `,
+    confirmText: "Yes, Delete Room",
+    cancelText: "Cancel",
+  });
+
+  if (!confirmed) {
     return;
   }
 
@@ -2186,11 +2618,26 @@ async function deleteRoom(roomId) {
  * Delete department
  */
 async function deleteDepartment(index) {
-  if (
-    !confirm(
-      "Are you sure you want to delete this department? This action cannot be undone if the department is being used by existing faculty or subjects."
-    )
-  ) {
+  // Get the department to be deleted
+  const department = departments[index];
+  if (!department) {
+    showToast("Department not found", "error");
+    return;
+  }
+
+  // Show confirmation modal
+  const confirmed = await showDeleteConfirmationModal({
+    title: "🗑️ Delete Department",
+    message: "Are you sure you want to delete this department?",
+    itemDetails: `
+      <p><strong>Department Name:</strong> ${department}</p>
+      <p><strong>Warning:</strong> This action cannot be undone if the department is being used by existing faculty or subjects.</p>
+    `,
+    confirmText: "Yes, Delete Department",
+    cancelText: "Cancel",
+  });
+
+  if (!confirmed) {
     return;
   }
 
@@ -2366,7 +2813,19 @@ async function deleteCourseDepartment(index) {
     return;
   }
 
-  if (!confirm(`Are you sure you want to delete "${cd.course} - ${cd.department}"?`)) {
+  // Show confirmation modal
+  const confirmed = await showDeleteConfirmationModal({
+    title: "🗑️ Delete Course-Department",
+    message: "Are you sure you want to delete this course-department combination?",
+    itemDetails: `
+      <p><strong>Course:</strong> ${cd.course}</p>
+      <p><strong>Department:</strong> ${cd.department}</p>
+    `,
+    confirmText: "Yes, Delete Combination",
+    cancelText: "Cancel",
+  });
+
+  if (!confirmed) {
     return;
   }
 
@@ -2443,6 +2902,24 @@ function convertTo12HourFormat(time24) {
   const hour12 = hour % 12 || 12;
 
   return `${hour12}:${minutes} ${ampm}`;
+}
+
+/**
+ * Convert minutes to hour format (e.g., 90 -> "1h 30m")
+ */
+function convertMinutesToHourFormat(minutes) {
+  if (!minutes || minutes === 0) return "0m";
+
+  const hours = Math.floor(minutes / 60);
+  const remainingMinutes = minutes % 60;
+
+  if (hours === 0) {
+    return `${remainingMinutes}m`;
+  } else if (remainingMinutes === 0) {
+    return `${hours}h`;
+  } else {
+    return `${hours}h ${remainingMinutes}m`;
+  }
 }
 
 /**

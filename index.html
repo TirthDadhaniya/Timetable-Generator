@@ -117,6 +117,53 @@
               <input type="time" id="collegeEndTime" value="17:00" required />
             </div>
           </div>
+          <div class="last-row">
+            <div class="form-group">
+              <label>Lecture Duration (minutes)</label>
+              <input
+                type="number"
+                id="slotDuration"
+                name="slotDuration"
+                min="15"
+                max="240"
+                step="5"
+                required
+                title="Duration in minutes (e.g., 90 for 1 hour 30 minutes)"
+                placeholder="90 minutes"
+              />
+            </div>
+            <div class="form-group checkbox-group">
+              <label class="checkbox-label" style="display: flex; margin-bottom: 0px; margin-left: 0px">
+                <input type="checkbox" id="hasBreak" name="hasBreak" />
+                <span>Enable Break Time</span>
+              </label>
+            </div>
+            <div class="form-group">
+              <label>Break Start Time</label>
+              <input
+                type="time"
+                id="breakStartTime"
+                name="breakStartTime"
+                value="12:00"
+                disabled
+                title="When does the break start?"
+              />
+            </div>
+            <div class="form-group">
+              <label>Break Duration</label>
+              <input
+                type="time"
+                id="breakDuration"
+                name="breakDuration"
+                value="01:00"
+                min="00:15"
+                max="02:00"
+                step="300"
+                disabled
+                title="How long is the break? (e.g., 01:30 for 1 hour 30 minutes)"
+              />
+            </div>
+          </div>
 
           <button type="submit" class="btn generate-btn">
             Generate Complete Timetable
