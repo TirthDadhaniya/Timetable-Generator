@@ -567,6 +567,37 @@ app.delete("/api/course-departments/:id", (req, res) => {
   }
 });
 
+// PUT - Update settings
+app.put("/api/settings", (req, res) => {
+  try {
+    const database = readDatabase();
+    if (!database) {
+      return res.status(500).json({ error: "Failed to read database" });
+    }
+
+    const { defaultSlotsPerDay } = req.body;
+
+    if (!database.settings) {
+      database.settings = {};
+    }
+
+    // Update the specific setting
+    if (defaultSlotsPerDay !== undefined) {
+      database.settings.defaultSlotsPerDay = parseInt(defaultSlotsPerDay);
+      console.log(`⚙️ Settings updated: defaultSlotsPerDay = ${defaultSlotsPerDay}`);
+    }
+
+    if (writeDatabase(database)) {
+      res.json({ message: "Settings updated successfully", settings: database.settings });
+    } else {
+      res.status(500).json({ error: "Failed to update settings" });
+    }
+  } catch (error) {
+    console.error("❌ Error updating settings:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
 // Initialize and start server
 initializeDatabase();
 
