@@ -65,11 +65,7 @@ const API_BASE =
     ? `http://${window.location.hostname}:3000`
     : window.location.origin;
 
-/**
- * ========================================
- * DATABASE AND INITIALIZATION FUNCTIONS
- * ========================================
- */
+// Database and initialization
 
 /**
  * Load database from server on page load
@@ -156,11 +152,7 @@ async function initializeTimetableSystem() {
   showLoadingState(false);
 }
 
-/**
- * ========================================
- * DROPDOWN POPULATION FUNCTIONS
- * ========================================
- */
+// Dropdown population
 
 /**
  * Populate all dropdowns with database data
@@ -302,11 +294,7 @@ function populateSelect(selectElement, options) {
   });
 }
 
-/**
- * ========================================
- * RENDERING FUNCTIONS
- * ========================================
- */
+// Rendering
 
 /**
  * Render subjects list
@@ -492,11 +480,7 @@ function renderCourseDepartments() {
     .join("");
 }
 
-/**
- * ========================================
- * FORM HANDLING FUNCTIONS
- * ========================================
- */
+// Form handling
 
 /**
  * Setup all form event handlers
@@ -568,7 +552,7 @@ function setupFormHandlers() {
           });
 
           if (response.ok) {
-            console.log(`✅ Updated defaultSlotsPerDay to ${newValue}`);
+            // Settings updated
           } else {
             console.error("❌ Failed to update settings");
           }
@@ -1053,14 +1037,7 @@ async function handleCourseFormSubmission(event) {
   }
 }
 
-/**
- * Handle department form submission
- */
-/**
- * ========================================
- * TIMETABLE GENERATION FUNCTIONS
- * ========================================
- */
+// Timetable generation
 
 /**
  * Check if a timetable with the same parameters already exists
@@ -1298,14 +1275,11 @@ async function handleTimetableGeneration(event) {
     parseInt(formData.get("lecturesPerDay")) || parseInt(document.getElementById("lecturesPerDay").value) || 0;
 
   if (userLecturesPerDay === 0) {
-    console.log("🤖 Auto-calculating optimal lectures per day...");
     generationParams.lecturesPerDay = calculateOptimalLecturesPerDay(generationParams);
     generationParams.isAutoCalculated = true;
-    console.log(`✅ Auto-calculated: ${generationParams.lecturesPerDay} lectures per day`);
   } else {
     generationParams.lecturesPerDay = userLecturesPerDay;
     generationParams.isAutoCalculated = false;
-    console.log(`👤 User specified: ${generationParams.lecturesPerDay} lectures per day`);
   }
 
   // Validation
@@ -1391,11 +1365,7 @@ async function generateTimetable(params) {
     isAutoCalculated = false,
   } = params;
 
-  console.log("🔍 GenerateTimetable Debug:", {
-    params,
-    totalSubjects: subjects.length,
-    totalRooms: rooms.length,
-  });
+  // Generation started
 
   try {
     // Filter subjects for the selected course, department, and semester
@@ -1403,13 +1373,7 @@ async function generateTimetable(params) {
       (s) => s.course === course && s.department === department && s.semester === semester
     );
 
-    console.log("🔍 Filtered subjects:", {
-      count: filteredSubjects.length,
-      subjects: filteredSubjects.map((s) => ({
-        name: s.name,
-        faculty: s.assignedFaculty,
-      })),
-    });
+    // Subjects filtered for selected course/department/semester
 
     if (filteredSubjects.length === 0) {
       return {
@@ -1593,7 +1557,7 @@ function generateOptimizedSchedule(subjects, availableRooms, timeSlots) {
     });
   });
 
-  // Helper function to shuffle array (Fisher-Yates shuffle)
+  // Helper: shuffle array (Fisher-Yates)
   function shuffleArray(array) {
     const shuffled = [...array];
     for (let i = shuffled.length - 1; i > 0; i--) {
@@ -1702,10 +1666,10 @@ function generateOptimizedSchedule(subjects, availableRooms, timeSlots) {
     }
   }
   // Second pass: Schedule lectures with multiple attempts and randomization
-  const maxPasses = 3; // Maximum number of scheduling passes
+  const maxPasses = 3;
 
   for (let pass = 1; pass <= maxPasses; pass++) {
-    console.log(`📚 Lecture scheduling pass ${pass}/${maxPasses}`);
+    // Lecture scheduling pass
 
     // Get subjects that still need lectures scheduled, randomized for each pass
     const pendingSubjects = shuffleArray(
@@ -1716,7 +1680,6 @@ function generateOptimizedSchedule(subjects, availableRooms, timeSlots) {
     );
 
     if (pendingSubjects.length === 0) {
-      console.log(`✅ All lectures scheduled in pass ${pass}`);
       break; // All lectures scheduled
     }
 
@@ -1748,17 +1711,7 @@ function generateOptimizedSchedule(subjects, availableRooms, timeSlots) {
           for (const slotIndex of randomizedSlots) {
             const slot = timeSlots[slotIndex];
 
-            // Optional debug logging for specific subjects
-            // if (lectureIndex === 0 && subject.name.includes("Applied Machine Learning")) {
-            //   console.log(`🔍 Debug for ${subject.name}:`, {
-            //     day,
-            //     slot: slot.id,
-            //     timetableSlot: timetable[day][slot.id],
-            //     facultySlot: facultySchedule[day][slot.id],
-            //     roomSlot: roomSchedule[day][slot.id],
-            //     facultyName: subject.assignedFaculty,
-            //   });
-            // }
+            //
 
             if (
               timetable[day][slot.id] === null &&
@@ -1833,7 +1786,7 @@ function generateOptimizedSchedule(subjects, availableRooms, timeSlots) {
 
     // If no progress was made in this pass and we still have pending lectures
     if (!progressMade && pass < maxPasses) {
-      console.log(`🔄 No progress in pass ${pass}, will continue to next pass`);
+      // Continue to next pass
     }
   }
 
@@ -1854,17 +1807,9 @@ function generateOptimizedSchedule(subjects, availableRooms, timeSlots) {
   };
 }
 
-/**
- * Generate timetable rows including break rows
- */
+// Build timetable rows (includes break rows)
 function generateTimetableRows(timeSlots, timetableData, workingDays, params) {
-  console.log("🔍 generateTimetableRows Debug:", {
-    timeSlots: timeSlots?.length,
-    hasBreak: params?.hasBreak,
-    breakStartTime: params?.breakStartTime,
-    breakEndTime: params?.breakEndTime,
-    params,
-  });
+  //
 
   const rows = [];
   const allTimeSlots = [];
@@ -1880,12 +1825,6 @@ function generateTimetableRows(timeSlots, timetableData, workingDays, params) {
   if (params.hasBreak && params.breakStartTime && params.breakEndTime) {
     breakStart = new Date(`1970-01-01T${params.breakStartTime}:00`);
     breakEnd = new Date(`1970-01-01T${params.breakEndTime}:00`);
-    console.log("🔍 Break times parsed:", {
-      breakStartTime: params.breakStartTime,
-      breakEndTime: params.breakEndTime,
-      breakStart: breakStart.toTimeString(),
-      breakEnd: breakEnd.toTimeString(),
-    });
   }
 
   let current = new Date(start);
@@ -1902,13 +1841,7 @@ function generateTimetableRows(timeSlots, timetableData, workingDays, params) {
           (next > breakStart && next <= breakEnd) ||
           (current <= breakStart && next >= breakEnd));
 
-      console.log(`🔍 Slot ${current.toTimeString().slice(0, 5)}-${next.toTimeString().slice(0, 5)}:`, {
-        current: current.toTimeString().slice(0, 5),
-        next: next.toTimeString().slice(0, 5),
-        breakStart: breakStart?.toTimeString().slice(0, 5),
-        breakEnd: breakEnd?.toTimeString().slice(0, 5),
-        isBreakTime,
-      });
+      //
 
       allTimeSlots.push({
         startTime: current.toTimeString().slice(0, 5),
@@ -1921,12 +1854,6 @@ function generateTimetableRows(timeSlots, timetableData, workingDays, params) {
 
   // Generate rows for each time slot
   allTimeSlots.forEach((slot, index) => {
-    console.log(`🔍 Slot ${index + 1}:`, {
-      startTime: slot.startTime,
-      endTime: slot.endTime,
-      isBreak: slot.isBreak,
-    });
-
     if (slot.isBreak) {
       // Generate break row
       rows.push(`
@@ -1987,12 +1914,7 @@ function generateTimetableRows(timeSlots, timetableData, workingDays, params) {
     }
   });
 
-  console.log("🔍 Final slot summary:", {
-    totalSlots: allTimeSlots.length,
-    breakSlots: allTimeSlots.filter((s) => s.isBreak).length,
-    regularSlots: allTimeSlots.filter((s) => !s.isBreak).length,
-    rowsGenerated: rows.length,
-  });
+  //
 
   return rows;
 }
@@ -2012,8 +1934,7 @@ function displayGeneratedTimetable(timetableData, params) {
   }
 
   // Generate timetable HTML
-  // Note: generateTimeSlots excludes break periods (used for scheduling logic)
-  // But generateTimetableRows creates ALL slots including break rows
+  // generateTimeSlots excludes break periods; generateTimetableRows adds break rows
   const timeSlots = generateTimeSlots(
     params.startTime,
     params.endTime,
@@ -2064,6 +1985,10 @@ function displayGeneratedTimetable(timetableData, params) {
       <button onclick="downloadCurrentTimetable()" title="Download Timetable" class="timetable-action-btn download-btn">
         <img src="res/download-bold.svg" alt="Download">
         Download Timetable
+      </button>
+      <button onclick="previewPDFLayout()" title="Preview PDF Layout" class="timetable-action-btn preview-btn">
+        <img src="res/eye.svg" alt="Preview" style="filter: invert(1);">
+        Preview PDF Layout
       </button>
       <button onclick="saveTimetable()" title="Save Timetable" class="timetable-action-btn save-btn admin-only">
         <img src="res/save-bold.svg" alt="Save">
@@ -2130,7 +2055,7 @@ async function saveTimetable() {
       // Update UI to show it's saved (maybe change button states)
       updateTimetableActionButtons(true, savedTimetable.id);
 
-      console.log("✅ Timetable saved with ID:", savedTimetable.id);
+      // Saved timetable
 
       // Hide the generated timetable and restore placeholder state
       const dynamicTimetable = document.getElementById("dynamic-timetable");
@@ -2354,23 +2279,6 @@ async function renderSavedTimetables() {
   }
 }
 
-function renderMiniTableGrid(timetable) {
-  if (!timetable) return "";
-  const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
-  // Choose a compact rendering: just list first non-empty sessions per day
-  const rows = days
-    .map((day) => {
-      const sessions = Object.values(timetable[day] || {}).filter(Boolean);
-      const first = sessions[0];
-      if (!first) return `<div class="mini-row"><b>${day}:</b> -</div>`;
-      return `<div class=\"mini-row\"><b>${day}:</b> ${first.subject} (${first.type}) - ${convertTo12HourFormat(
-        first.startTime
-      )}-${convertTo12HourFormat(first.endTime)}</div>`;
-    })
-    .join("");
-  return `<div class="mini-grid">${rows}</div>`;
-}
-
 /**
  * Render a full timetable table for saved timetables
  */
@@ -2569,7 +2477,7 @@ async function saveTimetableToDatabase(timetableData) {
 
     // Note: In a real implementation, you'd call an API to save this
     // For now, we'll just update the local database object
-    console.log("✅ Timetable saved to database");
+    // Timetable saved to database (in-memory)
     if (typeof updateStatistics === "function") {
       updateStatistics();
     }
@@ -2678,11 +2586,7 @@ function calculateOptimalLecturesPerDay(params) {
       totalWeeklyLabHours += subject.labHours || 0;
     });
 
-    console.log("📊 Weekly Requirements:", {
-      subjects: filteredSubjects.length,
-      totalLectureHours: totalWeeklyLectureHours,
-      totalLabHours: totalWeeklyLabHours,
-    });
+    // Weekly requirements gathered
 
     // Calculate available time per day
     const start = new Date(`1970-01-01T${params.startTime}:00`);
@@ -2715,16 +2619,7 @@ function calculateOptimalLecturesPerDay(params) {
     const workingDays = 5; // Monday to Friday
     const optimalSlotsPerDay = Math.ceil(totalWeeklySlots / workingDays);
 
-    console.log("🧮 Auto-calculation Details:", {
-      dailyMinutes,
-      breakMinutes,
-      availableDailyMinutes,
-      maxSlotsPerDay,
-      totalWeeklyLectureSlots,
-      labSlotsNeeded,
-      totalWeeklySlots,
-      optimalSlotsPerDay,
-    });
+    // Auto-calculation details computed
 
     // Ensure we don't exceed available time
     const finalSlotsPerDay = Math.min(optimalSlotsPerDay, maxSlotsPerDay);
@@ -3298,6 +3193,25 @@ window.getFaculty = getFaculty;
 window.getRooms = getRooms;
 window.saveTimetable = saveTimetable;
 /**
+ * Simple preview using the same print-ready HTML
+ */
+function previewPDFLayout() {
+  if (!currentGeneratedTimetable) {
+    showToast("No timetable to preview. Please generate a timetable first.", "error");
+    return;
+  }
+
+  const { timetableData, params } = currentGeneratedTimetable;
+  const previewHTML = generatePrintHTML(timetableData, params);
+
+  const previewWindow = window.open("", "_blank", "width=1200,height=800,scrollbars=yes");
+  previewWindow.document.write(previewHTML);
+  previewWindow.document.close();
+
+  showToast("Preview opened. Use Ctrl+P to print/save as PDF.", "success");
+}
+
+/**
  * Download the current generated timetable as PDF
  */
 function downloadCurrentTimetable() {
@@ -3332,250 +3246,272 @@ async function downloadTimetable(timetableId) {
 }
 
 /**
- * Generate and download PDF for a timetable using jsPDF with AutoTable
+ * Direct PDF download with minimal visibility - cleanest possible approach
  */
 function downloadTimetableAsPDF(timetableData, params) {
   try {
-    showToast("Generating PDF...", "info");
+    showToast("Preparing PDF download...", "info");
 
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF({
-      orientation: "landscape",
-      unit: "mm",
-      format: "a4",
-    });
+    // Generate HTML for printing
+    const printHTML = generatePrintHTML(timetableData, params);
 
-    // Set document properties
-    doc.setProperties({
-      title: `${params.course} - ${params.department} - ${params.semester} Timetable`,
-      subject: "Timetable",
-      author: "Interactive Timetable Generator",
-      creator: "Interactive Timetable Generator",
-    });
+    // Desired filename suggestion comes from document.title in most browsers
+    const desiredTitle = `${params.course} - ${params.department} - ${params.semester}`;
+    const originalTitle = document.title;
 
-    // Generate and add only the timetable table
-    addSimpleTimetableToPDF(doc, timetableData, params);
+    // Create a completely hidden iframe
+    const iframe = document.createElement("iframe");
+    iframe.style.position = "fixed";
+    iframe.style.top = "-999999px";
+    iframe.style.left = "-999999px";
+    // Keep it out of view but avoid display:none so print engines detect it
+    iframe.style.width = "0";
+    iframe.style.height = "0";
+    iframe.style.visibility = "hidden";
+    iframe.style.opacity = "0";
+    iframe.style.border = "none";
+    // Do not set display:none to ensure proper printing
+    iframe.setAttribute("aria-hidden", "true");
+    iframe.title = desiredTitle;
 
-    // Generate filename and save
-    const filename = `${params.course}_${params.department}_${params.semester}_Timetable.pdf`.replace(/\s+/g, "_");
-    doc.save(filename);
+    document.body.appendChild(iframe);
 
-    showToast("Timetable downloaded successfully!", "success");
+    // Write content to hidden iframe
+    iframe.contentDocument.open();
+    iframe.contentDocument.write(printHTML);
+    iframe.contentDocument.close();
+
+    // Auto-trigger print after content loads
+    iframe.onload = function () {
+      setTimeout(() => {
+        try {
+          // Set the iframe document title explicitly
+          try {
+            iframe.contentDocument.title = desiredTitle;
+          } catch (_) {}
+
+          // Temporarily set parent document title to influence filename in some browsers
+          document.title = desiredTitle;
+
+          // Ensure afterprint restores title and cleans up
+          const cleanup = () => {
+            // Restore page title
+            document.title = originalTitle;
+            // Remove iframe
+            if (iframe && iframe.parentNode) {
+              iframe.parentNode.removeChild(iframe);
+            }
+            // Remove listener for safety
+            if (iframe.contentWindow) {
+              iframe.contentWindow.removeEventListener("afterprint", cleanup);
+            }
+          };
+
+          if (iframe.contentWindow) {
+            iframe.contentWindow.addEventListener("afterprint", cleanup, { once: true });
+          }
+
+          iframe.contentWindow.focus();
+          iframe.contentWindow.print();
+
+          // Auto-cleanup after printing
+          setTimeout(() => {
+            // Fallback cleanup and title restore
+            document.title = originalTitle;
+            if (iframe && iframe.parentNode) document.body.removeChild(iframe);
+          }, 2000);
+        } catch (e) {
+          // Restore title and cleanup
+          document.title = originalTitle;
+          if (iframe && iframe.parentNode) document.body.removeChild(iframe);
+        }
+      }, 100);
+    };
+
+    showToast("PDF download dialog opened. Select 'Save' destination.", "success");
   } catch (error) {
-    console.error("Error generating PDF:", error);
-    showToast("Failed to generate PDF. Please try again.", "error");
+    console.error("Error downloading timetable:", error);
+    showToast("Failed to download timetable. Please try again.", "error");
   }
 }
 
 /**
- * Add simple black and white timetable table to PDF
+ * Generate minimal HTML for printing - styling handled by CSS
  */
-function addSimpleTimetableToPDF(doc, timetableData, params) {
+function generatePrintHTML(timetableData, params) {
   const timeSlots = generateTimeSlots(
     params.startTime,
     params.endTime,
     params.slotDuration,
     params.hasBreak ? params.breakStartTime : null,
-    params.hasBreak ? params.breakDuration : null
+    params.hasBreak ? params.breakEndTime : null
   );
 
   const workingDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
-  // Prepare table headers
-  const headers = [["Time", ...workingDays]];
+  // Compute break duration (in minutes) if break is enabled
+  let breakDurationMins = null;
+  if (params.hasBreak && params.breakStartTime && params.breakEndTime) {
+    try {
+      const bs = new Date(`1970-01-01T${params.breakStartTime}:00`);
+      const be = new Date(`1970-01-01T${params.breakEndTime}:00`);
+      breakDurationMins = Math.max(0, Math.round((be - bs) / (1000 * 60)));
+    } catch (_) {
+      breakDurationMins = null;
+    }
+  }
 
-  // Prepare table data
-  const tableData = [];
-
+  // Generate table rows - no styling in JS
+  let tableRows = "";
   timeSlots.forEach((slot, index) => {
     const slotNumber = (index + 1).toString();
-    const row = [`${convertTo12HourFormat(slot.startTime)} - ${convertTo12HourFormat(slot.endTime)}`];
+
+    let row = `<tr>
+      <td class="time-cell">${convertTo12HourFormat(slot.startTime)} <br>-<br /> ${convertTo12HourFormat(
+      slot.endTime
+    )}</td>`;
 
     workingDays.forEach((day) => {
       const session = timetableData[day] && timetableData[day][slotNumber];
-      if (session) {
-        // Skip continuation slots of multi-hour sessions
-        if (session.slotPosition && session.slotPosition !== "first") {
-          return; // Skip this iteration, don't add to row
-        }
-
-        const sessionText = `${session.subject}\n${session.faculty}\n${session.room}`;
-        row.push(sessionText);
-      } else {
-        row.push("");
+      if (session && (!session.slotPosition || session.slotPosition === "first")) {
+        const sessionType = (session.type || "").toString().toLowerCase();
+        const displayTypeSrc = (session.type || "").toString();
+        const formattedType = displayTypeSrc
+          ? displayTypeSrc.charAt(0).toUpperCase() + displayTypeSrc.slice(1).toLowerCase()
+          : "";
+        row += `<td class="${sessionType}-session">
+          <span class="type-label">${formattedType}</span><br>
+          ${session.subject}<br>
+          ${session.faculty}<br>
+          ${session.room}
+        </td>`;
+      } else if (!session) {
+        row += `<td class="empty-cell">Free</td>`;
       }
     });
 
-    // Only add row if it has the correct number of columns
-    if (row.length === 6) {
-      // 1 time column + 5 day columns
-      tableData.push(row);
-    }
+    row += "</tr>";
+    tableRows += row;
   });
 
-  // Generate the simple black and white table
-  doc.autoTable({
-    head: headers,
-    body: tableData,
-    startY: 20,
-    theme: "grid",
-    styles: {
-      fontSize: 10,
-      cellPadding: 4,
-      overflow: "linebreak",
-      halign: "center",
-      valign: "middle",
-      lineColor: [0, 0, 0], // Black lines
-      lineWidth: 0.5,
-      textColor: [0, 0, 0], // Black text
-      fillColor: [255, 255, 255], // White background
-    },
-    headStyles: {
-      fillColor: [255, 255, 255], // White header background
-      textColor: [0, 0, 0], // Black header text
-      fontSize: 12,
-      fontStyle: "bold",
-      halign: "center",
-      lineColor: [0, 0, 0], // Black border
-      lineWidth: 1,
-    },
-    columnStyles: {
-      0: {
-        cellWidth: 40,
-        halign: "center",
-        fillColor: [255, 255, 255], // White background
-        textColor: [0, 0, 0], // Black text
-        fontStyle: "bold",
-      },
-    },
-    margin: { left: 15, right: 15, top: 15, bottom: 15 },
-    tableWidth: "auto",
-    showHead: "everyPage",
-  });
-}
-
-/**
- * Generate printable HTML for timetable
- */
-function generatePrintableHTML(timetableData, params, title) {
-  const timeSlots = generateTimeSlots(
-    params.startTime || "09:00",
-    params.endTime || "17:00",
-    params.slotDuration || 60
-  );
-
-  const daysOrder = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-  const days = daysOrder.filter((day) => timetableData[day]);
-
-  let tableHTML = `
-    <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
-      <thead>
-        <tr style="background-color: #f5f5f5;">
-          <th style="border: 1px solid #ddd; padding: 12px; text-align: center; font-weight: bold;">Time</th>
-          ${days
-            .map(
-              (day) =>
-                `<th style="border: 1px solid #ddd; padding: 12px; text-align: center; font-weight: bold;">${day}</th>`
-            )
-            .join("")}
-        </tr>
-      </thead>
-      <tbody>
-  `;
-
-  timeSlots.forEach((slot, index) => {
-    const slotNumber = (index + 1).toString();
-    tableHTML += `
-      <tr>
-        <td style="border: 1px solid #ddd; padding: 8px; text-align: center; font-weight: bold; background-color: #f9f9f9;">
-          Slot ${slotNumber}<br>
-          <small style="color: #666;">${slot.startTime} - ${slot.endTime}</small>
-        </td>
-    `;
-
-    days.forEach((day) => {
-      const daySchedule = timetableData[day];
-      const slotData = daySchedule ? daySchedule[slotNumber] : null;
-
-      if (slotData) {
-        const bgColor = slotData.type === "Lab" ? "#e3f2fd" : "#f3e5f5";
-        tableHTML += `
-          <td style="border: 1px solid #ddd; padding: 8px; background-color: ${bgColor};">
-            <div style="font-weight: bold; margin-bottom: 4px;">${slotData.subject}</div>
-            <div style="font-size: 0.9em; color: #666;">
-              ${slotData.faculty}<br>
-              Room: ${slotData.room}<br>
-              ${slotData.type}${slotData.duration > 1 ? ` (${slotData.duration}h)` : ""}
-            </div>
-          </td>
-        `;
-      } else {
-        tableHTML += `<td style="border: 1px solid #ddd; padding: 8px; text-align: center; color: #999;">Free</td>`;
-      }
-    });
-
-    tableHTML += "</tr>";
-  });
-
-  tableHTML += "</tbody></table>";
-
+  // Return minimal HTML - CSS handles all styling
   return `
     <!DOCTYPE html>
     <html>
     <head>
-      <title>${title}</title>
-      <style>
-        body {
-          font-family: Arial, sans-serif;
-          margin: 20px;
-          color: #333;
-        }
-        h1 {
-          text-align: center;
-          color: #2c3e50;
-          margin-bottom: 10px;
-        }
-        .header-info {
-          text-align: center;
-          margin-bottom: 30px;
-          color: #666;
-        }
-        .header-info div {
-          margin: 5px 0;
-        }
-        table {
-          page-break-inside: avoid;
-        }
-        @media print {
-          body { margin: 0; }
-          .no-print { display: none; }
-        }
-      </style>
+      <title>${params.course} - ${params.department} - ${params.semester}</title>
+      <meta name="title" content="${params.course} - ${params.department} - ${params.semester}">
+      <meta name="description" content="Timetable for ${params.course} ${params.department} ${params.semester}">
+      <meta name="subject" content="${params.course} - ${params.department} - ${params.semester}">
+      <meta name="author" content="Timetable Generator">
+      <link rel="stylesheet" href="style.css">
     </head>
     <body>
-      <h1>${title}</h1>
-      <div class="header-info">
-        <div><strong>Students:</strong> ${params.students || "N/A"}</div>
-        <div><strong>Timing:</strong> ${convertTo12HourFormat(params.startTime || "09:00")} - ${convertTo12HourFormat(
-    params.endTime || "17:00"
-  )}</div>
-        <div><strong>Slot Duration:</strong> ${Math.floor((params.slotDuration || 60) / 60)}h ${
-    (params.slotDuration || 60) % 60
-  }m</div>
-        <div><strong>Generated on:</strong> ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}</div>
+      <div class="pdf-container">
+        <div class="header">
+          <h1>${params.course} - ${params.department}</h1>
+          <h2>${params.semester} Timetable</h2>
+          <p>Interactive Timetable Generator</p>
+          <div class="metadata">
+            <div class="meta-row">
+              <span><strong>Generated on:</strong> ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}</span>
+              <span><strong>Students:</strong> ${params.students || "Not specified"}</span>
+            </div>
+            <div class="meta-row">
+              <span><strong>Duration:</strong> ${convertTo12HourFormat(params.startTime)} - ${convertTo12HourFormat(
+    params.endTime
+  )}</span>
+              <span><strong>Slot Duration:</strong> ${params.slotDuration} minutes</span>
+            </div>
+            ${
+              params.hasBreak
+                ? `<div class="meta-row">
+              <span><strong>Break Time:</strong> ${convertTo12HourFormat(
+                params.breakStartTime
+              )} - ${convertTo12HourFormat(params.breakEndTime)}</span>
+              <span><strong>Break Duration:</strong> ${
+                breakDurationMins !== null ? breakDurationMins : ""
+              } minutes</span>
+            </div>`
+                : ""
+            }
+          </div>
+        </div>
+        
+        <table class="timetable">
+          <thead>
+            <tr>
+              <th>Time</th>
+              ${workingDays.map((day) => `<th>${day}</th>`).join("")}
+            </tr>
+          </thead>
+          <tbody>
+            ${tableRows}
+          </tbody>
+        </table>
+        
+        <div class="footer">
+          <div class="footer-content">
+            <div class="footer-left">
+              <p><strong>Academic Information</strong></p>
+              <p>Course: ${params.course}</p>
+              <p>Department: ${params.department}</p>
+              <p>Semester: ${params.semester}</p>
+            </div>
+            <div class="footer-center">
+              <p><strong>Schedule Details</strong></p>
+              <p>Total Working Days: 5 (Monday - Friday)</p>
+              <p>Daily Hours: ${convertTo12HourFormat(params.startTime)} - ${convertTo12HourFormat(params.endTime)}</p>
+              <p>Slot Duration: ${params.slotDuration} minutes</p>
+            </div>
+            <div class="footer-right">
+              <p><strong>Generated by</strong></p>
+              <p>Interactive Timetable Generator</p>
+              <p>Date: ${new Date().toLocaleDateString()}</p>
+              <p>Time: ${new Date().toLocaleTimeString()}</p>
+            </div>
+          </div>
+        </div>
       </div>
-      ${tableHTML}
-      <div style="margin-top: 30px; text-align: center; color: #666; font-size: 0.9em;">
-        Generated by Interactive Timetable Generator
-      </div>
+      
+      <script>
+        // Force set document title for proper filename
+        document.title = "${params.course} - ${params.department} - ${params.semester}";
+        
+        // Auto-close functionality for iframe-based printing
+        window.addEventListener('afterprint', function() {
+          // Close the window/iframe after printing is done
+          if (window.parent !== window) {
+            // We're in an iframe, remove it
+            setTimeout(() => {
+              if (window.parent && window.parent.document) {
+                const iframe = window.parent.document.querySelector('iframe[src=""]');
+                if (iframe) {
+                  iframe.remove();
+                }
+              }
+            }, 500);
+          }
+        });
+        
+        // Fallback: auto-close after 30 seconds if user doesn't print
+        setTimeout(() => {
+          if (window.parent !== window) {
+            const iframe = window.parent.document.querySelector('iframe[src=""]');
+            if (iframe) {
+              iframe.remove();
+            }
+          }
+        }, 30000);
+      </script>
     </body>
-    </html>
-  `;
+    </html>`;
 }
 
 window.deleteTimetable = deleteTimetable;
 window.downloadCurrentTimetable = downloadCurrentTimetable;
 window.downloadTimetable = downloadTimetable;
+window.previewPDFLayout = previewPDFLayout;
 window.deleteSavedTimetable = deleteSavedTimetable;
 window.focusTimetableTabAndScroll = focusTimetableTabAndScroll;
 
