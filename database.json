@@ -1525,6 +1525,19 @@
         "semester": "Semester 5",
         "facultyId": null
       }
+    },
+    {
+      "id": "mfkly60bpe4djzsssb",
+      "email": "kunj@mailinator.com",
+      "password": "$2b$10$3Ma4cYros7tIB/IzX9CSLOrwX6ghmyE6x2x581Phe1DVFxJuEj6eq",
+      "firstName": "Kunj",
+      "lastName": "Hirapra",
+      "role": "admin",
+      "institution": "Apollo",
+      "isActive": true,
+      "createdAt": "2025-09-15T04:12:14.699Z",
+      "lastLogin": "2025-09-15T04:12:24.088Z",
+      "profileData": {}
     }
   ],
   "userSessions": [],
