@@ -3,9 +3,16 @@ const tabs = document.querySelectorAll(".tab");
 const tabContents = document.querySelectorAll(".tab-content");
 tabs.forEach((tab) => {
   tab.addEventListener("click", () => {
+    // Remove active class from all tabs
     tabs.forEach((t) => t.classList.remove("active"));
-    tabContents.forEach((content) => content.classList.add("hidden"));
+
+    // Add active class to clicked tab
     tab.classList.add("active");
+
+    // Hide all tab contents
+    tabContents.forEach((content) => content.classList.add("hidden"));
+
+    // Show the selected tab content
     const tabId = tab.id.replace("-tab", "-content");
     const targetContent = document.getElementById(tabId);
     if (targetContent) {
@@ -13,6 +20,33 @@ tabs.forEach((tab) => {
     }
   });
 });
+
+// Enhanced authentication protection
+async function requireAuthentication() {
+  const currentPage = window.location.pathname.split("/").pop();
+  const urlParams = new URLSearchParams(window.location.search);
+
+  // Check if we're on the main index page
+  if (currentPage === "index.html" || currentPage === "") {
+    // Check if this is an authorized access
+    const isAuthorizedAccess = urlParams.get("authorized") === "true";
+
+    if (!isAuthorizedAccess) {
+      // Not authorized, redirect to welcome page
+      window.location.replace("welcome.html");
+      return false;
+    }
+
+    // Check session validity for returning users
+    if (!(await isSessionValid())) {
+      // Not logged in, redirect to login page
+      window.location.href = "login.html?redirect=true";
+      return false;
+    }
+  }
+
+  return true; // User is authenticated or on a public page
+}
 document.addEventListener("DOMContentLoaded", () => {
   // Add event listeners for automatic total calculation
   const lectureHoursInput = document.getElementById("lectureHours");
@@ -74,8 +108,7 @@ function updateFacultyCount() {
 function updateTimetableCount() {
   // Fetch saved timetables count directly from server for real-time accuracy
   const API_BASE =
-    window.location.hostname === "localhost" ||
-    window.location.hostname === "127.0.0.1"
+    window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
       ? `http://${window.location.hostname}:3000`
       : window.location.origin;
 
@@ -247,16 +280,12 @@ function updateUIForUserRole(role) {
     case "teacher":
       teacherElements.forEach((el) => (el.style.display = "block"));
       // Also show elements that are for both teacher and student
-      document
-        .querySelectorAll(".teacher-only.student-only")
-        .forEach((el) => (el.style.display = "block"));
+      document.querySelectorAll(".teacher-only.student-only").forEach((el) => (el.style.display = "block"));
       break;
     case "student":
       studentElements.forEach((el) => (el.style.display = "block"));
       // Also show elements that are for both teacher and student
-      document
-        .querySelectorAll(".teacher-only.student-only")
-        .forEach((el) => (el.style.display = "block"));
+      document.querySelectorAll(".teacher-only.student-only").forEach((el) => (el.style.display = "block"));
       break;
   }
 
