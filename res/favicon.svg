@@ -1,0 +1,46 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Gradient definition matching the favicon colors -->
+    <linearGradient id="gridGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366F1;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#8B5CF6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#EC4899;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="128" height="128" fill="white" rx="8"/>
+  
+  <!-- Grid structure -->
+  <g stroke="url(#gridGradient)" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Vertical lines -->
+    <line x1="32" y1="16" x2="32" y2="112" />
+    <line x1="64" y1="16" x2="64" y2="112" />
+    <line x1="96" y1="16" x2="96" y2="112" />
+    
+    <!-- Horizontal lines -->
+    <line x1="16" y1="32" x2="112" y2="32" />
+    <line x1="16" y1="64" x2="112" y2="64" />
+    <line x1="16" y1="96" x2="112" y2="96" />
+    
+    <!-- Additional diagonal/intersecting elements for timetable appearance -->
+    <rect x="20" y="20" width="24" height="24" stroke-width="6" />
+    <rect x="52" y="20" width="24" height="24" stroke-width="6" />
+    <rect x="84" y="20" width="24" height="24" stroke-width="6" />
+    
+    <rect x="20" y="52" width="24" height="24" stroke-width="6" />
+    <rect x="52" y="52" width="24" height="24" stroke-width="6" />
+    <rect x="84" y="52" width="24" height="24" stroke-width="6" />
+    
+    <rect x="20" y="84" width="24" height="24" stroke-width="6" />
+    <rect x="52" y="84" width="24" height="24" stroke-width="6" />
+    <rect x="84" y="84" width="24" height="24" stroke-width="6" />
+  </g>
+  
+  <!-- Accent elements to represent filled schedule slots -->
+  <g fill="url(#gridGradient)" opacity="0.3">
+    <rect x="22" y="22" width="20" height="20" rx="2" />
+    <rect x="54" y="54" width="20" height="20" rx="2" />
+    <rect x="86" y="86" width="20" height="20" rx="2" />
+  </g>
+</svg>
