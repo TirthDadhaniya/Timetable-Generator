@@ -1982,13 +1982,9 @@ function displayGeneratedTimetable(timetableData, params) {
     </div>
 
     <div class="timetable-actions">
-      <button onclick="downloadCurrentTimetable()" title="Download Timetable" class="timetable-action-btn download-btn">
-        <img src="res/download-bold.svg" alt="Download">
-        Download Timetable
-      </button>
-      <button onclick="previewPDFLayout()" title="Preview PDF Layout" class="timetable-action-btn preview-btn">
-        <img src="res/eye.svg" alt="Preview" style="filter: invert(1);">
-        Preview PDF Layout
+      <button onclick="downloadCurrentTimetable()" title="Download as PDF" class="timetable-action-btn download-btn">
+        <img src="res/download-bold.svg" alt="Download PDF">
+        Download PDF
       </button>
       <button onclick="saveTimetable()" title="Save Timetable" class="timetable-action-btn save-btn admin-only">
         <img src="res/save-bold.svg" alt="Save">
@@ -3192,24 +3188,6 @@ window.getSubjects = getSubjects;
 window.getFaculty = getFaculty;
 window.getRooms = getRooms;
 window.saveTimetable = saveTimetable;
-/**
- * Simple preview using the same print-ready HTML
- */
-function previewPDFLayout() {
-  if (!currentGeneratedTimetable) {
-    showToast("No timetable to preview. Please generate a timetable first.", "error");
-    return;
-  }
-
-  const { timetableData, params } = currentGeneratedTimetable;
-  const previewHTML = generatePrintHTML(timetableData, params);
-
-  const previewWindow = window.open("", "_blank", "width=1200,height=800,scrollbars=yes");
-  previewWindow.document.write(previewHTML);
-  previewWindow.document.close();
-
-  showToast("Preview opened. Use Ctrl+P to print/save as PDF.", "success");
-}
 
 /**
  * Download the current generated timetable as PDF
@@ -3224,6 +3202,9 @@ function downloadCurrentTimetable() {
   downloadTimetableAsPDF(timetableData, params);
 }
 
+/**
+ * Download the current generated timetable as HTML
+ */
 /**
  * Download a saved timetable by ID as PDF
  */
@@ -3349,49 +3330,96 @@ function generatePrintHTML(timetableData, params) {
 
   const workingDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
-  // Compute break duration (in minutes) if break is enabled
-  let breakDurationMins = null;
+  // Create all time slots including break slots for PDF
+  const allTimeSlots = [];
+  const start = new Date(`1970-01-01T${params.startTime}:00`);
+  const end = new Date(`1970-01-01T${params.endTime}:00`);
+  const slotDuration = params.slotDuration;
+
+  // Parse break times if provided
+  let breakStart = null;
+  let breakEnd = null;
   if (params.hasBreak && params.breakStartTime && params.breakEndTime) {
-    try {
-      const bs = new Date(`1970-01-01T${params.breakStartTime}:00`);
-      const be = new Date(`1970-01-01T${params.breakEndTime}:00`);
-      breakDurationMins = Math.max(0, Math.round((be - bs) / (1000 * 60)));
-    } catch (_) {
-      breakDurationMins = null;
-    }
+    breakStart = new Date(`1970-01-01T${params.breakStartTime}:00`);
+    breakEnd = new Date(`1970-01-01T${params.breakEndTime}:00`);
   }
 
-  // Generate table rows - no styling in JS
-  let tableRows = "";
-  timeSlots.forEach((slot, index) => {
-    const slotNumber = (index + 1).toString();
+  let current = new Date(start);
+  let slotIndex = 0;
 
-    let row = `<tr>
-      <td class="time-cell">${convertTo12HourFormat(slot.startTime)} <br>-<br /> ${convertTo12HourFormat(
-      slot.endTime
-    )}</td>`;
+  while (current < end) {
+    const next = new Date(current.getTime() + slotDuration * 60 * 1000);
 
-    workingDays.forEach((day) => {
-      const session = timetableData[day] && timetableData[day][slotNumber];
-      if (session && (!session.slotPosition || session.slotPosition === "first")) {
-        const sessionType = (session.type || "").toString().toLowerCase();
-        const displayTypeSrc = (session.type || "").toString();
-        const formattedType = displayTypeSrc
-          ? displayTypeSrc.charAt(0).toUpperCase() + displayTypeSrc.slice(1).toLowerCase()
-          : "";
-        row += `<td class="${sessionType}-session">
-          <span class="type-label">${formattedType}</span><br>
-          ${session.subject}<br>
-          ${session.faculty}<br>
-          ${session.room}
-        </td>`;
-      } else if (!session) {
-        row += `<td class="empty-cell">Free</td>`;
+    if (next <= end) {
+      // Check if this slot overlaps with break time
+      const isBreakTime =
+        breakStart &&
+        breakEnd &&
+        ((current >= breakStart && current < breakEnd) ||
+          (next > breakStart && next <= breakEnd) ||
+          (current <= breakStart && next >= breakEnd));
+
+      allTimeSlots.push({
+        startTime: current.toTimeString().slice(0, 5),
+        endTime: next.toTimeString().slice(0, 5),
+        isBreak: isBreakTime,
+        slotId: isBreakTime ? null : slotIndex + 1,
+      });
+
+      if (!isBreakTime) {
+        slotIndex++;
       }
-    });
+    }
+    current = next;
+  }
 
-    row += "</tr>";
-    tableRows += row;
+  // Generate table rows for PDF - simplified format
+  let tableRows = "";
+  allTimeSlots.forEach((slot) => {
+    if (slot.isBreak) {
+      // Generate break row
+      tableRows += `<tr class="break-row">
+        <td class="time-cell break-time">${convertTo12HourFormat(slot.startTime)} <br>-<br /> ${convertTo12HourFormat(
+        slot.endTime
+      )}</td>
+        ${workingDays.map(() => '<td class="break-cell">BREAK</td>').join("")}
+      </tr>`;
+    } else {
+      // Generate regular session row
+      let row = `<tr>
+        <td class="time-cell">${convertTo12HourFormat(slot.startTime)} <br>-<br /> ${convertTo12HourFormat(
+        slot.endTime
+      )}</td>`;
+
+      workingDays.forEach((day) => {
+        const session = timetableData[day] && timetableData[day][slot.slotId.toString()];
+        if (session && (!session.slotPosition || session.slotPosition === "first")) {
+          const sessionType = (session.type || "").toString().toLowerCase();
+          const displayTypeSrc = (session.type || "").toString();
+          const formattedType = displayTypeSrc
+            ? displayTypeSrc.charAt(0).toUpperCase() + displayTypeSrc.slice(1).toLowerCase()
+            : "";
+
+          // Add rowspan for multi-slot sessions (labs)
+          const rowspan = session.duration > 1 ? `rowspan="${session.duration}"` : "";
+
+          row += `<td class="${sessionType}-session" ${rowspan}>
+            ${session.subject}<br>
+            ${session.faculty}<br>
+            ${session.room}<br>
+            <span class="type-label">${formattedType}</span>
+          </td>`;
+        } else if (session && session.slotPosition && session.slotPosition !== "first") {
+          // Skip cells for continuation slots of multi-slot sessions
+          // These are handled by rowspan in the first slot
+        } else if (!session) {
+          row += `<td class="empty-cell">Free</td>`;
+        }
+      });
+
+      row += "</tr>";
+      tableRows += row;
+    }
   });
 
   // Return minimal HTML - CSS handles all styling
@@ -3405,6 +3433,7 @@ function generatePrintHTML(timetableData, params) {
       <meta name="subject" content="${params.course} - ${params.department} - ${params.semester}">
       <meta name="author" content="Timetable Generator">
       <link rel="stylesheet" href="style.css">
+      <link rel="stylesheet" href="print.css">
     </head>
     <body>
       <div class="pdf-container">
@@ -3412,30 +3441,6 @@ function generatePrintHTML(timetableData, params) {
           <h1>${params.course} - ${params.department}</h1>
           <h2>${params.semester} Timetable</h2>
           <p>Interactive Timetable Generator</p>
-          <div class="metadata">
-            <div class="meta-row">
-              <span><strong>Generated on:</strong> ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}</span>
-              <span><strong>Students:</strong> ${params.students || "Not specified"}</span>
-            </div>
-            <div class="meta-row">
-              <span><strong>Duration:</strong> ${convertTo12HourFormat(params.startTime)} - ${convertTo12HourFormat(
-    params.endTime
-  )}</span>
-              <span><strong>Slot Duration:</strong> ${params.slotDuration} minutes</span>
-            </div>
-            ${
-              params.hasBreak
-                ? `<div class="meta-row">
-              <span><strong>Break Time:</strong> ${convertTo12HourFormat(
-                params.breakStartTime
-              )} - ${convertTo12HourFormat(params.breakEndTime)}</span>
-              <span><strong>Break Duration:</strong> ${
-                breakDurationMins !== null ? breakDurationMins : ""
-              } minutes</span>
-            </div>`
-                : ""
-            }
-          </div>
         </div>
         
         <table class="timetable">
@@ -3511,7 +3516,6 @@ function generatePrintHTML(timetableData, params) {
 window.deleteTimetable = deleteTimetable;
 window.downloadCurrentTimetable = downloadCurrentTimetable;
 window.downloadTimetable = downloadTimetable;
-window.previewPDFLayout = previewPDFLayout;
 window.deleteSavedTimetable = deleteSavedTimetable;
 window.focusTimetableTabAndScroll = focusTimetableTabAndScroll;
 

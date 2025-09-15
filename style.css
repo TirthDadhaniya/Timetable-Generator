@@ -755,6 +755,16 @@ td.lab-session .type-label {
   transform: translateY(-2px);
 }
 
+.timetable-action-btn.download-html-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.timetable-action-btn.download-html-btn:hover {
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  transform: translateY(-2px);
+}
+
 .timetable-action-btn.save-btn {
   background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
   box-shadow: 0 4px 12px rgba(72, 187, 120, 0.3);
@@ -2523,6 +2533,7 @@ td.lab-session .type-label {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+  border: none;
 }
 
 .btn-primary:hover {
@@ -2724,10 +2735,11 @@ td.lab-session .type-label {
 /* Print-specific styling for exported timetable */
 @media print {
   body {
-    font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
     background: #ffffff;
+    font-family: "Inter", sans-serif;
+
   }
 
   .pdf-container {
@@ -2741,8 +2753,9 @@ td.lab-session .type-label {
   .header {
     text-align: center;
     margin-bottom: 30px;
-    border-bottom: 3px solid #8e44ad;
+    border-bottom: 3px solid #676568;
     padding-bottom: 15px;
+    font-family: "Inter", sans-serif;
   }
 
   .header h1 {
@@ -2765,67 +2778,132 @@ td.lab-session .type-label {
   }
 
   /* Table */
-  table.timetable {
+  .timetable {
     width: 100%;
     border-collapse: collapse;
-    font-size: 10px;
+    font-family: "Inter", sans-serif;
+    background: #f7fafc;
+    overflow: hidden;
+    border: 1px solid #dee2e6;
   }
 
-  table.timetable th {
-    background: #8e44ad !important;
-    color: #ffffff !important;
-    padding: 10px 8px;
+  .timetable thead {
+    background: #f7fafc;
+    color: black !important;
+    border-bottom: 1px solid #dee2e6;
+  }
+
+  .timetable th {
+    color: black;
+    padding: 15px 12px;
     text-align: center;
-    font-weight: bold;
+    font-weight: 700;
     font-size: 12px;
-    border: 1.5px solid #7b1fa2;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
+    border: 1px solid #dee2e6;
+  }
+
+  .timetable td {
+    padding: 8px 6px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 10px;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    border: 1px solid #dee2e6;
   }
 
   td.time-cell {
-    background: #ce93d8 !important;
-    color: #212529 !important;
-    font-weight: bold;
-    text-align: center;
-    padding: 10px 8px;
-    border: 1px solid #8e44ad;
+    background: #f7fafc;
+    color: #4a5568;
     width: 80px;
+    font-size: 11px;
+    text-align: center;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
+    border-bottom: 1px solid #dee2e6;
   }
 
   td.lecture-session {
-    background: #81ecec !important;
-    color: #0d47a1 !important;
-    padding: 8px 6px;
-    text-align: center;
-    border: 1px solid #8e44ad;
-    font-size: 9px;
+    background-color: #DCEEFC;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
+    color: #1e5b81;
   }
 
   td.lab-session {
-    background: #ffb74d !important;
-    color: #bf360c !important;
-    padding: 8px 6px;
+    background-color: #F1E9FE;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    color: #81409D;
+  }
+
+  td.empty-cell {
+    background: #f7fafc;
+    color: #4a5568;
     text-align: center;
-    border: 1px solid #8e44ad;
-    font-size: 9px;
     font-style: italic;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
 
-  td.empty-cell {
-    background: #f8f9fa !important;
-    color: #6c757d !important;
-    padding: 8px 6px;
+  /* Break row styles */
+  .break-time {
+    background: #f7fafc;
+    color: #4a5568;
     text-align: center;
-    border: 1px solid #8e44ad;
-    font-size: 9px;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .break-time div {
+    background-color: #eeeeee !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .break-cell {
+    background-color: #eeeeee !important;
+    color: #6e6e6e !important;
+    font-weight: 700;
+    font-size: 12px;
+    text-align: center;
+    padding: 12px 6px !important;
+    text-transform: uppercase;
+    letter-spacing: 1px;
     font-style: italic;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .type-label {
+    display: inline-block;
+    font-size: 9px;
+    line-height: 1;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    padding: 3px 5px;
+    border-radius: 9999px;
+    margin-bottom: 3px;
+    margin-top: 5px;
+  }
+
+  td.lecture-session .type-label {
+    color: #0d47a1 !important;
+    background: rgba(13, 71, 161, 0.08) !important;
+    border: 1px solid rgba(13, 71, 161, 0.35) !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  td.lab-session .type-label {
+    color: #a654c9 !important;
+    background: rgba(166, 84, 201, 0.15) !important;
+    border: 1px solid #81409D !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
@@ -2849,6 +2927,10 @@ td.lab-session .type-label {
 
   .meta-row:last-child {
     margin-bottom: 0;
+  }
+
+  .timetable {
+    page-break-inside: avoid;
   }
 
   .footer {
@@ -2885,47 +2967,5 @@ td.lab-session .type-label {
   .footer p {
     margin: 3px 0;
     color: #495057;
-  }
-
-  /* Default table cell style to ensure consistency for any td */
-  table.timetable td {
-    padding: 8px 6px;
-    text-align: center;
-    border: 1px solid #8e44ad;
-    font-size: 9px;
-  }
-
-  /* Small badge for session type (Lecture/Lab) */
-  .type-label {
-    display: inline-block;
-    font-size: 9px;
-    line-height: 1;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-    padding: 2px 5px;
-    border-radius: 9999px;
-    margin-bottom: 3px;
-  }
-
-  td.lecture-session .type-label {
-    color: #0d47a1 !important;
-    background: rgba(13, 71, 161, 0.08) !important;
-    border: 1px solid rgba(13, 71, 161, 0.35) !important;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-
-  td.lab-session .type-label {
-    color: #bf360c !important;
-    background: rgba(191, 54, 12, 0.08) !important;
-    border: 1px solid rgba(191, 54, 12, 0.35) !important;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-
-  /* Utility: ensure table avoids page break inside if possible */
-  .timetable {
-    page-break-inside: avoid;
   }
 }
