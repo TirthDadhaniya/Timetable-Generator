@@ -2082,6 +2082,19 @@
         "semester": "Semester 5",
         "facultyId": null
       }
+    },
+    {
+      "id": "mfkju2c3qdjchj7zwh",
+      "email": "kunj@mailinator.com",
+      "password": "$2b$10$wukrVwt1/fLuVvzdwNYgVOOt.9Hkm7E3SKR26NpqhW95OXbr7Ipu.",
+      "firstName": "Brandon",
+      "lastName": "Berry",
+      "role": "admin",
+      "institution": "Travis and Bauer Traders",
+      "isActive": true,
+      "createdAt": "2025-09-15T03:13:04.083Z",
+      "lastLogin": "2025-09-15T03:13:10.378Z",
+      "profileData": {}
     }
   ],
   "userSessions": [],
