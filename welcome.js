@@ -60,7 +60,7 @@ function showLoggedInState(user) {
         You're already logged in as ${user.role}. Ready to continue managing your schedules?
       </p>
       <div class="cta-buttons">
-        <a href="index.html" class="btn btn-primary">Go to Dashboard</a>
+        <a href="index.html?authorized=true" class="btn btn-primary">Go to Dashboard</a>
         <a href="#" onclick="logout()" class="btn btn-secondary">Logout</a>
       </div>
     `;

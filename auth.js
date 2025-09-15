@@ -116,7 +116,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
           // Redirect to main application after 1 second
           setTimeout(() => {
-            window.location.href = "index.html?login=success";
+            window.location.href = "index.html?authorized=true&login=success";
           }, 1000);
         } else {
           // Login failed
@@ -392,7 +392,7 @@ function redirectToRegister() {
 }
 
 function redirectToApp() {
-  window.location.href = "index.html";
+  window.location.href = "index.html?authorized=true";
 }
 
 // Session management functions (shared with script.js)
@@ -476,7 +476,7 @@ function getUserToken() {
   return localStorage.getItem("userToken");
 }
 
-// Check if user is already logged in (for demo purposes)
+// Check if user is already logged in
 async function checkAuthStatus() {
   const currentPage = window.location.pathname.split("/").pop();
 
@@ -484,7 +484,7 @@ async function checkAuthStatus() {
     // User is already logged in, redirect to main app
     showToast("You are already logged in. Redirecting...", "info");
     setTimeout(() => {
-      window.location.href = "index.html";
+      window.location.href = "index.html?authorized=true";
     }, 1500);
   }
 }
