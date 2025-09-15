@@ -3,86 +3,16 @@ const tabs = document.querySelectorAll(".tab");
 const tabContents = document.querySelectorAll(".tab-content");
 tabs.forEach((tab) => {
   tab.addEventListener("click", () => {
+    // Remove active class from all tabs
     tabs.forEach((t) => t.classList.remove("active"));
-    // Enhanced authentication protection
-    async function requireAuthentication() {
-      const currentPage = window.location.pathname.split("/").pop();
 
-      // Check if we're on the main index page
-      if (currentPage === "index.html" || currentPage === "") {
-        // Check for demo access flag first
-        const demoAccess = localStorage.getItem("demoAccess");
-        const demoAccessTime = localStorage.getItem("demoAccessTime");
+    // Add active class to clicked tab
+    tab.classList.add("active");
 
-        // If this is demo access within the last hour, allow access
-        if (demoAccess === "true" && demoAccessTime) {
-          const accessTime = parseInt(demoAccessTime);
-          const currentTime = Date.now();
-          const hourInMs = 60 * 60 * 1000; // 1 hour
+    // Hide all tab contents
+    tabContents.forEach((content) => content.classList.add("hidden"));
 
-          if (currentTime - accessTime < hourInMs) {
-            // Demo access is still valid, show demo banner
-            showDemoBanner();
-            return true;
-          } else {
-            // Demo access expired, clear it
-            localStorage.removeItem("demoAccess");
-            localStorage.removeItem("demoAccessTime");
-          }
-        }
-
-        // Check if this is a first-time visitor
-        const hasVisited = localStorage.getItem("hasVisited");
-        if (!hasVisited) {
-          // First-time visitor, redirect to welcome page
-          localStorage.setItem("hasVisited", "true");
-          window.location.href = "welcome.html";
-          return false;
-        }
-
-        // Check session validity for returning users
-        if (!(await isSessionValid())) {
-          // Not logged in, redirect to welcome page for better UX
-          window.location.href = "welcome.html";
-          return false;
-        }
-      }
-
-      return true; // User is authenticated or on a public page
-    }
-
-    function showDemoBanner() {
-      // Create demo banner if it doesn't exist
-      let demoBanner = document.getElementById("demo-banner");
-      if (!demoBanner) {
-        demoBanner = document.createElement("div");
-        demoBanner.id = "demo-banner";
-        demoBanner.className = "demo-banner";
-        demoBanner.innerHTML = `
-      <div class="demo-banner-content">
-        <span class="demo-banner-text">
-          🚀 You're viewing the demo version. 
-          <a href="register.html" class="demo-banner-link">Create an account</a> to save your data.
-        </span>
-        <button class="demo-banner-close" onclick="closeDemoBanner()">×</button>
-      </div>
-    `;
-
-        // Insert at the top of the container
-        const container = document.querySelector(".container");
-        if (container) {
-          container.insertBefore(demoBanner, container.firstChild);
-        }
-      }
-    }
-
-    function closeDemoBanner() {
-      const demoBanner = document.getElementById("demo-banner");
-      if (demoBanner) {
-        demoBanner.remove();
-      }
-    }
-    List.add("active");
+    // Show the selected tab content
     const tabId = tab.id.replace("-tab", "-content");
     const targetContent = document.getElementById(tabId);
     if (targetContent) {
@@ -90,6 +20,85 @@ tabs.forEach((tab) => {
     }
   });
 });
+
+// Enhanced authentication protection
+async function requireAuthentication() {
+  const currentPage = window.location.pathname.split("/").pop();
+
+  // Check if we're on the main index page
+  if (currentPage === "index.html" || currentPage === "") {
+    // Check for demo access flag first
+    const demoAccess = localStorage.getItem("demoAccess");
+    const demoAccessTime = localStorage.getItem("demoAccessTime");
+
+    // If this is demo access within the last hour, allow access
+    if (demoAccess === "true" && demoAccessTime) {
+      const accessTime = parseInt(demoAccessTime);
+      const currentTime = Date.now();
+      const hourInMs = 60 * 60 * 1000; // 1 hour
+
+      if (currentTime - accessTime < hourInMs) {
+        // Demo access is still valid, show demo banner
+        showDemoBanner();
+        return true;
+      } else {
+        // Demo access expired, clear it
+        localStorage.removeItem("demoAccess");
+        localStorage.removeItem("demoAccessTime");
+      }
+    }
+
+    // Check if this is a first-time visitor
+    const hasVisited = localStorage.getItem("hasVisited");
+    if (!hasVisited) {
+      // First-time visitor, redirect to welcome page
+      localStorage.setItem("hasVisited", "true");
+      window.location.href = "welcome.html";
+      return false;
+    }
+
+    // Check session validity for returning users
+    if (!(await isSessionValid())) {
+      // Not logged in, redirect to welcome page for better UX
+      window.location.href = "welcome.html";
+      return false;
+    }
+  }
+
+  return true; // User is authenticated or on a public page
+}
+
+function showDemoBanner() {
+  // Create demo banner if it doesn't exist
+  let demoBanner = document.getElementById("demo-banner");
+  if (!demoBanner) {
+    demoBanner = document.createElement("div");
+    demoBanner.id = "demo-banner";
+    demoBanner.className = "demo-banner";
+    demoBanner.innerHTML = `
+    <div class="demo-banner-content">
+      <span class="demo-banner-text">
+        🚀 You're viewing the demo version. 
+        <a href="register.html" class="demo-banner-link">Create an account</a> to save your data.
+      </span>
+      <button class="demo-banner-close" onclick="closeDemoBanner()">×</button>
+    </div>
+  `;
+
+    // Insert at the top of the container
+    const container = document.querySelector(".container");
+    if (container) {
+      container.insertBefore(demoBanner, container.firstChild);
+    }
+  }
+}
+
+function closeDemoBanner() {
+  const demoBanner = document.getElementById("demo-banner");
+  if (demoBanner) {
+    demoBanner.remove();
+  }
+}
 document.addEventListener("DOMContentLoaded", () => {
   // Add event listeners for automatic total calculation
   const lectureHoursInput = document.getElementById("lectureHours");
