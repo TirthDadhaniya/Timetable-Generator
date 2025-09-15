@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style.css" />
     <title>Interactive Timetable Generator</title>
     <script>
-      // Redirect to welcome page immediately unless coming from authorized source
+      // Redirect to welcome page immediately unless user is logged in or coming from authorized source
       (function () {
         const currentPage = window.location.pathname.split("/").pop();
         const urlParams = new URLSearchParams(window.location.search);
@@ -15,8 +15,16 @@
         // Check if this is an authorized access (coming from login/welcome with proper auth)
         const isAuthorizedAccess = urlParams.get("authorized") === "true";
 
-        // If not authorized access and on index.html or root, redirect to welcome
-        if (!isAuthorizedAccess && (currentPage === "index.html" || currentPage === "")) {
+        // Check if user is logged in (has valid session)
+        const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+        const hasToken = localStorage.getItem("userToken");
+        const sessionExpiry = localStorage.getItem("sessionExpiry");
+        const isSessionNotExpired = sessionExpiry && Date.now() < parseInt(sessionExpiry);
+
+        const hasValidSession = isLoggedIn && hasToken && isSessionNotExpired;
+
+        // If not authorized access AND not logged in and on index.html or root, redirect to welcome
+        if (!isAuthorizedAccess && !hasValidSession && (currentPage === "index.html" || currentPage === "")) {
           window.location.replace("welcome.html");
         }
       })();
