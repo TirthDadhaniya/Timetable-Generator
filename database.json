@@ -1527,16 +1527,16 @@
       }
     },
     {
-      "id": "mfjpcbcxyldhb2e6pc",
-      "email": "test@example.com",
-      "password": "$2b$10$Sco8HxawJEa3k..OJsjZDu2S7esObcBzLEappW9PIAFM8EEF4r5TO",
-      "firstName": "Tirth",
-      "lastName": "Dadhaniya",
+      "id": "mfkly60bpe4djzsssb",
+      "email": "kunj@mailinator.com",
+      "password": "$2b$10$3Ma4cYros7tIB/IzX9CSLOrwX6ghmyE6x2x581Phe1DVFxJuEj6eq",
+      "firstName": "Kunj",
+      "lastName": "Hirapra",
       "role": "admin",
-      "institution": "Apollo Institute of Engineering and Technology",
+      "institution": "Apollo",
       "isActive": true,
-      "createdAt": "2025-09-14T12:59:27.489Z",
-      "lastLogin": "2025-09-14T14:55:35.327Z",
+      "createdAt": "2025-09-15T04:12:14.699Z",
+      "lastLogin": "2025-09-15T04:12:24.088Z",
       "profileData": {}
     }
   ],
