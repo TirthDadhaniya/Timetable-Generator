@@ -6,6 +6,21 @@
     <link rel="shortcut icon" href="res/favicon.png" type="image/x-icon" />
     <link rel="stylesheet" href="style.css" />
     <title>Interactive Timetable Generator</title>
+    <script>
+      // Redirect to welcome page immediately unless coming from authorized source
+      (function () {
+        const currentPage = window.location.pathname.split("/").pop();
+        const urlParams = new URLSearchParams(window.location.search);
+
+        // Check if this is an authorized access (coming from login/welcome with proper auth)
+        const isAuthorizedAccess = urlParams.get("authorized") === "true";
+
+        // If not authorized access and on index.html or root, redirect to welcome
+        if (!isAuthorizedAccess && (currentPage === "index.html" || currentPage === "")) {
+          window.location.replace("welcome.html");
+        }
+      })();
+    </script>
   </head>
   <body>
     <div class="container">
