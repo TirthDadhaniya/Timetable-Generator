@@ -259,6 +259,21 @@ function populateTimetableGeneratorDropdowns() {
         // Reset department dropdown if no course selected
         genDepartmentSelect.innerHTML = '<option value="">Select department</option>';
       }
+      // Trigger hours calculation update
+      updateTimeCalculation();
+    });
+  }
+
+  // Add event listeners for department and semester selection to trigger hours calculation
+  if (genDepartmentSelect) {
+    genDepartmentSelect.addEventListener("change", function () {
+      updateTimeCalculation();
+    });
+  }
+
+  if (genSemesterSelect) {
+    genSemesterSelect.addEventListener("change", function () {
+      updateTimeCalculation();
     });
   }
 
@@ -268,6 +283,38 @@ function populateTimetableGeneratorDropdowns() {
 
   // Semesters are already in correct order 1-8
   populateSelect(genSemesterSelect, semesters);
+}
+
+/**
+ * Calculate total required hours for selected course, department, and semester
+ */
+function calculateRequiredHours(course, department, semester) {
+  if (!course || !department || !semester) {
+    return { totalHours: 0, lectureHours: 0, labHours: 0, subjectCount: 0 };
+  }
+
+  // Filter subjects based on course, department, and semester
+  const filteredSubjects = subjects.filter(
+    (subject) => subject.course === course && subject.department === department && subject.semester === semester
+  );
+
+  let totalLectureHours = 0;
+  let totalLabHours = 0;
+  let totalHours = 0;
+
+  filteredSubjects.forEach((subject) => {
+    totalLectureHours += subject.lectureHours || 0;
+    totalLabHours += subject.labHours || 0;
+    totalHours += subject.totalHours || 0;
+  });
+
+  return {
+    totalHours,
+    lectureHours: totalLectureHours,
+    labHours: totalLabHours,
+    subjectCount: filteredSubjects.length,
+    subjects: filteredSubjects,
+  };
 }
 
 /**
@@ -597,6 +644,55 @@ function updateTimeCalculation() {
   const breakStartTime = document.getElementById("breakStartTime")?.value || "12:00";
   const breakEndTime = document.getElementById("breakEndTime")?.value || "13:00";
 
+  // Validation: Number of Students
+  const numStudentsInput = document.getElementById("numStudents");
+  const numStudents = parseInt(numStudentsInput?.value) || 0;
+  if (numStudentsInput) {
+    if (numStudents <= 0) {
+      numStudentsInput.classList.add("input-error");
+    } else {
+      numStudentsInput.classList.remove("input-error");
+    }
+  }
+
+  // Validation: Lecture Duration
+  const lectureDurationInput = document.getElementById("slotDuration");
+  if (lectureDurationInput) {
+    if (slotDuration <= 0) {
+      lectureDurationInput.classList.add("input-error");
+    } else {
+      lectureDurationInput.classList.remove("input-error");
+    }
+  }
+
+  // Validation: Break Time
+  const breakStartInput = document.getElementById("breakStartTime");
+  const breakEndInput = document.getElementById("breakEndTime");
+  let breakErrorMsg = "";
+  if (hasBreak && breakStartInput && breakEndInput) {
+    if (breakStartTime === breakEndTime) {
+      breakStartInput.classList.add("input-error");
+      breakEndInput.classList.add("input-error");
+      breakErrorMsg = "Break start and end time cannot be the same.";
+    } else {
+      // Calculate break duration
+      const breakStart = new Date(`1970-01-01T${breakStartTime}:00`);
+      const breakEnd = new Date(`1970-01-01T${breakEndTime}:00`);
+      const breakDuration = (breakEnd - breakStart) / (1000 * 60);
+      if (breakDuration < 5) {
+        breakStartInput.classList.add("input-error");
+        breakEndInput.classList.add("input-error");
+        breakErrorMsg = "Break duration must be at least 5 minutes.";
+      } else {
+        breakStartInput.classList.remove("input-error");
+        breakEndInput.classList.remove("input-error");
+      }
+    }
+  } else {
+    if (breakStartInput) breakStartInput.classList.remove("input-error");
+    if (breakEndInput) breakEndInput.classList.remove("input-error");
+  }
+
   const timeDetailsDiv = document.getElementById("timeDetails");
   if (!timeDetailsDiv) return;
 
@@ -655,7 +751,65 @@ function updateTimeCalculation() {
     const remainingHours = Math.floor(Math.abs(remainingTime) / 60);
     const remainingMins = Math.abs(remainingTime) % 60;
 
+    // Calculate required hours for selected course, department, and semester
+    const course = document.getElementById("genCourse")?.value;
+    const department = document.getElementById("genDepartment")?.value;
+    const semester = document.getElementById("genSemester")?.value;
+
+    let requiredHoursInfo = "";
+    let hoursValidationError = "";
+
+    if (course && department && semester) {
+      const requiredHours = calculateRequiredHours(course, department, semester);
+
+      if (requiredHours.subjectCount > 0) {
+        requiredHoursInfo = `
+          <div style="margin-bottom: 5px; padding: 8px; background-color: #f0f9ff; border-left: 4px solid #0ea5e9; border-radius: 4px;">
+            <div style="margin-bottom: 5px;">
+              📖 <strong>Subject Requirements (${requiredHours.subjectCount} subjects):</strong>
+            </div>
+            <div style="margin-bottom: 3px;">
+              📚 Lecture Hours: <strong>${requiredHours.lectureHours}h/week</strong>
+            </div>
+            <div style="margin-bottom: 3px;">
+              🧪 Lab Hours: <strong>${requiredHours.labHours}h/week</strong>
+            </div>
+            <div style="margin-bottom: 3px;">
+              ⏱️ <strong>Total Required: ${requiredHours.totalHours}h/week</strong>
+            </div>
+          </div>
+        `;
+
+        // Calculate available time slots per week (5 working days)
+        const availableSlotsPerDay = displayLecturesPerDay !== "?" ? displayLecturesPerDay : 0;
+        const availableHoursPerWeek = availableSlotsPerDay * 5 * (slotDuration / 60);
+
+        if (availableSlotsPerDay > 0 && requiredHours.totalHours > availableHoursPerWeek) {
+          const shortfallHours = requiredHours.totalHours - availableHoursPerWeek;
+          hoursValidationError = `
+            <div style="color: #dc2626; padding: 8px; background-color: #fef2f2; border-left: 4px solid #dc2626; border-radius: 4px; margin-bottom: 5px;">
+              ❌ <strong>Insufficient Time Allocation:</strong><br/>
+              Required: ${requiredHours.totalHours}h/week<br/>
+              Available: ${availableHoursPerWeek.toFixed(1)}h/week<br/>
+              Shortfall: ${shortfallHours.toFixed(1)}h/week<br/>
+              <em>Please increase college hours, reduce lecture duration, or adjust break time.</em>
+            </div>
+          `;
+        } else if (availableSlotsPerDay > 0) {
+          const excessHours = availableHoursPerWeek - requiredHours.totalHours;
+          requiredHoursInfo += `
+            <div style="color: #059669; margin-top: 5px;">
+              ✅ <strong>Available Hours Per Week:</strong> ${availableHoursPerWeek.toFixed(1)}h (${excessHours.toFixed(
+            1
+          )}h excess)
+            </div>
+          `;
+        }
+      }
+    }
+
     let html = `
+      ${requiredHoursInfo}
       <div style="margin-bottom: 5px;">
         📅 <strong>Total College Time:</strong> ${totalHours}h ${totalMins}m (${convertTo12HourFormat(
       startTime
@@ -664,7 +818,19 @@ function updateTimeCalculation() {
       <div style="margin-bottom: 5px;">
         📚 <strong>Lecture Time Needed:</strong> ${displayLecturesPerDay} slots × ${slotDuration}min = ${lectureHours}h ${lectureMins}m
       </div>
+      ${hoursValidationError}
     `;
+
+    // Show validation errors
+    if (numStudentsInput && numStudents <= 0) {
+      html += `<div style='color:#dc2626'><strong>Number of students must be greater than 0.</strong></div>`;
+    }
+    if (lectureDurationInput && slotDuration <= 0) {
+      html += `<div style='color:#dc2626'><strong>Lecture duration must be greater than 0.</strong></div>`;
+    }
+    if (breakErrorMsg) {
+      html += `<div style='color:#dc2626'><strong>${breakErrorMsg}</strong></div>`;
+    }
 
     if (hasBreak) {
       html += `
@@ -1448,22 +1614,15 @@ async function generateTimetable(params) {
 }
 
 /**
- * Generate time slots based on start and end time
+ * Generate all time slots including breaks for display purposes
  */
-function generateTimeSlots(
-  startTime,
-  endTime,
-  slotDuration = 60,
-  breakStartTime = null,
-  breakEndTime = null,
-  lecturesPerDay = null
-) {
-  const slots = [];
+function generateAllTimeSlots(startTime, endTime, slotDuration = 60, breakStartTime = null, breakEndTime = null) {
+  const allSlots = [];
   const start = new Date(`1970-01-01T${startTime}:00`);
   const end = new Date(`1970-01-01T${endTime}:00`);
 
   let current = new Date(start);
-  let slotNumber = 1;
+  let slotIndex = 1;
 
   // Parse break time if provided
   let breakStart = null;
@@ -1474,41 +1633,79 @@ function generateTimeSlots(
   }
 
   while (current < end) {
-    const next = new Date(current.getTime() + slotDuration * 60 * 1000); // Add slot duration in minutes
+    const next = new Date(current.getTime() + slotDuration * 60 * 1000);
 
     if (next <= end) {
-      // Check if this slot overlaps with break time
-      const isBreakSlot =
-        breakStart &&
-        breakEnd &&
-        ((current >= breakStart && current < breakEnd) ||
-          (next > breakStart && next <= breakEnd) ||
-          (current <= breakStart && next >= breakEnd));
+      // Improved break overlap detection
+      let isBreakSlot = false;
+
+      if (breakStart && breakEnd) {
+        // Check if any part of this slot overlaps with break time
+        const slotOverlapsBreak = current < breakEnd && next > breakStart;
+
+        if (slotOverlapsBreak) {
+          // If there's an overlap, we need to handle it properly
+          const overlapStart = new Date(Math.max(current.getTime(), breakStart.getTime()));
+          const overlapEnd = new Date(Math.min(next.getTime(), breakEnd.getTime()));
+          const overlapDuration = (overlapEnd - overlapStart) / (1000 * 60); // in minutes
+
+          // If more than 50% of the slot overlaps with break, consider it a break slot
+          // Or if the overlap is significant (more than 10 minutes), consider it a break slot
+          if (overlapDuration > slotDuration * 0.5 || overlapDuration > 10) {
+            isBreakSlot = true;
+          }
+        }
+      }
+
+      allSlots.push({
+        startTime: current.toTimeString().slice(0, 5),
+        endTime: next.toTimeString().slice(0, 5),
+        isBreak: isBreakSlot,
+        slotId: isBreakSlot ? null : slotIndex,
+      });
 
       if (!isBreakSlot) {
-        slots.push({
-          id: slotNumber,
-          startTime: current.toTimeString().slice(0, 5),
-          endTime: next.toTimeString().slice(0, 5),
-          duration: slotDuration / 60, // Duration in hours
-        });
-        slotNumber++;
+        slotIndex++;
       }
     }
     current = next;
   }
 
+  return allSlots;
+}
+
+/**
+ * Generate time slots based on start and end time (lecture slots only)
+ */
+function generateTimeSlots(
+  startTime,
+  endTime,
+  slotDuration = 60,
+  breakStartTime = null,
+  breakEndTime = null,
+  lecturesPerDay = null
+) {
+  const allSlots = generateAllTimeSlots(startTime, endTime, slotDuration, breakStartTime, breakEndTime);
+  const lectureSlots = allSlots
+    .filter((slot) => !slot.isBreak)
+    .map((slot, index) => ({
+      id: index + 1,
+      startTime: slot.startTime,
+      endTime: slot.endTime,
+      duration: slotDuration / 60, // Duration in hours
+    }));
+
   // Validate if the number of slots matches the desired lectures per day
-  if (lecturesPerDay && slots.length !== lecturesPerDay) {
+  if (lecturesPerDay && lectureSlots.length !== lecturesPerDay) {
     console.warn(
-      `⚠️ Time configuration mismatch: Generated ${slots.length} slots but expected ${lecturesPerDay} lectures per day`
+      `⚠️ Time configuration mismatch: Generated ${lectureSlots.length} slots but expected ${lecturesPerDay} lectures per day`
     );
     console.warn(
-      `💡 Suggestion: Adjust start/end time or slot duration to get exactly ${lecturesPerDay} lecture slots`
+      `💡 Suggestion: Adjust start/end time, slot duration, or break time to get exactly ${lecturesPerDay} lecture slots`
     );
   }
 
-  return slots;
+  return lectureSlots;
 }
 
 /**
@@ -1809,48 +2006,16 @@ function generateOptimizedSchedule(subjects, availableRooms, timeSlots) {
 
 // Build timetable rows (includes break rows)
 function generateTimetableRows(timeSlots, timetableData, workingDays, params) {
-  //
-
   const rows = [];
-  const allTimeSlots = [];
 
-  // Create all time slots including break slots
-  const start = new Date(`1970-01-01T${params.startTime}:00`);
-  const end = new Date(`1970-01-01T${params.endTime}:00`);
-  const slotDuration = params.slotDuration;
-
-  // Parse break times if provided
-  let breakStart = null;
-  let breakEnd = null;
-  if (params.hasBreak && params.breakStartTime && params.breakEndTime) {
-    breakStart = new Date(`1970-01-01T${params.breakStartTime}:00`);
-    breakEnd = new Date(`1970-01-01T${params.breakEndTime}:00`);
-  }
-
-  let current = new Date(start);
-
-  while (current < end) {
-    const next = new Date(current.getTime() + slotDuration * 60 * 1000);
-
-    if (next <= end) {
-      // Check if this slot overlaps with break time
-      const isBreakTime =
-        breakStart &&
-        breakEnd &&
-        ((current >= breakStart && current < breakEnd) ||
-          (next > breakStart && next <= breakEnd) ||
-          (current <= breakStart && next >= breakEnd));
-
-      //
-
-      allTimeSlots.push({
-        startTime: current.toTimeString().slice(0, 5),
-        endTime: next.toTimeString().slice(0, 5),
-        isBreak: isBreakTime,
-      });
-    }
-    current = next;
-  }
+  // Generate all time slots including breaks using the same logic
+  const allTimeSlots = generateAllTimeSlots(
+    params.startTime,
+    params.endTime,
+    params.slotDuration,
+    params.hasBreak ? params.breakStartTime : null,
+    params.hasBreak ? params.breakEndTime : null
+  );
 
   // Generate rows for each time slot
   allTimeSlots.forEach((slot, index) => {
@@ -1868,7 +2033,7 @@ function generateTimetableRows(timeSlots, timetableData, workingDays, params) {
         </tr>
       `);
     } else {
-      // Find the corresponding slot from timeSlots (which excludes break slots)
+      // Find the corresponding slot from timeSlots (lecture slots only)
       const actualSlot = timeSlots.find((ts) => ts.startTime === slot.startTime);
       if (actualSlot) {
         rows.push(`
@@ -1913,8 +2078,6 @@ function generateTimetableRows(timeSlots, timetableData, workingDays, params) {
       }
     }
   });
-
-  //
 
   return rows;
 }
@@ -3330,48 +3493,14 @@ function generatePrintHTML(timetableData, params) {
 
   const workingDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
-  // Create all time slots including break slots for PDF
-  const allTimeSlots = [];
-  const start = new Date(`1970-01-01T${params.startTime}:00`);
-  const end = new Date(`1970-01-01T${params.endTime}:00`);
-  const slotDuration = params.slotDuration;
-
-  // Parse break times if provided
-  let breakStart = null;
-  let breakEnd = null;
-  if (params.hasBreak && params.breakStartTime && params.breakEndTime) {
-    breakStart = new Date(`1970-01-01T${params.breakStartTime}:00`);
-    breakEnd = new Date(`1970-01-01T${params.breakEndTime}:00`);
-  }
-
-  let current = new Date(start);
-  let slotIndex = 0;
-
-  while (current < end) {
-    const next = new Date(current.getTime() + slotDuration * 60 * 1000);
-
-    if (next <= end) {
-      // Check if this slot overlaps with break time
-      const isBreakTime =
-        breakStart &&
-        breakEnd &&
-        ((current >= breakStart && current < breakEnd) ||
-          (next > breakStart && next <= breakEnd) ||
-          (current <= breakStart && next >= breakEnd));
-
-      allTimeSlots.push({
-        startTime: current.toTimeString().slice(0, 5),
-        endTime: next.toTimeString().slice(0, 5),
-        isBreak: isBreakTime,
-        slotId: isBreakTime ? null : slotIndex + 1,
-      });
-
-      if (!isBreakTime) {
-        slotIndex++;
-      }
-    }
-    current = next;
-  }
+  // Use the same allTimeSlots generation as other functions
+  const allTimeSlots = generateAllTimeSlots(
+    params.startTime,
+    params.endTime,
+    params.slotDuration,
+    params.hasBreak ? params.breakStartTime : null,
+    params.hasBreak ? params.breakEndTime : null
+  );
 
   // Generate table rows for PDF - simplified format
   let tableRows = "";

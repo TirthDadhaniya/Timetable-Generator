@@ -1536,7 +1536,7 @@
       "institution": "Apollo",
       "isActive": true,
       "createdAt": "2025-09-15T04:12:14.699Z",
-      "lastLogin": "2025-09-15T09:07:33.169Z",
+      "lastLogin": "2025-09-16T04:35:31.774Z",
       "profileData": {}
     }
   ],
@@ -1544,7 +1544,7 @@
   "settings": {
     "defaultCollegeStartTime": "09:00",
     "defaultCollegeEndTime": "17:00",
-    "defaultSlotsPerDay": 6,
+    "defaultSlotsPerDay": 4,
     "workingDays": [
       "Monday",
       "Tuesday",
