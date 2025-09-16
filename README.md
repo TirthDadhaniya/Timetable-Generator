@@ -619,7 +619,7 @@ npm start
 
 ## 🎉 Version History
 
-### **Version-1.0 \_ Stable Version** _(Current)_
+### **v1.0 - Stable Version** _(Current)_
 
 - ✨ Advanced randomized scheduling algorithm
 - ✨ Real-time editing with auto-population
