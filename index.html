@@ -20,12 +20,17 @@
         const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
         const hasToken = localStorage.getItem("userToken");
         const sessionExpiry = localStorage.getItem("sessionExpiry");
-        const isSessionNotExpired = sessionExpiry && Date.now() < parseInt(sessionExpiry);
+        const isSessionNotExpired =
+          sessionExpiry && Date.now() < parseInt(sessionExpiry);
 
         const hasValidSession = isLoggedIn && hasToken && isSessionNotExpired;
 
         // If not authorized access AND not logged in and on index.html or root, redirect to welcome
-        if (!isAuthorizedAccess && !hasValidSession && (currentPage === "index.html" || currentPage === "")) {
+        if (
+          !isAuthorizedAccess &&
+          !hasValidSession &&
+          (currentPage === "index.html" || currentPage === "")
+        ) {
           window.location.replace("welcome.html");
         }
       })();
@@ -42,8 +47,12 @@
           </div>
           <div class="header-actions">
             <div class="user-info" id="userInfo" style="display: none">
-              <span class="user-welcome">Welcome, <span id="userName">User</span></span>
-              <button class="btn-logout" onclick="handleLogout()">Logout</button>
+              <span class="user-welcome"
+                >Welcome, <span id="userName">User</span></span
+              >
+              <button class="btn-logout" onclick="handleLogout()">
+                Logout
+              </button>
             </div>
           </div>
         </div>
@@ -88,17 +97,19 @@
       <!-- Timetable Generator Section -->
       <div class="generator-panel admin-only">
         <h2>Timetable Generator</h2>
-        <p>Automatically generate subjects, faculty, and optimized timetable.</p>
+        <p>
+          Automatically generate subjects, faculty, and optimized timetable.
+        </p>
         <form id="timetableGenForm" class="generator-form">
           <div class="form-row">
             <div class="form-group">
-              <label>Course Name</label>
+              <label for="genCourse">Course Name</label>
               <select id="genCourse" required>
                 <option value="">Select course</option>
               </select>
             </div>
             <div class="form-group">
-              <label>Department</label>
+              <label for="genDepartment">Department</label>
               <select id="genDepartment" required>
                 <option value="">Select department</option>
               </select>
@@ -106,29 +117,34 @@
           </div>
           <div class="form-row">
             <div class="form-group">
-              <label>Semester</label>
+              <label for="genSemester">Semester</label>
               <select id="genSemester" required>
                 <option value="">Select semester</option>
               </select>
             </div>
             <div class="form-group">
-              <label>Number of Students</label>
-              <input type="number" id="genStudents" placeholder="60" min="1" required />
+              <label for="genStudents">Number of Students</label>
+              <input
+                type="number"
+                id="genStudents"
+                placeholder="60"
+                min="1"
+                required />
             </div>
           </div>
           <div class="form-row">
             <div class="form-group">
-              <label>College Start Time</label>
+              <label for="collegeStartTime">College Start Time</label>
               <input type="time" id="collegeStartTime" value="09:00" required />
             </div>
             <div class="form-group">
-              <label>College End Time</label>
+              <label for="collegeEndTime">College End Time</label>
               <input type="time" id="collegeEndTime" value="17:00" required />
             </div>
           </div>
           <div class="form-row">
             <div class="form-group">
-              <label>Lecture Duration (minutes)</label>
+              <label for="slotDuration">Lecture Duration (minutes)</label>
               <input
                 type="number"
                 id="slotDuration"
@@ -138,11 +154,14 @@
                 step="5"
                 required
                 title="Duration in minutes (e.g., 90 for 1 hour 30 minutes)"
-                placeholder="60 minutes"
-              />
+                placeholder="60 minutes" />
             </div>
             <div class="form-group">
-              <label>Number of Lectures per Day<small> (0 for auto-calculate)</small></label>
+              <label for="lecturesPerDay"
+                >Number of Lectures per Day<small>
+                  (0 for auto-calculate)</small
+                ></label
+              >
               <input
                 type="number"
                 id="lecturesPerDay"
@@ -152,13 +171,15 @@
                 step="1"
                 required
                 title="Set to 0 for auto-calculation based on weekly hour requirements, or specify exact number"
-                placeholder="6"
-              />
+                placeholder="6" />
             </div>
           </div>
           <div class="form-row">
             <div class="form-group checkbox-group">
-              <label class="checkbox-label" style="display: flex; margin-bottom: 0px; margin-left: 0px">
+              <label
+                for="hasBreak"
+                class="checkbox-label"
+                style="display: flex; margin-bottom: 0px; margin-left: 0px">
                 <input type="checkbox" id="hasBreak" name="hasBreak" />
                 <span>Enable Break Time</span>
               </label>
@@ -188,14 +209,18 @@
 
           <div class="form-group">
             <div class="info-box" id="timeCalculation">
-              <strong style="color: #0369a1">⏰ Time Configuration Summary:</strong>
+              <strong style="color: #0369a1"
+                >⏰ Time Configuration Summary:</strong
+              >
               <div id="timeDetails" style="margin-top: 5px; color: #0369a1">
                 Select your preferences above to see the time breakdown
               </div>
             </div>
           </div>
 
-          <button type="submit" class="btn generate-btn">Generate Complete Timetable</button>
+          <button type="submit" class="btn generate-btn">
+            Generate Complete Timetable
+          </button>
           <div id="timetableGenStatus"></div>
         </form>
       </div>
@@ -219,17 +244,26 @@
           <div class="timetable-placeholder">
             <div class="placeholder-content">
               <h3>No Timetable Generated Yet</h3>
-              <p class="admin-only">Use the Timetable Generator above to create your schedule</p>
-              <p class="teacher-only student-only">Please contact your administrator to generate timetables</p>
+              <p class="admin-only">
+                Use the Timetable Generator above to create your schedule
+              </p>
+              <p class="teacher-only student-only">
+                Please contact your administrator to generate timetables
+              </p>
               <div class="btn-container admin-only">
-                <button onclick="scrollToGenerator()" class="btn">Generate Timetable</button>
+                <button onclick="scrollToGenerator()" class="btn">
+                  Generate Timetable
+                </button>
               </div>
             </div>
           </div>
         </div>
 
         <!-- Saved Timetables Section -->
-        <div id="saved-timetables-section" class="list-section" style="display: none; margin-top: 24px">
+        <div
+          id="saved-timetables-section"
+          class="list-section"
+          style="display: none; margin-top: 24px">
           <h3>Saved Timetables</h3>
           <div id="savedTimetablesList" class="saved-timetables-list"></div>
         </div>
@@ -242,24 +276,24 @@
           <p>Manage academic courses and their departments</p>
           <div class="form-row">
             <div class="form-group">
-              <label>Course Name</label>
+              <label for="courseName">Course Name</label>
               <input
                 type="text"
                 id="courseName"
                 name="courseName"
                 placeholder="e.g., Bachelor of Engineering, Master of Science"
-                required
-              />
+                autocomplete="off"
+                required />
             </div>
             <div class="form-group">
-              <label>Department Name</label>
+              <label for="departmentName">Department Name</label>
               <input
                 type="text"
                 id="departmentName"
                 name="departmentName"
                 placeholder="e.g., Computer Engineering, Information Technology"
-                required
-              />
+                autocomplete="off"
+                required />
             </div>
           </div>
           <button type="submit" class="btn">Add Course & Department</button>
@@ -277,36 +311,42 @@
           <p>Add faculty members with their details and specialization.</p>
           <div class="form-row">
             <div class="form-group">
-              <label>Faculty Name</label>
-              <input type="text" id="facultyName" name="facultyName" placeholder="John Smith" required />
+              <label for="facultyName">Faculty Name</label>
+              <input
+                type="text"
+                id="facultyName"
+                name="facultyName"
+                placeholder="John Smith"
+                autocomplete="name"
+                required />
             </div>
             <div class="form-group">
-              <label>Specialization</label>
+              <label for="facultySpecialization">Specialization</label>
               <input
                 type="text"
                 id="facultySpecialization"
                 name="facultySpecialization"
                 placeholder="e.g., Data Structures, AI"
-                required
-              />
+                autocomplete="off"
+                required />
             </div>
           </div>
           <div class="form-row">
             <div class="form-group">
-              <label>Department</label>
+              <label for="facultyDepartment">Department</label>
               <select id="facultyDepartment" name="facultyDepartment" required>
                 <option value="">Select department</option>
               </select>
             </div>
             <div class="form-group">
-              <label>Email</label>
+              <label for="facultyEmail">Email</label>
               <input
                 type="email"
                 id="facultyEmail"
                 name="facultyEmail"
                 placeholder="john.smith@university.edu"
-                required
-              />
+                autocomplete="email"
+                required />
             </div>
           </div>
           <button type="submit" class="btn">Add Faculty</button>
@@ -324,23 +364,35 @@
           <p>Configure subjects with their lecture and lab hour requirements</p>
           <div class="form-row">
             <div class="form-group">
-              <label>Subject Name</label>
-              <input type="text" id="subjectName" name="subjectName" placeholder="e.g. Data Structures" required />
+              <label for="subjectName">Subject Name</label>
+              <input
+                type="text"
+                id="subjectName"
+                name="subjectName"
+                placeholder="e.g. Data Structures"
+                autocomplete="off"
+                required />
             </div>
             <div class="form-group">
-              <label>Subject Code</label>
-              <input type="text" id="subjectCode" name="subjectCode" placeholder="e.g. CS201" required />
+              <label for="subjectCode">Subject Code</label>
+              <input
+                type="text"
+                id="subjectCode"
+                name="subjectCode"
+                placeholder="e.g. CS201"
+                autocomplete="off"
+                required />
             </div>
           </div>
           <div class="form-row">
             <div class="form-group">
-              <label>Course/Program Name</label>
+              <label for="subjectCourse">Course/Program Name</label>
               <select id="subjectCourse" name="subjectCourse" required>
                 <option value="">Select course</option>
               </select>
             </div>
             <div class="form-group">
-              <label>Department</label>
+              <label for="subjectDepartment">Department</label>
               <select id="subjectDepartment" name="subjectDepartment" required>
                 <option value="">Select department</option>
               </select>
@@ -348,19 +400,37 @@
           </div>
           <div class="form-row">
             <div class="form-group">
-              <label>Lecture Hours</label>
-              <input type="number" id="lectureHours" name="lectureHours" placeholder="3" min="0" required />
+              <label for="lectureHours">Lecture Hours</label>
+              <input
+                type="number"
+                id="lectureHours"
+                name="lectureHours"
+                placeholder="3"
+                min="0"
+                required />
             </div>
             <div class="form-group">
-              <label>Lab Hours</label>
-              <input type="number" id="labHours" name="labHours" placeholder="2" min="0" required />
+              <label for="labHours">Lab Hours</label>
+              <input
+                type="number"
+                id="labHours"
+                name="labHours"
+                placeholder="2"
+                min="0"
+                required />
             </div>
             <div class="form-group">
-              <label>Total Hours/Week</label>
-              <input type="number" id="totalHours" name="totalHours" placeholder="5" min="1" readonly />
+              <label for="totalHours">Total Hours/Week</label>
+              <input
+                type="number"
+                id="totalHours"
+                name="totalHours"
+                placeholder="5"
+                min="1"
+                readonly />
             </div>
             <div class="form-group">
-              <label>Lab Duration (per session)</label>
+              <label for="labDuration">Lab Duration (per session)</label>
               <select id="labDuration" name="labDuration">
                 <option value="0">No Lab</option>
                 <option value="1">1 Hour</option>
@@ -372,13 +442,13 @@
           </div>
           <div class="form-row">
             <div class="form-group">
-              <label>Assigned Faculty</label>
+              <label for="assignedFaculty">Assigned Faculty</label>
               <select id="assignedFaculty" name="assignedFaculty" required>
                 <option value="">Select faculty</option>
               </select>
             </div>
             <div class="form-group">
-              <label>Semester</label>
+              <label for="subjectSemester">Semester</label>
               <select id="subjectSemester" name="subjectSemester" required>
                 <option value="">Select semester</option>
               </select>
@@ -399,11 +469,17 @@
           <p>Add classroom and labs with their specifications</p>
           <div class="form-row">
             <div class="form-group">
-              <label>Room Number</label>
-              <input type="text" id="roomNumber" name="roomNumber" placeholder="e.g., A101, Lab-201" required />
+              <label for="roomNumber">Room Number</label>
+              <input
+                type="text"
+                id="roomNumber"
+                name="roomNumber"
+                placeholder="e.g., A101, Lab-201"
+                autocomplete="off"
+                required />
             </div>
             <div class="form-group">
-              <label>Room Type</label>
+              <label for="roomType">Room Type</label>
               <select id="roomType" name="roomType" required>
                 <option value="">Select room type</option>
               </select>
@@ -411,17 +487,17 @@
           </div>
           <div class="form-row">
             <div class="form-group">
-              <label>Building</label>
+              <label for="roomBuilding">Building</label>
               <input
                 type="text"
                 id="roomBuilding"
                 name="roomBuilding"
                 placeholder="e.g., Main Building, IT Block"
-                required
-              />
+                autocomplete="off"
+                required />
             </div>
             <div class="form-group">
-              <label>Floor</label>
+              <label for="roomFloor">Floor</label>
               <select id="roomFloor" name="roomFloor" required>
                 <option value="">Select floor</option>
                 <option value="Ground Floor">Ground Floor</option>
@@ -434,17 +510,23 @@
           </div>
           <div class="form-row">
             <div class="form-group">
-              <label>Capacity</label>
-              <input type="number" id="roomCapacity" name="roomCapacity" placeholder="e.g., 60" min="1" required />
+              <label for="roomCapacity">Capacity</label>
+              <input
+                type="number"
+                id="roomCapacity"
+                name="roomCapacity"
+                placeholder="e.g., 60"
+                min="1"
+                required />
             </div>
             <div class="form-group">
-              <label>Equipment (Optional)</label>
+              <label for="roomEquipment">Equipment (Optional)</label>
               <input
                 type="text"
                 id="roomEquipment"
                 name="roomEquipment"
                 placeholder="e.g., Projector, AC, Lab Equipment"
-              />
+                autocomplete="off" />
             </div>
           </div>
           <button type="submit" class="btn">Add Room</button>
@@ -457,7 +539,11 @@
     </div>
 
     <!-- Toast Notification Container -->
-    <div id="toast-container" class="toast-container" aria-live="polite" aria-label="Notifications"></div>
+    <div
+      id="toast-container"
+      class="toast-container"
+      aria-live="polite"
+      aria-label="Notifications"></div>
 
     <!-- JavaScript for Tab Functionality and Data Management -->
     <script src="auth.js"></script>

@@ -1033,10 +1033,12 @@ td.lab-session .type-label {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg,
-      transparent,
-      rgba(255, 255, 255, 0.2),
-      transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
   transition: left 0.5s;
 }
 
@@ -2031,7 +2033,8 @@ td.lab-session .type-label {
 .auth-logo img {
   width: 48px;
   height: 48px;
-  filter: brightness(0) saturate(100%) invert(43%) sepia(95%) saturate(1464%) hue-rotate(215deg) brightness(95%) contrast(91%);
+  filter: brightness(0) saturate(100%) invert(43%) sepia(95%) saturate(1464%)
+    hue-rotate(215deg) brightness(95%) contrast(91%);
 }
 
 .auth-header h1 {
@@ -2144,12 +2147,12 @@ td.lab-session .type-label {
   background: #ffffff;
 }
 
-.checkbox-container input[type="checkbox"]:checked+.checkmark {
+.checkbox-container input[type="checkbox"]:checked + .checkmark {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border-color: #667eea;
 }
 
-.checkbox-container input[type="checkbox"]:checked+.checkmark::after {
+.checkbox-container input[type="checkbox"]:checked + .checkmark::after {
   content: "✓";
   color: white;
   font-size: 12px;
@@ -2221,9 +2224,11 @@ td.lab-session .type-label {
 .decoration-circle {
   position: absolute;
   border-radius: 50%;
-  background: linear-gradient(135deg,
-      rgba(102, 126, 234, 0.1) 0%,
-      rgba(118, 75, 162, 0.1) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(102, 126, 234, 0.1) 0%,
+    rgba(118, 75, 162, 0.1) 100%
+  );
   animation: float 6s ease-in-out infinite;
 }
 
@@ -2252,7 +2257,6 @@ td.lab-session .type-label {
 }
 
 @keyframes float {
-
   0%,
   100% {
     transform: translateY(0px) rotate(0deg);
@@ -2444,7 +2448,8 @@ td.lab-session .type-label {
 .landing-logo img {
   width: 64px;
   height: 64px;
-  filter: brightness(0) saturate(100%) invert(43%) sepia(95%) saturate(1464%) hue-rotate(215deg) brightness(95%) contrast(91%);
+  filter: brightness(0) saturate(100%) invert(43%) sepia(95%) saturate(1464%)
+    hue-rotate(215deg) brightness(95%) contrast(91%);
 }
 
 .landing-header h1 {
@@ -2460,7 +2465,7 @@ td.lab-session .type-label {
   line-height: 1.1;
 }
 
-.landing-header>p {
+.landing-header > p {
   color: #64748b;
   font-size: 1.3rem;
   font-weight: 600;
@@ -2526,7 +2531,8 @@ td.lab-session .type-label {
 .feature-icon img {
   width: 48px;
   height: 48px;
-  filter: brightness(0) saturate(100%) invert(43%) sepia(95%) saturate(1464%) hue-rotate(215deg) brightness(95%) contrast(91%);
+  filter: brightness(0) saturate(100%) invert(43%) sepia(95%) saturate(1464%)
+    hue-rotate(215deg) brightness(95%) contrast(91%);
 }
 
 .feature-card h3 {
@@ -2558,7 +2564,7 @@ td.lab-session .type-label {
   line-height: 1.2;
 }
 
-.landing-cta>p {
+.landing-cta > p {
   color: #64748b;
   font-size: 1.1rem;
   font-weight: 500;
@@ -2681,7 +2687,7 @@ td.lab-session .type-label {
     font-size: 2.5rem;
   }
 
-  .landing-header>p {
+  .landing-header > p {
     font-size: 1.1rem;
   }
 
@@ -2707,7 +2713,7 @@ td.lab-session .type-label {
     font-size: 2rem;
   }
 
-  .landing-cta>p {
+  .landing-cta > p {
     font-size: 1rem;
     margin-bottom: 30px;
   }
@@ -2757,7 +2763,7 @@ td.lab-session .type-label {
     font-size: 2rem;
   }
 
-  .landing-header>p {
+  .landing-header > p {
     font-size: 1rem;
   }
 
@@ -2786,7 +2792,7 @@ td.lab-session .type-label {
     font-size: 1.7rem;
   }
 
-  .landing-cta>p {
+  .landing-cta > p {
     font-size: 0.95rem;
   }
 
