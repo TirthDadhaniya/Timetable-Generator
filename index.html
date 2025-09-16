@@ -174,7 +174,7 @@
                 placeholder="6" />
             </div>
           </div>
-          <div class="last-row">
+          <div class="form-row">
             <div class="form-group checkbox-group">
               <label
                 for="hasBreak"
@@ -185,24 +185,25 @@
               </label>
             </div>
             <div class="form-group">
-              <label for="breakStartTime">Break Start Time</label>
-              <input
-                type="time"
-                id="breakStartTime"
-                name="breakStartTime"
-                value="12:00"
+              <label>Break Slot Number</label>
+              <select
+                id="breakSlotNumber"
+                name="breakSlotNumber"
                 disabled
-                title="When does the break start?" />
-            </div>
-            <div class="form-group">
-              <label for="breakEndTime">Break End Time</label>
-              <input
-                type="time"
-                id="breakEndTime"
-                name="breakEndTime"
-                value="13:00"
-                disabled
-                title="When does the break end?" />
+                title="Which slot should be the break slot? (e.g., 4th slot)"
+              >
+                <option value="">Select break slot</option>
+                <option value="1">1st Slot</option>
+                <option value="2">2nd Slot</option>
+                <option value="3">3rd Slot</option>
+                <option value="4">4th Slot</option>
+                <option value="5">5th Slot</option>
+                <option value="6">6th Slot</option>
+                <option value="7">7th Slot</option>
+                <option value="8">8th Slot</option>
+                <option value="9">9th Slot</option>
+                <option value="10">10th Slot</option>
+              </select>
             </div>
           </div>
 
