@@ -1214,8 +1214,55 @@
       "institution": "Apollo",
       "isActive": true,
       "createdAt": "2025-09-15T04:12:14.699Z",
-      "lastLogin": "2025-09-16T07:20:29.111Z",
+      "lastLogin": "2025-09-16T09:36:24.279Z",
       "profileData": {}
+    },
+    {
+      "id": "mfmq3g10mp1sf2rfwc",
+      "email": "admin@mail.com",
+      "password": "$2b$10$QpunH7VsGbWHAi6L2RIs.OQn1.xoYsmtX17cvX.3Es40ASAV1f3XG",
+      "firstName": "Admin",
+      "lastName": "Test",
+      "role": "admin",
+      "institution": "Apollo Institute of Engineering and Technology",
+      "isActive": true,
+      "createdAt": "2025-09-16T15:43:51.780Z",
+      "lastLogin": null,
+      "profileData": {}
+    },
+    {
+      "id": "mfmq52xmtmjmzmoycso",
+      "email": "student@mail.com",
+      "password": "$2b$10$g1qxoDNFMWTvxcY6RXwHk.ot8PeujTNmz8NVk64n7BoODCKI/m.1m",
+      "firstName": "Student",
+      "lastName": "Test",
+      "role": "student",
+      "institution": "Apollo Institute of Engineering and Technology",
+      "isActive": true,
+      "createdAt": "2025-09-16T15:45:08.122Z",
+      "lastLogin": null,
+      "profileData": {
+        "department": "Information Technology",
+        "semester": "Semester 7",
+        "facultyId": null
+      }
+    },
+    {
+      "id": "mfmq6i875flgz4d306k",
+      "email": "teacher@mail.com",
+      "password": "$2b$10$DKvkZ0RCldhI7.pOk1yGduJf19av0VYedi53Un01Abs56.8qz9HoS",
+      "firstName": "Teacher",
+      "lastName": "Test",
+      "role": "teacher",
+      "institution": "Apollo Institute of Engineering and Technology",
+      "isActive": true,
+      "createdAt": "2025-09-16T15:46:14.599Z",
+      "lastLogin": null,
+      "profileData": {
+        "department": null,
+        "semester": null,
+        "facultyId": null
+      }
     }
   ],
   "userSessions": [],

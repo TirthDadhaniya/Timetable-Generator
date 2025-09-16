@@ -1623,7 +1623,7 @@ function generateAllTimeSlots(startTime, endTime, slotDuration = 60, breakSlotNu
  */
 function generateTimeSlots(startTime, endTime, slotDuration = 60, breakSlotNumber = null, lecturesPerDay = null) {
   const allSlots = generateAllTimeSlots(startTime, endTime, slotDuration, breakSlotNumber);
-  const lectureSlots = allSlots
+  let lectureSlots = allSlots
     .filter((slot) => !slot.isBreak)
     .map((slot, index) => ({
       id: index + 1,
@@ -1632,14 +1632,24 @@ function generateTimeSlots(startTime, endTime, slotDuration = 60, breakSlotNumbe
       duration: slotDuration / 60, // Duration in hours
     }));
 
-  // Validate if the number of slots matches the desired lectures per day
-  if (lecturesPerDay && lectureSlots.length !== lecturesPerDay) {
-    console.warn(
-      `⚠️ Time configuration mismatch: Generated ${lectureSlots.length} slots but expected ${lecturesPerDay} lectures per day`
-    );
-    console.warn(
-      `💡 Suggestion: Adjust start/end time, slot duration, or break time to get exactly ${lecturesPerDay} lecture slots`
-    );
+  // If user specified a specific number of lectures per day, respect that limit
+  if (lecturesPerDay && lecturesPerDay > 0) {
+    if (lectureSlots.length > lecturesPerDay) {
+      // Limit slots to user-defined count
+      lectureSlots = lectureSlots.slice(0, lecturesPerDay);
+      console.log(
+        `✅ Limited to ${lecturesPerDay} slots as requested by user (${
+          lectureSlots.length - lecturesPerDay
+        } excess slots removed)`
+      );
+    } else if (lectureSlots.length < lecturesPerDay) {
+      console.warn(
+        `⚠️ Time configuration insufficient: Only ${lectureSlots.length} slots available but ${lecturesPerDay} lectures per day requested`
+      );
+      console.warn(
+        `💡 Suggestion: Extend end time, reduce slot duration, or remove break time to fit ${lecturesPerDay} lecture slots`
+      );
+    }
   }
 
   return lectureSlots;
@@ -2705,16 +2715,22 @@ function calculateOptimalLecturesPerDay(params) {
     const maxSlotsPerDay = Math.floor(availableDailyMinutes / slotDurationMinutes);
 
     // Convert hours to slots (assuming 1 hour = 1 slot for lectures)
-    // For labs, we need to consider lab duration (usually 2+ hours per lab session)
+    // For labs, we need to consider actual lab duration from each subject
     const lectureSlotDuration = slotDurationMinutes / 60; // in hours
     const totalWeeklyLectureSlots = Math.ceil(totalWeeklyLectureHours / lectureSlotDuration);
 
-    // Labs need special handling - each lab session is typically 2+ hours
-    const avgLabSessionDuration = 2; // hours per lab session
-    const labSessionsPerWeek = Math.ceil(totalWeeklyLabHours / avgLabSessionDuration);
-    const labSlotsNeeded = labSessionsPerWeek * Math.ceil(avgLabSessionDuration / lectureSlotDuration);
+    // Labs need special handling - use actual lab durations from subjects
+    let totalLabSlotsNeeded = 0;
+    filteredSubjects.forEach((subject) => {
+      if (subject.labHours > 0) {
+        const labDuration = subject.labDuration || 2; // Default to 2 hours if not specified
+        const labSessionsNeeded = Math.ceil(subject.labHours / labDuration);
+        const slotsPerLabSession = Math.ceil(labDuration / lectureSlotDuration);
+        totalLabSlotsNeeded += labSessionsNeeded * slotsPerLabSession;
+      }
+    });
 
-    const totalWeeklySlots = totalWeeklyLectureSlots + labSlotsNeeded;
+    const totalWeeklySlots = totalWeeklyLectureSlots + totalLabSlotsNeeded;
     const workingDays = 5; // Monday to Friday
     const optimalSlotsPerDay = Math.ceil(totalWeeklySlots / workingDays);
 
