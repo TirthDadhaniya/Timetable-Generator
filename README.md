@@ -610,7 +610,7 @@ npm start
 
 **Author**: Tirth Dadhaniya  
 **GitHub**: [TirthDadhaniya/Timetable-Generator](https://github.com/TirthDadhaniya/Timetable-Generator)  
-**Version**: 2.0 (Advanced Edition)  
+**Version**: 1.0  
 **License**: MIT License  
 **Node.js**: Backend server framework  
 **Dependencies**: Express.js, CORS, Nodemon
@@ -619,7 +619,7 @@ npm start
 
 ## 🎉 Version History
 
-### **v2.0 - Advanced Edition** _(Current)_
+### **Version-1.0 \_ Stable Version** _(Current)_
 
 - ✨ Advanced randomized scheduling algorithm
 - ✨ Real-time editing with auto-population
@@ -629,13 +629,6 @@ npm start
 - ✨ Multi-pass scheduling with 3 attempts
 - ✨ Lab session optimization (2-4 hour blocks)
 - ✨ Mobile-responsive interface improvements
-
-### **v1.0 - Basic Edition**
-
-- 📝 Basic CRUD operations
-- 🗂️ Simple timetable generation
-- 💾 File-based data persistence
-- 🌐 REST API with Node.js backend
 
 ---
 
