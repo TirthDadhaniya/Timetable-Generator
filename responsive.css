@@ -296,7 +296,7 @@
     font-size: 2.5rem;
   }
 
-  .landing-header > p {
+  .landing-header>p {
     font-size: 1.1rem;
   }
 
@@ -322,7 +322,7 @@
     font-size: 2rem;
   }
 
-  .landing-cta > p {
+  .landing-cta>p {
     font-size: 1rem;
     margin-bottom: 30px;
   }
@@ -357,6 +357,7 @@
     width: 140px;
     height: 140px;
   }
+
   .form-row {
     flex-direction: column;
   }
@@ -514,7 +515,7 @@
     font-size: 2rem;
   }
 
-  .landing-header > p {
+  .landing-header>p {
     font-size: 1rem;
   }
 
@@ -543,7 +544,7 @@
     font-size: 1.7rem;
   }
 
-  .landing-cta > p {
+  .landing-cta>p {
     font-size: 0.95rem;
   }
 
@@ -561,266 +562,36 @@
   .form-row {
     flex-direction: column;
   }
+
   .last-row {
     grid-template-columns: 1fr;
     margin-top: -15px;
   }
+
   .form-group.checkbox-group {
     justify-content: start;
   }
+
   .checkbox-label input[type="checkbox"] {
     width: 14px;
     height: 14px;
   }
+
   .tab {
     font-size: 16px;
     padding: 12px 12px;
     border-radius: 8px;
   }
+
   .form-section {
     padding: 35px 20px;
   }
+
   .tab-content {
     padding: 10px;
   }
+
   .section-title {
     font-size: 22px;
-  }
-}
-
-/* Print-specific styling for exported timetable */
-@media print {
-  body {
-    margin: 0;
-    padding: 0;
-    background: #ffffff;
-    font-family: "Inter", sans-serif;
-  }
-
-  .pdf-container {
-    width: 100%;
-    background: #ffffff;
-    margin: 0;
-    padding: 15mm;
-    box-sizing: border-box;
-  }
-
-  .header {
-    text-align: center;
-    margin-bottom: 30px;
-    border-bottom: 3px solid #676568;
-    padding-bottom: 15px;
-    font-family: "Inter", sans-serif;
-  }
-
-  .header h1 {
-    color: #2c3e50;
-    font-size: 24px;
-    margin: 0 0 8px 0;
-    font-weight: bold;
-  }
-
-  .header h2 {
-    color: #2c3e50;
-    font-size: 16px;
-    margin: 0 0 8px 0;
-  }
-
-  .header p {
-    color: #7f8c8d;
-    font-size: 12px;
-    margin: 0;
-  }
-
-  /* Table */
-  .timetable {
-    width: 100%;
-    border-collapse: collapse;
-    font-family: "Inter", sans-serif;
-    background: #f7fafc;
-    overflow: hidden;
-    border: 1px solid #dee2e6;
-  }
-
-  .timetable thead {
-    background: #f7fafc;
-    color: black !important;
-    border-bottom: 1px solid #dee2e6;
-  }
-
-  .timetable th {
-    color: black;
-    padding: 15px 12px;
-    text-align: center;
-    font-weight: 700;
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-    border: 1px solid #dee2e6;
-  }
-
-  .timetable td {
-    padding: 8px 6px;
-    text-align: center;
-    font-weight: 600;
-    font-size: 10px;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-    border: 1px solid #dee2e6;
-  }
-
-  td.time-cell {
-    background: #f7fafc;
-    color: #4a5568;
-    width: 80px;
-    font-size: 11px;
-    text-align: center;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-    border-bottom: 1px solid #dee2e6;
-  }
-
-  td.lecture-session {
-    background-color: #dceefc;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-    color: #1e5b81;
-  }
-
-  td.lab-session {
-    background-color: #f1e9fe;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-    color: #81409d;
-  }
-
-  td.empty-cell {
-    background: #f7fafc;
-    color: #4a5568;
-    text-align: center;
-    font-style: italic;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-
-  /* Break row styles */
-  .break-time {
-    background: #f7fafc;
-    color: #4a5568;
-    text-align: center;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-
-  .break-time div {
-    background-color: #eeeeee !important;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-
-  .break-cell {
-    background-color: #eeeeee !important;
-    color: #6e6e6e !important;
-    font-weight: 700;
-    font-size: 12px;
-    text-align: center;
-    padding: 12px 6px !important;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-style: italic;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-
-  .type-label {
-    display: inline-block;
-    font-size: 9px;
-    line-height: 1;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-    padding: 3px 5px;
-    border-radius: 9999px;
-    margin-bottom: 3px;
-    margin-top: 5px;
-  }
-
-  td.lecture-session .type-label {
-    color: #0d47a1 !important;
-    background: rgba(13, 71, 161, 0.08) !important;
-    border: 1px solid rgba(13, 71, 161, 0.35) !important;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-
-  td.lab-session .type-label {
-    color: #a654c9 !important;
-    background: rgba(166, 84, 201, 0.15) !important;
-    border: 1px solid #81409d !important;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-
-  .metadata {
-    margin-top: 15px;
-    padding: 10px;
-    background: #f8f9fa !important;
-    border: 1px solid #dee2e6;
-    border-radius: 5px;
-    font-size: 10px;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-
-  .meta-row {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 5px;
-  }
-
-  .meta-row:last-child {
-    margin-bottom: 0;
-  }
-
-  .timetable {
-    page-break-inside: avoid;
-  }
-
-  .footer {
-    margin-top: 30px;
-    padding: 20px 0;
-    border-top: 2px solid #8e44ad;
-    page-break-inside: avoid;
-  }
-
-  .footer-content {
-    display: flex;
-    justify-content: space-between;
-    font-size: 9px;
-    line-height: 1.4;
-  }
-
-  .footer-left,
-  .footer-center,
-  .footer-right {
-    flex: 1;
-    padding: 0 10px;
-  }
-
-  .footer-left p:first-child,
-  .footer-center p:first-child,
-  .footer-right p:first-child {
-    font-weight: bold;
-    margin-bottom: 8px;
-    color: #8e44ad;
-    border-bottom: 1px solid #dee2e6;
-    padding-bottom: 3px;
-  }
-
-  .footer p {
-    margin: 3px 0;
-    color: #495057;
   }
 }

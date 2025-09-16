@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="shortcut icon" href="res/favicon.png" type="image/x-icon" />
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="responsive.css" />
     <title>Register - Interactive Timetable Generator</title>
   </head>
   <body>
@@ -24,32 +25,17 @@
           <div class="form-row">
             <div class="form-group">
               <label for="firstName">First Name</label>
-              <input
-                type="text"
-                id="firstName"
-                name="firstName"
-                placeholder="Enter your first name"
-                required />
+              <input type="text" id="firstName" name="firstName" placeholder="Enter your first name" required />
             </div>
             <div class="form-group">
               <label for="lastName">Last Name</label>
-              <input
-                type="text"
-                id="lastName"
-                name="lastName"
-                placeholder="Enter your last name"
-                required />
+              <input type="text" id="lastName" name="lastName" placeholder="Enter your last name" required />
             </div>
           </div>
 
           <div class="form-group">
             <label for="email">Email Address</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              placeholder="Enter your email address"
-              required />
+            <input type="email" id="email" name="email" placeholder="Enter your email address" required />
           </div>
 
           <div class="form-group">
@@ -60,7 +46,8 @@
               name="password"
               placeholder="Create a password"
               required
-              minlength="8" />
+              minlength="8"
+            />
           </div>
           <div class="form-group">
             <label for="confirmPassword">Confirm Password</label>
@@ -70,7 +57,8 @@
               name="confirmPassword"
               placeholder="Confirm your password"
               required
-              minlength="8" />
+              minlength="8"
+            />
           </div>
 
           <div class="form-group">
@@ -85,12 +73,7 @@
 
           <div class="form-group">
             <label for="institution">Institution/Organization</label>
-            <input
-              type="text"
-              id="institution"
-              name="institution"
-              placeholder="Enter your institution name"
-              required />
+            <input type="text" id="institution" name="institution" placeholder="Enter your institution name" required />
           </div>
 
           <!-- Student-specific fields -->
@@ -99,15 +82,9 @@
               <label for="department">Department</label>
               <select id="department" name="department">
                 <option value="">Select department</option>
-                <option value="Computer Engineering">
-                  Computer Engineering
-                </option>
-                <option value="Information Technology">
-                  Information Technology
-                </option>
-                <option value="Artificial Intelligence & Data Science">
-                  Artificial Intelligence & Data Science
-                </option>
+                <option value="Computer Engineering">Computer Engineering</option>
+                <option value="Information Technology">Information Technology</option>
+                <option value="Artificial Intelligence & Data Science">Artificial Intelligence & Data Science</option>
               </select>
             </div>
 
@@ -133,15 +110,9 @@
               <label for="teacherDepartment">Department (Optional)</label>
               <select id="teacherDepartment" name="department">
                 <option value="">Select department</option>
-                <option value="Computer Engineering">
-                  Computer Engineering
-                </option>
-                <option value="Information Technology">
-                  Information Technology
-                </option>
-                <option value="Artificial Intelligence & Data Science">
-                  Artificial Intelligence & Data Science
-                </option>
+                <option value="Computer Engineering">Computer Engineering</option>
+                <option value="Information Technology">Information Technology</option>
+                <option value="Artificial Intelligence & Data Science">Artificial Intelligence & Data Science</option>
               </select>
             </div>
           </div>
@@ -163,11 +134,7 @@
     </div>
 
     <!-- Toast Notification Container -->
-    <div
-      id="toast-container"
-      class="toast-container"
-      aria-live="polite"
-      aria-label="Notifications"></div>
+    <div id="toast-container" class="toast-container" aria-live="polite" aria-label="Notifications"></div>
 
     <!-- JavaScript -->
     <script src="auth.js"></script>
