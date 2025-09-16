@@ -1623,7 +1623,7 @@ function generateAllTimeSlots(startTime, endTime, slotDuration = 60, breakSlotNu
  */
 function generateTimeSlots(startTime, endTime, slotDuration = 60, breakSlotNumber = null, lecturesPerDay = null) {
   const allSlots = generateAllTimeSlots(startTime, endTime, slotDuration, breakSlotNumber);
-  const lectureSlots = allSlots
+  let lectureSlots = allSlots
     .filter((slot) => !slot.isBreak)
     .map((slot, index) => ({
       id: index + 1,
@@ -1632,14 +1632,24 @@ function generateTimeSlots(startTime, endTime, slotDuration = 60, breakSlotNumbe
       duration: slotDuration / 60, // Duration in hours
     }));
 
-  // Validate if the number of slots matches the desired lectures per day
-  if (lecturesPerDay && lectureSlots.length !== lecturesPerDay) {
-    console.warn(
-      `⚠️ Time configuration mismatch: Generated ${lectureSlots.length} slots but expected ${lecturesPerDay} lectures per day`
-    );
-    console.warn(
-      `💡 Suggestion: Adjust start/end time, slot duration, or break time to get exactly ${lecturesPerDay} lecture slots`
-    );
+  // If user specified a specific number of lectures per day, respect that limit
+  if (lecturesPerDay && lecturesPerDay > 0) {
+    if (lectureSlots.length > lecturesPerDay) {
+      // Limit slots to user-defined count
+      lectureSlots = lectureSlots.slice(0, lecturesPerDay);
+      console.log(
+        `✅ Limited to ${lecturesPerDay} slots as requested by user (${
+          lectureSlots.length - lecturesPerDay
+        } excess slots removed)`
+      );
+    } else if (lectureSlots.length < lecturesPerDay) {
+      console.warn(
+        `⚠️ Time configuration insufficient: Only ${lectureSlots.length} slots available but ${lecturesPerDay} lectures per day requested`
+      );
+      console.warn(
+        `💡 Suggestion: Extend end time, reduce slot duration, or remove break time to fit ${lecturesPerDay} lecture slots`
+      );
+    }
   }
 
   return lectureSlots;
