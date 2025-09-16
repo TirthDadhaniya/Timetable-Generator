@@ -1231,23 +1231,6 @@
       "profileData": {}
     },
     {
-      "id": "mfmq52xmtmjmzmoycso",
-      "email": "student@mail.com",
-      "password": "$2b$10$g1qxoDNFMWTvxcY6RXwHk.ot8PeujTNmz8NVk64n7BoODCKI/m.1m",
-      "firstName": "Student",
-      "lastName": "Test",
-      "role": "student",
-      "institution": "Apollo Institute of Engineering and Technology",
-      "isActive": true,
-      "createdAt": "2025-09-16T15:45:08.122Z",
-      "lastLogin": null,
-      "profileData": {
-        "department": "Information Technology",
-        "semester": "Semester 7",
-        "facultyId": null
-      }
-    },
-    {
       "id": "mfmq6i875flgz4d306k",
       "email": "teacher@mail.com",
       "password": "$2b$10$DKvkZ0RCldhI7.pOk1yGduJf19av0VYedi53Un01Abs56.8qz9HoS",
@@ -1261,6 +1244,23 @@
       "profileData": {
         "department": null,
         "semester": null,
+        "facultyId": null
+      }
+    },
+    {
+      "id": "mfmq52xmtmjmzmoycso",
+      "email": "student@mail.com",
+      "password": "$2b$10$g1qxoDNFMWTvxcY6RXwHk.ot8PeujTNmz8NVk64n7BoODCKI/m.1m",
+      "firstName": "Student",
+      "lastName": "Test",
+      "role": "student",
+      "institution": "Apollo Institute of Engineering and Technology",
+      "isActive": true,
+      "createdAt": "2025-09-16T15:45:08.122Z",
+      "lastLogin": null,
+      "profileData": {
+        "department": "Information Technology",
+        "semester": "Semester 7",
         "facultyId": null
       }
     }
