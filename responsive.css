@@ -1,0 +1,826 @@
+/* Media Queries for Responsive Design */
+
+@media (max-width: 992px) {
+  .landing-features {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 20px 0;
+  }
+
+  .header {
+    padding: 25px 20px;
+    margin-bottom: 30px;
+  }
+
+  .header-content {
+    flex-direction: column;
+    gap: 20px;
+    text-align: center;
+  }
+
+  .header-text h1 {
+    font-size: 2.2rem;
+  }
+
+  .header-text p {
+    font-size: 1rem;
+    padding: 0 10px;
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .user-info {
+    flex-direction: column;
+    gap: 10px;
+    padding: 15px;
+    text-align: center;
+  }
+
+  .auth-buttons {
+    flex-direction: row;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .btn-auth {
+    flex: 1;
+    min-width: auto;
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+
+  /* Responsive button styles */
+  .btn {
+    padding: 12px 20px;
+    font-size: 14px;
+    border-radius: 8px;
+  }
+
+  .btn.generate-btn {
+    padding: 14px 24px;
+    font-size: 15px;
+    width: 100%;
+    max-width: none;
+  }
+
+  .auth-btn {
+    padding: 14px 24px;
+    font-size: 15px;
+    width: 100%;
+  }
+
+  .btn-logout {
+    padding: 8px 14px;
+    font-size: 13px;
+  }
+
+  /* Timetable action buttons */
+  .timetable-action-btn {
+    padding: 10px 16px;
+    font-size: 14px;
+    min-width: 120px;
+  }
+
+  .timetable-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .timetable-action-btn {
+    width: 100%;
+    max-width: none;
+  }
+
+  /* Small buttons in cards */
+  .small-btn {
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+
+  .card-action-btn {
+    padding: 8px 10px;
+  }
+
+  .card-action-btn img {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Course department card responsive */
+  .course-department-card-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .course-department-card-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .stats-overview {
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+
+  .stat-overview-card {
+    flex: 1 1 100%;
+    max-width: none;
+  }
+
+  .generator-panel {
+    padding: 25px 20px;
+    margin: 30px 0;
+  }
+
+  .generator-panel h2 {
+    font-size: 1.8rem;
+  }
+
+  .generator-form .form-row {
+    grid-template-columns: 1fr;
+    gap: 15px;
+    align-items: stretch;
+    margin-bottom: 15px;
+  }
+
+  .generator-form .form-group {
+    max-width: none;
+  }
+
+  .btn.generate-btn {
+    width: 100%;
+    margin-top: 20px;
+  }
+
+  .placeholder-content {
+    padding: 40px 20px;
+  }
+
+  .placeholder-content h3 {
+    font-size: 1.5rem;
+  }
+
+  .control-row {
+    flex-direction: column;
+  }
+
+  .tabs {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+  }
+
+  .timetable-container {
+    overflow-x: auto;
+  }
+
+  .timetable th,
+  .timetable td {
+    padding: 8px 6px;
+    font-size: 12px;
+    min-width: 100px;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .timetable-meta {
+    grid-template-columns: 1fr;
+  }
+
+  .timetable-grid th,
+  .timetable-grid td {
+    padding: 8px 5px;
+    font-size: 12px;
+  }
+
+  .session-content {
+    padding: 8px;
+  }
+
+  .session-subject {
+    font-size: 11px;
+  }
+
+  .session-faculty,
+  .session-room,
+  .session-time {
+    font-size: 10px;
+  }
+
+  /* Saved timetables responsive */
+  .saved-timetables-list .saved-timetable-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    margin: 16px 0 12px 0;
+    padding: 12px 0;
+  }
+
+  .saved-timetable-title {
+    font-size: 1rem;
+  }
+
+  .saved-timetable-details {
+    font-size: 11px;
+    margin-top: 6px;
+  }
+
+  .meta-info-compact {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-container {
+    padding: 15px;
+  }
+
+  .auth-card {
+    padding: 30px 25px;
+    max-width: 100%;
+  }
+
+  .auth-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .auth-form .form-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .form-options {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+
+  .decoration-circle-1 {
+    width: 120px;
+    height: 120px;
+  }
+
+  .decoration-circle-2 {
+    width: 100px;
+    height: 100px;
+  }
+
+  .decoration-circle-3 {
+    width: 80px;
+    height: 80px;
+  }
+
+  .landing-container {
+    padding: 20px 15px;
+  }
+
+  .landing-content {
+    padding: 40px 30px;
+    max-width: 100%;
+  }
+
+  .landing-header h1 {
+    font-size: 2.5rem;
+  }
+
+  .landing-header > p {
+    font-size: 1.1rem;
+  }
+
+  .landing-description p {
+    font-size: 1rem;
+  }
+
+  .landing-features {
+    grid-template-columns: 1fr;
+    gap: 30px;
+    margin-bottom: 50px;
+  }
+
+  .feature-card {
+    padding: 30px 25px;
+  }
+
+  .feature-card h3 {
+    font-size: 1.2rem;
+  }
+
+  .landing-cta h2 {
+    font-size: 2rem;
+  }
+
+  .landing-cta > p {
+    font-size: 1rem;
+    margin-bottom: 30px;
+  }
+
+  .cta-buttons {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .btn {
+    width: 100%;
+    max-width: 280px;
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+
+  /* CTA buttons on landing page */
+  .cta-buttons {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .cta-buttons .btn {
+    width: 100%;
+    max-width: 250px;
+    padding: 14px 24px;
+  }
+
+  .decoration-circle-4 {
+    width: 140px;
+    height: 140px;
+  }
+  .form-row {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 20px 15px;
+  }
+
+  .header-text h1 {
+    font-size: 1.8rem;
+  }
+
+  .header-text p {
+    font-size: 0.9rem;
+  }
+
+  .user-info {
+    padding: 12px;
+  }
+
+  .user-welcome {
+    font-size: 14px;
+  }
+
+  .btn-auth {
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+
+  .btn-logout {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  /* Even smaller buttons for small mobile */
+  .btn {
+    padding: 10px 16px;
+    font-size: 13px;
+    border-radius: 6px;
+  }
+
+  .btn.generate-btn {
+    padding: 12px 20px;
+    font-size: 14px;
+    border-radius: 8px;
+  }
+
+  .auth-btn {
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+
+  .timetable-action-btn {
+    padding: 10px 14px;
+    font-size: 13px;
+    min-width: 100px;
+  }
+
+  .small-btn {
+    padding: 5px 8px;
+    font-size: 10px;
+  }
+
+  .card-action-btn {
+    padding: 6px 8px;
+  }
+
+  .card-action-btn img {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* Course department card responsive for small mobile */
+  .course-department-card-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .course-department-card-info {
+    width: 100%;
+  }
+
+  .course-department-card-actions {
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 8px;
+  }
+
+  /* CTA buttons for small screens */
+  .cta-buttons .btn {
+    max-width: 220px;
+    padding: 12px 20px;
+    font-size: 13px;
+  }
+
+  /* Responsive Modal */
+  .duplicate-modal {
+    width: 95%;
+    margin: 10px;
+  }
+
+  .duplicate-modal-header,
+  .duplicate-modal-body,
+  .duplicate-modal-footer {
+    padding: 20px;
+  }
+
+  .duplicate-modal-header h3 {
+    font-size: 1.2rem;
+  }
+
+  .duplicate-modal-footer {
+    flex-direction: column;
+  }
+
+  .duplicate-modal-footer .btn {
+    width: 100%;
+  }
+
+  .auth-card {
+    padding: 25px 20px;
+  }
+
+  .auth-header h1 {
+    font-size: 1.6rem;
+  }
+
+  .auth-header p {
+    font-size: 0.9rem;
+  }
+
+  .auth-form input,
+  .auth-form select {
+    padding: 14px 16px;
+    font-size: 14px;
+  }
+
+  .auth-btn {
+    padding: 16px 25px;
+    font-size: 15px;
+  }
+
+  .landing-content {
+    padding: 30px 20px;
+  }
+
+  .landing-header {
+    margin-bottom: 40px;
+  }
+
+  .landing-header h1 {
+    font-size: 2rem;
+  }
+
+  .landing-header > p {
+    font-size: 1rem;
+  }
+
+  .landing-description p {
+    font-size: 0.95rem;
+  }
+
+  .feature-card {
+    padding: 25px 20px;
+  }
+
+  .feature-icon img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .feature-card h3 {
+    font-size: 1.1rem;
+  }
+
+  .feature-card p {
+    font-size: 0.95rem;
+  }
+
+  .landing-cta h2 {
+    font-size: 1.7rem;
+  }
+
+  .landing-cta > p {
+    font-size: 0.95rem;
+  }
+
+  .btn {
+    padding: 14px 24px;
+    font-size: 15px;
+  }
+
+  /* Form buttons */
+  .auth-btn {
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+
+  .form-row {
+    flex-direction: column;
+  }
+  .last-row {
+    grid-template-columns: 1fr;
+    margin-top: -15px;
+  }
+  .form-group.checkbox-group {
+    justify-content: start;
+  }
+  .checkbox-label input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+  }
+  .tab {
+    font-size: 16px;
+    padding: 12px 12px;
+    border-radius: 8px;
+  }
+  .form-section {
+    padding: 35px 20px;
+  }
+  .tab-content {
+    padding: 10px;
+  }
+  .section-title {
+    font-size: 22px;
+  }
+}
+
+/* Print-specific styling for exported timetable */
+@media print {
+  body {
+    margin: 0;
+    padding: 0;
+    background: #ffffff;
+    font-family: "Inter", sans-serif;
+  }
+
+  .pdf-container {
+    width: 100%;
+    background: #ffffff;
+    margin: 0;
+    padding: 15mm;
+    box-sizing: border-box;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 30px;
+    border-bottom: 3px solid #676568;
+    padding-bottom: 15px;
+    font-family: "Inter", sans-serif;
+  }
+
+  .header h1 {
+    color: #2c3e50;
+    font-size: 24px;
+    margin: 0 0 8px 0;
+    font-weight: bold;
+  }
+
+  .header h2 {
+    color: #2c3e50;
+    font-size: 16px;
+    margin: 0 0 8px 0;
+  }
+
+  .header p {
+    color: #7f8c8d;
+    font-size: 12px;
+    margin: 0;
+  }
+
+  /* Table */
+  .timetable {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: "Inter", sans-serif;
+    background: #f7fafc;
+    overflow: hidden;
+    border: 1px solid #dee2e6;
+  }
+
+  .timetable thead {
+    background: #f7fafc;
+    color: black !important;
+    border-bottom: 1px solid #dee2e6;
+  }
+
+  .timetable th {
+    color: black;
+    padding: 15px 12px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    border: 1px solid #dee2e6;
+  }
+
+  .timetable td {
+    padding: 8px 6px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 10px;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    border: 1px solid #dee2e6;
+  }
+
+  td.time-cell {
+    background: #f7fafc;
+    color: #4a5568;
+    width: 80px;
+    font-size: 11px;
+    text-align: center;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    border-bottom: 1px solid #dee2e6;
+  }
+
+  td.lecture-session {
+    background-color: #dceefc;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    color: #1e5b81;
+  }
+
+  td.lab-session {
+    background-color: #f1e9fe;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    color: #81409d;
+  }
+
+  td.empty-cell {
+    background: #f7fafc;
+    color: #4a5568;
+    text-align: center;
+    font-style: italic;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Break row styles */
+  .break-time {
+    background: #f7fafc;
+    color: #4a5568;
+    text-align: center;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .break-time div {
+    background-color: #eeeeee !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .break-cell {
+    background-color: #eeeeee !important;
+    color: #6e6e6e !important;
+    font-weight: 700;
+    font-size: 12px;
+    text-align: center;
+    padding: 12px 6px !important;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-style: italic;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .type-label {
+    display: inline-block;
+    font-size: 9px;
+    line-height: 1;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    padding: 3px 5px;
+    border-radius: 9999px;
+    margin-bottom: 3px;
+    margin-top: 5px;
+  }
+
+  td.lecture-session .type-label {
+    color: #0d47a1 !important;
+    background: rgba(13, 71, 161, 0.08) !important;
+    border: 1px solid rgba(13, 71, 161, 0.35) !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  td.lab-session .type-label {
+    color: #a654c9 !important;
+    background: rgba(166, 84, 201, 0.15) !important;
+    border: 1px solid #81409d !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .metadata {
+    margin-top: 15px;
+    padding: 10px;
+    background: #f8f9fa !important;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    font-size: 10px;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .meta-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+  }
+
+  .meta-row:last-child {
+    margin-bottom: 0;
+  }
+
+  .timetable {
+    page-break-inside: avoid;
+  }
+
+  .footer {
+    margin-top: 30px;
+    padding: 20px 0;
+    border-top: 2px solid #8e44ad;
+    page-break-inside: avoid;
+  }
+
+  .footer-content {
+    display: flex;
+    justify-content: space-between;
+    font-size: 9px;
+    line-height: 1.4;
+  }
+
+  .footer-left,
+  .footer-center,
+  .footer-right {
+    flex: 1;
+    padding: 0 10px;
+  }
+
+  .footer-left p:first-child,
+  .footer-center p:first-child,
+  .footer-right p:first-child {
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #8e44ad;
+    border-bottom: 1px solid #dee2e6;
+    padding-bottom: 3px;
+  }
+
+  .footer p {
+    margin: 3px 0;
+    color: #495057;
+  }
+}
