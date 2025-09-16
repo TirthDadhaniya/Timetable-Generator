@@ -1544,7 +1544,7 @@
   "settings": {
     "defaultCollegeStartTime": "09:00",
     "defaultCollegeEndTime": "17:00",
-    "defaultSlotsPerDay": 6,
+    "defaultSlotsPerDay": 4,
     "workingDays": [
       "Monday",
       "Tuesday",
